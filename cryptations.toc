@@ -1,0 +1,23 @@
+## Interface: 70200
+## Title: cryptations
+## Version: 0.1
+
+# Core
+Core\Core.lua
+Core\UnitEngine.lua
+Core\SpellManager.lua
+Core\PulseEngine.lua
+Core\Helpers.lua
+Core\RotationEngine.lua
+
+# Tables
+Tables\Auras.lua
+Tables\Spells.lua
+
+# Rotations
+Rotations\Rogue - Assasination.lua
+Rotations\Mage - Frost.lua
+Rotations\Paladin - Protection.lua
+Rotations\Paladin - Holy.lua
+
+frame.xml
