@@ -31,6 +31,7 @@ function ct.PaladinHoly()
     and not ct.UnitHasAura(LowestFriend, 6940)
     and UnitHealth(LowestFriend) <= UnitHealthMax(LowestFriend) * 20 then
       local Sequence = {498, 6940}
+      message("here")
       return ct.AddSpellToQueue(Sequence, LowestFriend)
     end
 
@@ -51,8 +52,9 @@ function ct.PaladinHoly()
     -- TANK / SINGLE TARGET HEALING
     if MainTank ~= nil and MainTank == LowestFriend
     and ct.PercentHealth(MainTank) <= ct.TankHealthThreshold then
+      -- TODO: Beacon of Virtue
       -- Beacon of Light (Cast on Main Tank. If BOF is talented, place BOF on lowest unit)
-      if ct.CanCast(53563, MainTank) and not UnitHasAura(MainTank, 53563)
+      if ct.CanCast(53563, MainTank) and not ct.UnitHasAura(MainTank, 53563)
       and ct.IsInLOS(MainTank) then
         return ct.AddSpellToQueue(53563, MainTank)
       end

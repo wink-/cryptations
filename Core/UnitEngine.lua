@@ -43,7 +43,8 @@ function ct.GetUnitTables()
           EnemyIndex = EnemyIndex + 1
         end
         AlreadyInTable = false
-      elseif not ct.UnitIsHostile(Unit) and UnitIsPlayer(Unit) then
+      elseif not ct.UnitIsHostile(Unit) and UnitIsPlayer(Unit)
+      or (UnitInParty(Unit) or UnitInRaid(Unit)) then
         -- FRIENDLY PLAYERS --
         -- check if not already in table
         for index, value in ipairs(ct.friends) do

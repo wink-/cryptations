@@ -26,12 +26,13 @@ function ct.PulseQueue()
     -- check if we have a sequence entry or a single spell
     -- (sequence entry is a table)
     -- only cast the spell if a specific target was given or if the player has a target
-    if (type(ct.SpellQueue[i].spell) == table) then
+    if (type(ct.SpellQueue[i].spell) == "table") then
       while getn(ct.SpellQueue[i].spell) ~= 0 do
-        SpellID = ct.SpellQueue[i].spell[j]
+        SpellID = ct.SpellQueue[i].spell[1]
         -- Cast Spell
         if (not ct.UnitIsMoving("player") or ct.CanCastWhileMoving(SpellID))
         and not ct.PlayerIsCasting() and (UnitGUID("target") ~= nil or SpecificTarget == true) then
+          -- TODO: script ran to long
           CastSpellByID(SpellID, TargetUnit)
         end
       end
@@ -61,9 +62,9 @@ function ct.DeQueueSpell(spell)
   end
 
   -- find spell in queue and dequeue it
-  if (type(ct.SpellQueue[1].spell) == table) then
+  if (type(ct.SpellQueue[1].spell) == "table") then
     if ct.SpellQueue[1].spell[1] == spell then
-      table.remove(ct.SpellQueue[1], 1)
+      table.remove(ct.SpellQueue[1].spell, 1)
     end
   else
     if ct.SpellQueue[1].spell == spell then

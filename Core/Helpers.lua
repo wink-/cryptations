@@ -148,7 +148,7 @@ function ct.FindHighestUnit(table)
 
   for index, value in ipairs(table) do
     local Unit = table[index][1]
-    if Highest == nil or ct.HealthPercent(Unit) > ct.HealthPercent(Highest) then
+    if Highest == nil or ct.PercentHealth(Unit) > ct.PercentHealth(Highest) then
       Highest = Unit
     end
   end
@@ -166,7 +166,7 @@ function ct.FindLowestUnit(table)
 
   for index, value in ipairs(table) do
     local Unit = table[index][1]
-    if Lowest == nil or ct.HealthPercent(Unit) < ct.HealthPercent(Lowest and UnitHealth(Unit) ~= 0) then
+    if Lowest == nil or (ct.PercentHealth(Unit) < ct.PercentHealth(Lowest) and UnitHealth(Unit) ~= 0) then
       Lowest = Unit
     end
   end
@@ -216,7 +216,7 @@ end
 function ct.GetUnitsInRadius(table, radius)
   local Units = {}
   for index, value in ipairs(table) do
-    Unit = table[index][i]
+    Unit = table[index][1]
     if ct.IsInRange(Unit, radius) then
       table.insert(Units, Unit)
     end
@@ -257,14 +257,8 @@ function ct.FindTanks()
   -- find tanks
   local Tanks = {}
 
-  -- Proving Grounds
-  local Table = ct.friends
-  if select(8, GetInstanceInfo()) == 1148 then
-    Table = ct.npcs
-  end
-
-  for index, value in ipairs(Table) do
-    local Unit = Table[index][1]
+  for index, value in ipairs(ct.friends) do
+    local Unit = ct.friends[index][1]
     if (UnitInParty(Unit) or UnitInRaid(Unit))
     and UnitGroupRolesAssigned(Unit) == "TANK" or ObjectID(Unit) == 72218 then
       table.insert(Tanks, Unit)
