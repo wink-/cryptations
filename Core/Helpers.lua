@@ -108,7 +108,6 @@ end
 
 -- returns number of how many auras the given unit has
 function ct.GetAuraCount(unit)
-  local Auras = {}
   local AuraIndex = 1
   local AuraCount = 0
 
@@ -270,7 +269,7 @@ function ct.FindTanks()
   local MainTank  = nil
   local OffTank   = nil
 
-  for i in getn(Tanks) do
+  for i = 1, getn(Tanks) do
     if ct.IsTankingBoss(Tanks[i]) then
       MainTank = Tanks[i]
     else

@@ -10,7 +10,7 @@ function ct.PaladinHoly()
 
   -- COOLDOWNS
   -- Avenging Wrath (Use when 50% of group is below 70% health)
-  if ct.CanCast(31842)
+  if ct.CanCast(31842) and GetNumGroupMembers() ~= 1
   and ct.GetUnitCountBelowHealth(ct.friends, 70) >= math.floor(GetNumGroupMembers() * 0.5) then
     return ct.AddSpellToQueue(31842)
   end
@@ -26,7 +26,8 @@ function ct.PaladinHoly()
   end
 
   -- Blessing of Sacrifice (Use together with Divine Protection on units below 20% health)
-  if ct.CanCast(6940) and ct.CanCast(498) and not ct.UnitHasAura(LowestFriend, 6940)
+  if ct.CanCast(6940) and ct.CanCast(498) and LowestFriend ~= nil
+  and not ct.UnitHasAura(LowestFriend, 6940)
   and UnitHealth(LowestFriend) <= UnitHealthMax(LowestFriend) * 20 then
     local Sequence = {498, 6940}
     return ct.AddSpellToQueue(Sequence, LowestFriend)
@@ -40,7 +41,8 @@ function ct.PaladinHoly()
   -- Tyr's Deliverance (Used when 30% of group are below 70% health)
   if ct.CanCast(200652) then
     local UnitsInRadius = ct.GetUnitsInRadius(ct.friends, 15)
-    if ct.GetUnitCountBelowHealth(UnitsInRadius, 70) >= math.floor(GetNumGroupMembers() * 0.3) then
+    if GetNumGroupMembers() ~= 1
+    and ct.GetUnitCountBelowHealth(UnitsInRadius, 70) >= math.floor(GetNumGroupMembers() * 0.3) then
       return ct.AddSpellToQueue(200652)
     end
   end
