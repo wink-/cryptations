@@ -249,12 +249,13 @@ function ct.GetUnitCountBelowHealth(table, healthPercent)
   return Count
 end
 
--- returns the unit objects of the tanks, return nil if not found
+-- returns the unit objects of the tanks and specifies them as main and off tank, return nil if not found
 function ct.FindTanks()
   if GetNumGroupMembers() == 0 then
     return nil
   end
 
+  -- find tanks
   local Tanks = {}
 
   for index, value in ipairs(ct.friends) do
@@ -265,5 +266,32 @@ function ct.FindTanks()
     end
   end
 
-  return Tanks
+  -- specify main and off tank
+  local MainTank  = nil
+  local OffTank   = nil
+
+  for i in getn(Tanks) do
+    if ct.IsTankingBoss(Tanks[i]) then
+      MainTank = Tanks[i]
+    else
+      OffTank = Tanks[i]
+    end
+  end
+
+  return MainTank, OffTank
+end
+
+-- returns true when the given unit is tanking a boss
+function ct.IsTankingBoss(unit)
+  local Target = UnitTarget(unit)
+  if Target ~= nil and (UnitClassification(Target) == "elite"
+  or UnitClassification(Target) == "worldboss") then
+    return true
+  end
+  return false
+end
+
+-- returns the percent value of the unit's current health
+function ct.PercentHealth(unit)
+  return math.floor((UnitHealth(unit) / UnitHealthMax(unit)) * 100)
 end
