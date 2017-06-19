@@ -138,7 +138,7 @@ function ct.FindUnitsWithAura(auraID)
   end
 end
 
--- return the unit with the most health points out of the given table
+-- return the unit with the most health percentage out of the given table
 function ct.FindHighestUnit(table)
   local Highest = nil
 
@@ -148,14 +148,14 @@ function ct.FindHighestUnit(table)
 
   for index, value in ipairs(table) do
     local Unit = table[index][1]
-    if Highest == nil or UnitHealth(Unit) > UnitHealth(highest) then
+    if Highest == nil or ct.HealthPercent(Unit) > ct.HealthPercent(Highest) then
       Highest = Unit
     end
   end
   return Highest
 end
 
--- return the unit with the least health points out of the given table
+-- return the unit with the least health percentage out of the given table
 -- ignores dead units
 function ct.FindLowestUnit(table)
   local Lowest = nil
@@ -166,7 +166,7 @@ function ct.FindLowestUnit(table)
 
   for index, value in ipairs(table) do
     local Unit = table[index][1]
-    if Lowest == nil or (UnitHealth(Unit) < UnitHealth(Lowest) and UnitHealth(Unit) ~= 0) then
+    if Lowest == nil or ct.HealthPercent(Unit) < ct.HealthPercent(Lowest and UnitHealth(Unit) ~= 0) then
       Lowest = Unit
     end
   end
