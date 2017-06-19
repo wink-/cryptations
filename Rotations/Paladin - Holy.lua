@@ -48,72 +48,61 @@ function ct.PaladinHoly()
       end
     end
 
-    -- TANK / SINGLE TARGET HEALING
-    if MainTank ~= nil and MainTank == LowestFriend
-    and ct.PercentHealth(MainTank) <= ct.TankHealthThreshold then
-      -- Beacon of Light (Cast on Main Tank if BOV is not Talented)
-      if not IsSpellKnown(200025) and ct.CanCast(53563, MainTank)
-      and not ct.UnitHasAura(MainTank, 53563) and ct.IsInLOS(MainTank) then
-        return ct.AddSpellToQueue(53563, MainTank)
+    -- AOE HEALING Logic
+    -- Light of Dawn
+    -- Holy Prism or Beacon of Virtue
+
+    -- SINGLETARGET HEALING LOGIC
+    if MainTank ~= nil and PercentHealth(MainTank) <= ct.TankHealthThreshold
+    or (LowestFriend ~= nil and PercentHealth(LowestFriend) <= ct.OtherHealthThreshold) then
+      -- Beacon of Light on Tank (If not Talented BOV)
+      if not IsSpellKnown(200025) and ct.CanCast(53563, Target)
+      and not ct.UnitHasAura(Target, 53563) and ct.IsInLOS(Target) then
+        return ct.AddSpellToQueue(53563, Target)
       end
 
-      -- TODO: remove from here
-      -- Beacon of Faith Talent
-      if LowestFriend ~= nil and ct.CanCast(156910, LowestFriend)
-      and not UnitHasAura(LowestFriend, 156910) and ct.IsInLOS(LowestFriend) then
-        return ct.AddSpellToQueue(156910, LowestFriend)
+      -- Beacon of Faith on LowestFriend (If Talented BOF)
+      if ct.CanCast(156910, Target)
+      and not UnitHasAura(Target, 156910) and ct.IsInLOS(Target) then
+        return ct.AddSpellToQueue(156910, Target)
       end
 
       -- Infusion of Light Proc (Either Holy Light or Flash of Light)
       if ct.UnitHasAura(ct.player, 53576) then
         if ct.UseHolyLightOnInfusion then
-          if ct.CanCast(82326, MainTank) and ct.IsInLOS(MainTank) then
-            return ct.AddSpellToQueue(82326, MainTank)
+          if ct.CanCast(82326, Target) and ct.IsInLOS(Target) then
+            return ct.AddSpellToQueue(82326, Target)
           end
         elseif ct.UseFlashOfLightOnInfusion then
-          if ct.CanCast(19750, MainTank) and ct.IsInLOS(MainTank) then
-            return ct.AddSpellToQueue(19750, MainTank)
+          if ct.CanCast(19750, Target) and ct.IsInLOS(Target) then
+            return ct.AddSpellToQueue(19750, Target)
           end
         end
       end
 
       -- Holy Shock on cooldown (or Light of the Martyr if moving and Holy Shock has CD)
       if not ct.UnitIsMoving(ct.player) then
-        if ct.CanCast(20473, MainTank) and ct.IsInLOS(MainTank) then
+        if ct.CanCast(20473, Target) and ct.IsInLOS(Target) then
           return ct.AddSpellToQueue(20473)
         end
       else
-        if ct.CanCast(183998, MainTank) and ct.IsInLOS(MainTank) then
+        if ct.CanCast(183998, Target) and ct.IsInLOS(Target) then
           return ct.AddSpellToQueue(183998)
         end
       end
 
-      -- Bestow Faith on cooldown
-      if ct.CanCast(223306, MainTank) and not ct.UnitHasAura(MainTank, 223306)
-      and ct.IsInLOS(MainTank) then
-        return ct.AddSpellToQueue(223306, MainTank)
-      end
+      -- Judgment (when Judgment of Light is talented)
 
       -- Holy Light (Flash of Light for greater damage)
-      if ct.PercentHealth(MainTank) <= ct.FlashOfLightThreshold then
-        if ct.CanCast(19750, MainTank) and ct.IsInLOS(MainTank) then
-          return ct.AddSpellToQueue(19750, MainTank)
+      if ct.PercentHealth(Target) <= ct.FlashOfLightThreshold then
+        if ct.CanCast(19750, Target) and ct.IsInLOS(Target) then
+          return ct.AddSpellToQueue(19750, Target)
         end
       else
-        if ct.CanCast(82326, MainTank) and ct.IsInLOS(MainTank) then
-          return ct.AddSpellToQueue(82326, MainTank)
+        if ct.CanCast(82326, Target) and ct.IsInLOS(Target) then
+          return ct.AddSpellToQueue(82326, Target)
         end
       end
-
-      -- RAID / AOE HEALING
-      -- Beacon of Light on Tank (If not Talented BOV)
-      -- Beacon of Faith on LowestFriend (If Talented BOF)
-      -- Infusion of Light Proc (Either Holy Light or Flash of Light)
-      -- Holy Shock on cooldown (or Light of the Martyr if moving and Holy Shock has CD)
-      -- Judgment (when Judgment of Light is talented)
-      -- Light of Dawn
-      -- Holy Prism or Beacon of Virtue
-      -- Holy Light (Flash of Light for greater damage)
     end
   else
     -- OUT OF COMBAT ROUTINE
