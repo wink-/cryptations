@@ -250,17 +250,23 @@ end
 
 -- returns the unit objects of the tanks and specifies them as main and off tank, return nil if not found
 function ct.FindTanks()
-  if GetNumGroupMembers() == 0 then
+  if GetNumGroupMembers() == 1 then
     return nil
   end
 
   -- find tanks
   local Tanks = {}
 
-  for index, value in ipairs(ct.friends) do
-    local Unit = ct.friends[index][1]
-    if UnitInParty(Unit) or UnitInRaid(Unit)
-    and UnitGroupRolesAssigned(Unit) == "TANK" then
+  -- Proving Grounds
+  local Table = ct.friends
+  if select(8, GetInstanceInfo()) == 1148 then
+    Table = ct.npcs
+  end
+
+  for index, value in ipairs(Table) do
+    local Unit = Table[index][1]
+    if (UnitInParty(Unit) or UnitInRaid(Unit))
+    and UnitGroupRolesAssigned(Unit) == "TANK" or ObjectID(Unit) == 72218 then
       table.insert(Tanks, Unit)
     end
   end
