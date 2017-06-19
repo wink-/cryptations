@@ -7,18 +7,21 @@ ct = {}
 -- GLOBAL SETTINGS
 
 -- Targeting behavior : Only one can be true
-ct.ReTargetNearestUnit  = true
-ct.ReTargetHighestUnit  = false
-ct.ReTargetLowestUnit   = false
+ct.ReTargetNearestUnit      = true
+ct.ReTargetHighestUnit      = false
+ct.ReTargetLowestUnit       = false
+
+-- Combat behavior
+ct.AllowOutOfCombatRoutine  = false
 
 -- Interrupt behavior
-ct.EnableInterrupt      = true
-ct.InterruptMinPercent  = 20
-ct.InterruptMaxPercent  = 80
+ct.EnableInterrupt          = true
+ct.InterruptMinPercent      = 20
+ct.InterruptMaxPercent      = 80
 
 -- Cast Logic Settings
-ct.CastDelay            = 100           -- The lower, the more delay will be between each spellcast
-ct.CastAngle            =  90           -- Facing angle for casted spells
+ct.CastDelay                = 100           -- The lower, the more delay will be between each spellcast
+ct.CastAngle                =  90           -- Facing angle for casted spells
 
 function ct.StartUp()
   if FireHack ~= nil then
