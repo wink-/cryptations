@@ -276,7 +276,7 @@ function ct.FindTanks()
   local OffTank   = nil
 
   for i = 1, getn(Tanks) do
-    if ct.IsTankingBoss(Tanks[i]) then
+    if ct.IsTankingBoss(Tanks[i]) or getn(Tanks) == 1 then
       MainTank = Tanks[i]
     else
       OffTank = Tanks[i]
