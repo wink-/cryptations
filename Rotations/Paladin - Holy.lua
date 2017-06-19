@@ -29,9 +29,8 @@ function ct.PaladinHoly()
     -- Blessing of Sacrifice (Use together with Divine Protection on units below 20% health)
     if ct.CanCast(6940) and ct.CanCast(498) and LowestFriend ~= nil
     and not ct.UnitHasAura(LowestFriend, 6940)
-    and UnitHealth(LowestFriend) <= UnitHealthMax(LowestFriend) * 20 then
+    and PercentHealth(LowestFriend) <= 20 then
       local Sequence = {498, 6940}
-      message("here")
       return ct.AddSpellToQueue(Sequence, LowestFriend)
     end
 
@@ -52,10 +51,9 @@ function ct.PaladinHoly()
     -- TANK / SINGLE TARGET HEALING
     if MainTank ~= nil and MainTank == LowestFriend
     and ct.PercentHealth(MainTank) <= ct.TankHealthThreshold then
-      -- TODO: Beacon of Virtue
-      -- Beacon of Light (Cast on Main Tank. If BOF is talented, place BOF on lowest unit)
-      if ct.CanCast(53563, MainTank) and not ct.UnitHasAura(MainTank, 53563)
-      and ct.IsInLOS(MainTank) then
+      -- Beacon of Light (Cast on Main Tank if BOV is not Talented)
+      if not IsSpellKnown(200025) and ct.CanCast(53563, MainTank)
+      and not ct.UnitHasAura(MainTank, 53563) and ct.IsInLOS(MainTank) then
         return ct.AddSpellToQueue(53563, MainTank)
       end
 
@@ -108,7 +106,8 @@ function ct.PaladinHoly()
       end
 
       -- RAID / AOE HEALING
-      -- Beacon of Light on Tank (If talented, place second beacon on lowest unit)
+      -- Beacon of Light on Tank (If not Talented BOV)
+      -- Beacon of Faith on LowestFriend (If Talented BOF)
       -- Infusion of Light Proc (Either Holy Light or Flash of Light)
       -- Holy Shock on cooldown (or Light of the Martyr if moving and Holy Shock has CD)
       -- Judgment (when Judgment of Light is talented)

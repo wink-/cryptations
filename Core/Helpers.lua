@@ -213,11 +213,11 @@ function ct.GetUnitCountInRadius(table, radius)
 end
 
 -- returns table containing units from the given table that are within the given radius
-function ct.GetUnitsInRadius(table, radius)
+function ct.GetUnitsInRadius(unitTable, radius)
   local Units = {}
-  for index, value in ipairs(table) do
-    Unit = table[index][1]
-    if ct.IsInRange(Unit, radius) then
+  for index, value in ipairs(unitTable) do
+    Unit = unitTable[index][1]
+    if Unit ~= nil and ct.IsInRange(Unit, radius) then
       table.insert(Units, Unit)
     end
   end
@@ -241,7 +241,7 @@ function ct.GetUnitCountBelowHealth(table, healthPercent)
   local Count = 0
   for index, value in ipairs(table) do
     Unit = table[index][1]
-    if (UnitHealth(Unit) / UnitHealthMax(Unit)) * 100 < healthPercent then
+    if Unit ~= nil and (UnitHealth(Unit) / UnitHealthMax(Unit)) * 100 < healthPercent then
       Count = Count + 1
     end
   end
