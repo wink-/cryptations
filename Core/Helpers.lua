@@ -141,37 +141,35 @@ end
 
 -- return the unit with the most health points out of the given table
 function ct.FindHighestUnit(table)
-  local Highest = nil
+  local highest = nil
 
   if getn(table) == 0 then
     return nil
   end
 
   for index, value in ipairs(table) do
-    local Unit = table[index][1]
-    if Highest == nil or UnitHealth(Unit) > UnitHealth(highest) then
-      Highest = Unit
+    if highest == nil or UnitHealth(table[index][1]) > UnitHealth(highest) then
+      highest = table[index][1]
     end
   end
-  return Highest
+  return highest
 end
 
 -- return the unit with the least health points out of the given table
 -- ignores dead units
 function ct.FindLowestUnit(table)
-  local Lowest = nil
+  local lowest = nil
 
   if getn(table) == 0 then
     return nil
   end
 
   for index, value in ipairs(table) do
-    local Unit = table[index][1]
-    if Lowest == nil or (UnitHealth(Unit) < UnitHealth(Lowest) and UnitHealth(Unit) ~= 0) then
-      Lowest = Unit
+    if lowest == nil or (UnitHealth(table[index][1]) < UnitHealth(lowest) and UnitHealth(table[index][1]) ~= 0) then
+      lowest = table[index][1]
     end
   end
-  return Lowest
+  return lowest
 end
 
 -- return the unit from the given table which is closest to the player
