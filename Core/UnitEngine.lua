@@ -1,7 +1,6 @@
--- global table that contains all valid units
-ct.friends = {}
-ct.npcs = {}
-ct.enemys = {}
+ct.friends = {}     -- contains all friendly players
+ct.npcs = {}        -- contains all friendly non - players
+ct.enemys = {}      -- contains all enemy units (npc and player)
 
 local Distance = 100
 

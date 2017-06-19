@@ -248,3 +248,22 @@ function ct.GetUnitCountBelowHealth(table, healthPercent)
   end
   return Count
 end
+
+-- returns the unit objects of the tanks, return nil if not found
+function ct.FindTanks()
+  if GetNumGroupMembers() == 0 then
+    return nil
+  end
+
+  local Tanks = {}
+
+  for index, value in ipairs(ct.friends) do
+    local Unit = ct.friends[index][1]
+    if UnitInParty(Unit) or UnitInRaid(Unit)
+    and UnitGroupRolesAssigned(Unit) == "TANK" then
+      table.insert(Tanks, Unit)
+    end
+  end
+
+  return Tanks
+end
