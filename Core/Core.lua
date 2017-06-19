@@ -20,24 +20,15 @@ ct.InterruptMaxPercent  = 80
 ct.CastDelay            = 100           -- The lower, the more delay will be between each spellcast
 ct.CastAngle            =  90           -- Facing angle for casted spells
 
--- define player object (needed for ewt)
-ct.player = GetObjectWithGUID(UnitGUID("player"))
-
 function ct.StartUp()
   if FireHack ~= nil then
-    ct.SetUpRotationEngine()
-
     -- Setup event frame
     local frame = CreateFrame("FRAME", "EventFrame")
 
-    frame:RegisterEvent("PLAYER_ENTERING_WORLD")
     frame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
     frame:RegisterEvent("PLAYER_REGEN_ENABLED")
 
     local function eventHandler(self, event, arg1, arg2, arg3, arg4, arg5, arg6)
-      if event == "PLAYER_ENTERING_WORLD" then
-        -- TODO: Greeting Message
-      end
       if event == "UNIT_SPELLCAST_SUCCEEDED" and arg1 == "player" then
         -- removes the spell from the Queue
         ct.DeQueueSpell(arg5)
@@ -50,6 +41,11 @@ function ct.StartUp()
     end
 
     frame:SetScript("OnEvent", eventHandler)
+
+    -- define player object (needed for ewt)
+    ct.player = GetObjectWithGUID(UnitGUID("player"))
+
+    ct.SetUpRotationEngine()
   else
     message("No unlocker loaded")
   end
