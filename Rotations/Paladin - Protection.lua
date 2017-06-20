@@ -1,6 +1,5 @@
 -- contains all the rotation logic and will be pulsed OnUpdate
 function ct.PaladinProtection()
-  local TargetObj     = GetObjectWithGUID(UnitGUID("target"))
   local MaxMana       = UnitPowerMax(ct.player , 0)
   local MaxHealth     = UnitHealthMax(ct.player)
 
@@ -15,8 +14,9 @@ function ct.PaladinProtection()
   -- combat rotation
   if UnitAffectingCombat(ct.player) then
 
-    -- pulse target engine
+    -- pulse target engine and remember target
     ct.TargetEngine(ct.enemys)
+    local TargetObj = GetObjectWithGUID(UnitGUID("target"))
 
     -- Call interrupt engine (only when current target is casting)
     if TargetObj ~= nil and UnitCastingInfo(TargetObj) ~= nil then
@@ -45,7 +45,7 @@ function ct.PaladinProtection()
     end
 
     -- Eye of Tyr (Use when 3 enemys are within 8 yards)
-    if ct.GetUnitCountInRadius(ct.enemys, 8) >= 3 and ct.CanCast(209202)
+    if getn(ct.GetUnitsInRadius(ct.enemys, 8)) >= 3 and ct.CanCast(209202)
     and ct.IsInRange(TargetObj, 8) then
       return ct.AddSpellToQueue(209202)
     end
@@ -76,7 +76,7 @@ function ct.PaladinProtection()
     end
 
     -- AOE ROTATION
-    if ct.GetUnitCountInRadius(ct.enemys, 8) >= 3 then
+    if getn(ct.GetUnitsInRadius(ct.enemys, 8)) >= 3 then
 
       -- Consecration (when not moving)
       if ct.UnitIsHostile(TargetObj) and not ct.UnitIsMoving(ct.player)
