@@ -152,9 +152,22 @@ function ct.PaladinHoly()
       end
 
       -- Holy Prism (Use on Enemys with at least 4 Players around them)
-      
+      if ct.CanCast(114165) then
+        for index, value in ipairs(ct.enemys) do
+          Enemy = ct.enemys[index][1]
+          if Enemy ~= nil and ct.CanCast(114165, Enemy) and ct.IsInLOS(Enemy)
+          and getn(ct.GetUnitsInRadius(Enemy, ct.friends, 15)) >= 4 then
+            return ct.AddSpellToQueue(114165, Enemy)
+          end
+        end
+      end
 
-      -- Beacon of Virtue
+      -- Beacon of Virtue TODO: add mana logic
+      if ct.CanCast(200025, LowestFriend) and ct.IsInLOS(LowestFriend)
+      and getn(ct.GetUnitsInRadius(LowestFriend, ct.friends, 30)) >= 3 then
+        return ct.AddSpellToQueue(200025, LowestFriend)
+      end
+
 
       -- Holy Light (Flash of Light for greater damage)
       if ct.PercentHealth(LowestFriend) <= ct.FlashOfLightThreshold then
