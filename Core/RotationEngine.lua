@@ -35,7 +35,7 @@ function ct.TauntEngine()
     local Unit = ct.enemys[index][1]
     local IsTanking = select(1, UnitDetailedThreatSituation(ct.player, Unit))
 
-    if UnitAffectingCombat(Unit) and not IsTanking and ct.IsInRange(Unit, 30)
+    if UnitAffectingCombat(Unit) and not IsTanking and ct.IsInRange(ct.player, Unit, 30)
     and ct.Taunt ~= nil then
       ct.Taunt(Unit)
     end
