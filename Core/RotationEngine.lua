@@ -54,6 +54,8 @@ function ct.InterruptEngine(unit)
   end
 end
 
+-- TODO: add function to predict incoming healing and absorbs on a unit
+
 -- Handles Disspelling
 function ct.DisspellEngine()
 end

@@ -45,8 +45,8 @@ end
 
 -- returns true if distance between player and given unit
 -- is lower or equal to given distance
-function ct.IsInRange(unit, distance)
-  return GetDistanceBetweenObjects(ct.player, unit) <= distance
+function ct.IsInRange(unit, otherUnit, distance)
+  return GetDistanceBetweenObjects(unit, otherUnit) <= distance
 end
 
 -- same as above but this one considers the boundingboxes and combat reach
@@ -201,23 +201,27 @@ function ct.PlayerIsCasting()
   end
 end
 
--- returns the number of units from the given table in the given range (to the player)
-function ct.GetUnitCountInRadius(table, radius)
-  local Count = 0
-  for i = 1, getn(table) do
-    if ct.IsInRange(table[i][1], radius) then
-      Count = Count + 1
-    end
-  end
-  return Count
-end
-
--- returns table containing units from the given table that are within the given radius
-function ct.GetUnitsInRadius(unitTable, radius)
+-- returns table containing units from the given table
+-- that are within the given radius of the given unit
+function ct.GetUnitsInRadius(unit, unitTable, radius)
   local Units = {}
   for index, value in ipairs(unitTable) do
-    Unit = unitTable[index][1]
-    if Unit ~= nil and ct.IsInRange(Unit, radius) then
+    OtherUnit = unitTable[index][1]
+    if OtherUnit ~= nil and ct.IsInRange(unit, OtherUnit, radius) then
+      table.insert(Units, OtherUnit)
+    end
+  end
+  return Units
+end
+
+-- returns table containing units from the given table
+-- that are within the given unit's given cone angle and distance
+function ct.GetUnitsInCone(unit, unitTable, angle, distance)
+  local Units = {}
+  for index, value in ipairs(unitTable) do
+    local OtherUnit = unitTable[index][1]
+    if OtherUnit ~= nil and ct.IsFacing(OtherUnit, angle)
+    and ct.IsInRange(unit, OtherUnit, distance) then
       table.insert(Units, Unit)
     end
   end

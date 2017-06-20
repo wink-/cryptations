@@ -19,7 +19,7 @@ function ct.GetUnitTables()
     Unit = GetObjectWithIndex(i)
     if ObjectExists(Unit) and ObjectIsType(Unit, ObjectTypes.Unit)
     and UnitHealth(Unit) > 1 -- exclude critters and dead units
-    and ct.IsInLOS(Unit) and ct.IsInRange(Unit, Distance) then
+    and ct.IsInLOS(Unit) and ct.IsInRange(ct.player, Unit, Distance) then
 
       -- distinguish between friend, enemy and npc
       if ct.UnitIsHostile(Unit) then
@@ -97,7 +97,7 @@ function ct.UpdateTables()
   for index, value in ipairs(ct.friends) do
     Unit = ct.friends[index][1]
       if not ObjectExists(Unit) or UnitHealth(Unit) <= 1
-      or not ct.IsInLOS(Unit) or not ct.IsInRange(Unit, Distance) then
+      or not ct.IsInLOS(Unit) or not ct.IsInRange(ct.player, Unit, Distance) then
         -- delete invalid unit
         table.remove(ct.friends, index)
       else
@@ -110,7 +110,7 @@ function ct.UpdateTables()
   for index, value in ipairs(ct.npcs) do
     Unit = ct.npcs[index][1]
       if not ObjectExists(Unit) or UnitHealth(Unit) <= 1
-      or not ct.IsInLOS(Unit) or not ct.IsInRange(Unit, Distance) then
+      or not ct.IsInLOS(Unit) or not ct.IsInRange(ct.player, Unit, Distance) then
         -- delete invalid unit
         table.remove(ct.npcs, index)
       else
@@ -123,7 +123,7 @@ function ct.UpdateTables()
   for index, value in ipairs(ct.enemys) do
     Unit = ct.enemys[index][1]
       if not ObjectExists(Unit) or UnitHealth(Unit) <= 1
-      or not ct.IsInLOS(Unit) or not ct.IsInRange(Unit, Distance) then
+      or not ct.IsInLOS(Unit) or not ct.IsInRange(ct.player, Unit, Distance) then
         -- delete invalid unit
         table.remove(ct.enemys, index)
       else
