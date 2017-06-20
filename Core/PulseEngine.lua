@@ -5,6 +5,10 @@ function Pulse(self, elapsed)
 
   while (self.TimeSinceLastUpdate > UpdateInterval) do
 
+    -- Ensure addon was started properly
+    if ct.player == nil then
+      ReloadUI()
+    end
     -- TODO: pulse engine delays for:
     -- when player left combat
     -- when player is looting

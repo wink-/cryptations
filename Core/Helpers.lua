@@ -43,7 +43,7 @@ function ct.IsInLOS(unit)
   return TraceLine(px, py, pz + 2, ux, uy, uz + 2, 0x10) == nil
 end
 
--- returns true if distance between player and given unit
+-- returns true if distance between unit and otherunit
 -- is lower or equal to given distance
 function ct.IsInRange(unit, otherUnit, distance)
   return GetDistanceBetweenObjects(unit, otherUnit) <= distance

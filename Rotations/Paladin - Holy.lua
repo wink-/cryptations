@@ -45,7 +45,7 @@ function ct.PaladinHoly()
 
     -- Tyr's Deliverance (Used when 30% of group are below 70% health)
     if ct.CanCast(200652) then
-      local UnitsInRadius = ct.GetUnitsInRadius(ct.friends, 15)
+      local UnitsInRadius = ct.GetUnitsInRadius(ct.player, ct.friends, 15)
       if GetNumGroupMembers() ~= 1
       and ct.GetUnitCountBelowHealth(UnitsInRadius, 70) >= math.floor(GetNumGroupMembers() * 0.3) then
         return ct.AddSpellToQueue(200652)
@@ -54,7 +54,8 @@ function ct.PaladinHoly()
 
     -- TANK HEALING --
     if MainTank ~= nil and MainTank == LowestFriend
-    and ct.PercentHealth(MainTank) <= ct.TankHealthThreshold then
+    and ct.PercentHealth(MainTank) <= ct.TankHealthThreshold
+    and not ct.GetUnitCountBelowHealth(ct.friends, ct.OtherHealthThreshold) >= math.floor(GetNumGroupMembers() * 0.2) then
       -- Beacon of Light (Cast on Main Tank if BOV is not Talented)
       if not IsSpellKnown(200025) and ct.CanCast(53563, MainTank)
       and not ct.UnitHasAura(MainTank, 53563) and ct.IsInLOS(MainTank) then
@@ -147,7 +148,7 @@ function ct.PaladinHoly()
       end
 
       -- Light of Dawn (Use when 2 Units are in the 45 degree cone)
-      if ct.CanCast(85222) and getn(ct.GetUnitsInCone(ct.friends, 45, 15)) >= 2 then
+      if ct.CanCast(85222) and getn(ct.GetUnitsInCone(ct.player, ct.friends, 45, 15)) >= 2 then
         return ct.AddSpellToQueue(85222)
       end
 
