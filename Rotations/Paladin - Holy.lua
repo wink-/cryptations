@@ -186,6 +186,11 @@ function ct.PaladinHoly()
   end
 end
 
+-- TODO: Disspell Spells are handled here
+function ct.PaladinHolyDisspell()
+end
+
+-- This sets up basic settings
 function ct.PaldinHolySetUp()
   -- Infusion of Light Settings
   ct.UseHolyLightOnInfusion           = true
