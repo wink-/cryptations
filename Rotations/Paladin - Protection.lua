@@ -70,8 +70,8 @@ function ct.PaladinProtection()
 
     -- Light of the Protector:
     -- use when below 50% health
-    -- TODO: prevent double casting
-    if ct.CanCast(184092) and UnitHealth(ct.player) <= MaxHealth * 0.5 then
+    if ct.CanCast(184092) and UnitHealth(ct.player) <= MaxHealth * 0.5
+    and (ct.GetPreviousSpell() ~= 184092 or ct.GetTimeSinceLastSpell() >= ct.CastDelay) then
       return ct.AddSpellToQueue(184092)
     end
 
