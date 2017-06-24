@@ -4,8 +4,6 @@ ct.enemys = {}      -- contains all enemy units (npc and player)
 
 local Distance = 100
 
--- TODO: rework the unit engine so that it is not called every tick but every second or so
-
 -- fills the units tables with appropriate units and their applied auras
 function ct.GetUnitTables()
   local ObjectCount     =  GetObjectCount()

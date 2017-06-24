@@ -147,8 +147,8 @@ function ct.PaladinHoly()
         return ct.AddSpellToQueue(20271, TargetObj)
       end
 
-      -- Light of Dawn (Use when 2 Units are in the 45 degree cone)
-      if ct.CanCast(85222) and getn(ct.GetUnitsInCone(ct.player, ct.friends, 45, 15)) >= 2 then
+      -- Light of Dawn (Use when 2 Units are in the cone)
+      if ct.CanCast(85222) and getn(ct.GetUnitsInCone(ct.player, ct.friends, ct.ConeAngle, 15)) >= 2 then
         return ct.AddSpellToQueue(85222)
       end
 

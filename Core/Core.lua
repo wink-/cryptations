@@ -1,9 +1,6 @@
 -- Global Table
 ct = {}
 
--- TODO: outsource taunt and interrupt logic into seperate functions
--- every rotation should then contain ct.ClassSpecTaunt or ct.ClassSpecInterrupt.
-
 -- GLOBAL SETTINGS
 
 -- Targeting behavior : Only one can be true
@@ -22,6 +19,7 @@ ct.InterruptMaxPercent      = 80
 -- Cast Logic Settings
 ct.CastDelay                = 100           -- The lower, the more delay will be between each spellcast
 ct.CastAngle                =  90           -- Facing angle for casted spells
+ct.ConeAngle                =  45           -- Facing angle for cone logic    
 
 function ct.StartUp()
   if FireHack ~= nil then

@@ -10,7 +10,6 @@ end
 
 -- several checks to determine whether or not a spell can be casted
 -- returns true if all checks pass
--- TODO: automatically figure out required power and power type
 function ct.CanCast(spell, unit, powerType, power)
   return select(1, GetSpellCooldown(spell) == 0) and (unit == nil or ct.IsInAttackRange(spell, unit))
   and IsSpellKnown(spell) and ((powerType == nil and power == nil) or UnitPower(ct.player, powerType) >= power)
