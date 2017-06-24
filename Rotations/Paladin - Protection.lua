@@ -12,16 +12,15 @@ function ct.PaladinProtection()
   ct.TauntEngine()
 
   -- combat rotation
+  -- TODO: add "engage out of combat" setting
   if UnitAffectingCombat(ct.player) then
 
     -- pulse target engine and remember target
     ct.TargetEngine(ct.enemys)
     local TargetObj = GetObjectWithGUID(UnitGUID("target"))
 
-    -- Call interrupt engine (only when current target is casting)
-    if TargetObj ~= nil and UnitCastingInfo(TargetObj) ~= nil then
-      ct.InterruptEngine(TargetObj)
-    end
+    -- call interrupt engine
+    ct.InterruptEngine()
 
     -- COOLDOWNS
     -- Guardian of the Ancient Kings (use when below 30%)
@@ -45,8 +44,8 @@ function ct.PaladinProtection()
     end
 
     -- Eye of Tyr (Use when 3 enemys are within 8 yards)
-    if getn(ct.GetUnitsInRadius(ct.enemys, 8)) >= 3 and ct.CanCast(209202)
-    and ct.IsInRange(TargetObj, 8) then
+    if getn(ct.GetUnitsInRadius(ct.player, ct.enemys, 8)) >= 3 and ct.CanCast(209202)
+    and ct.IsInRange(ct.player, TargetObj, 8) then
       return ct.AddSpellToQueue(209202)
     end
 
@@ -71,16 +70,16 @@ function ct.PaladinProtection()
     -- Light of the Protector:
     -- use when below 50% health
     if ct.CanCast(184092) and UnitHealth(ct.player) <= MaxHealth * 0.5
-    and (ct.GetPreviousSpell() ~= 184092 or ct.GetTimeSinceLastSpell() >= ct.CastDelay) then
+    and (ct.GetPreviousSpell() ~= 184092 or ct.GetTimeSinceLastSpell() >= 500) then
       return ct.AddSpellToQueue(184092)
     end
 
     -- AOE ROTATION
-    if getn(ct.GetUnitsInRadius(ct.enemys, 8)) >= 3 then
+    if getn(ct.GetUnitsInRadius(ct.player, ct.enemys, 8)) >= 3 then
 
       -- Consecration (when not moving)
       if ct.UnitIsHostile(TargetObj) and not ct.UnitIsMoving(ct.player)
-      and ct.CanCast(26573) and ct.IsInRange(TargetObj, 8) then
+      and ct.CanCast(26573) and ct.IsInRange(ct.player, TargetObj, 8) then
         return ct.AddSpellToQueue(26573)
       end
 
@@ -99,12 +98,12 @@ function ct.PaladinProtection()
       -- Blessed Hammer (or Hammer of the Righteous)
       if IsSpellKnown(204019) then
         if ct.UnitIsHostile(TargetObj) and ct.CanCast(204019)
-        and ct.IsInRange(TargetObj, 8) then
+        and ct.IsInRange(ct.player, TargetObj, 8) then
           return ct.AddSpellToQueue(204019)
         end
       elseif IsSpellKnown(53595) then
         if ct.UnitIsHostile(TargetObj) and ct.CanCast(53595)
-        and ct.IsInRange(TargetObj, 8) then
+        and ct.IsInRange(ct.player, TargetObj, 8) then
           return ct.AddSpellToQueue(53595)
         end
       end
@@ -120,7 +119,7 @@ function ct.PaladinProtection()
 
       -- Consecration (when not moving)
       if ct.UnitIsHostile(TargetObj) and not ct.UnitIsMoving(ct.player)
-      and ct.CanCast(26573) and ct.IsInRange(TargetObj, 8) then
+      and ct.CanCast(26573) and ct.IsInRange(ct.player, TargetObj, 8) then
         return ct.AddSpellToQueue(26573)
       end
 
@@ -134,7 +133,7 @@ function ct.PaladinProtection()
       -- use when fully charged
       if IsSpellKnown(204019) and ct.UnitIsHostile(TargetObj)
       and ct.CanCast(204019) and select(1, GetSpellCharges(204019)) == 3
-      and ct.IsInRange(TargetObj, 8) then
+      and ct.IsInRange(ct.player, TargetObj, 8) then
           return ct.AddSpellToQueue(204019)
       end
     end

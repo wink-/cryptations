@@ -34,12 +34,17 @@ function ct.TauntEngine()
   for index, value in ipairs(ct.enemys) do
     local Unit = ct.enemys[index][1]
     local MainTank, OffTank = ct.FindTanks()
-    local IsOtherTankTanking = select(1, UnitDetailedThreatSituation(MainTank, Unit)) ~= nil
-                               or select(1, UnitDetailedThreatSituation(OffTank, Unit)) ~= nil
+    local IsOtherTankTanking = nil
     local IsTanking = select(1, UnitDetailedThreatSituation(ct.player, Unit))
 
-    if UnitAffectingCombat(Unit) and not IsTanking and ct.IsInRange(ct.player, Unit, 30)
-    and ct.Taunt ~= nil and not IsOtherTankTanking then
+    if MainTank ~= nil then
+      IsOtherTankTanking = select(1, UnitDetailedThreatSituation(MainTank, Unit)) ~= nil
+    elseif OffTank ~= nil then
+      IsOtherTankTanking =select(1, UnitDetailedThreatSituation(OffTank, Unit)) ~= nil
+    end
+
+    if GetNumGroupMembers() > 1 and UnitAffectingCombat(Unit) and not IsTanking
+    and ct.IsInRange(ct.player, Unit, 30) and ct.Taunt ~= nil and not IsOtherTankTanking then
       ct.Taunt(Unit)
     end
   end
@@ -47,12 +52,17 @@ end
 
 -- Handles Interrupting
 -- this can currently only interrupt the current target
-function ct.InterruptEngine(unit)
-  if unit ~= nil and select(9, UnitCastingInfo(unit)) == false and ct.UnitIsHostile(unit) then
-    local PercentCasted = ct.CastedPercent(unit)
+-- TODO: add setting to interrupt any unit
+function ct.InterruptEngine()
+  local Unit = nil
+  if UnitGUID("target") == nil then
+    Unit = GetObjectWithGUID(UnitGUID("target"))
+  end
+  if Unit ~= nil and select(9, UnitCastingInfo(Unit)) == false and ct.UnitIsHostile(Unit) then
+    local PercentCasted = ct.CastedPercent(Unit)
     if ct.InterruptMinPercent < PercentCasted
     and PercentCasted < ct.InterruptMaxPercent and ct.Interrupt ~= nil then
-      ct.Interrupt(unit)
+      ct.Interrupt(Unit)
     end
   end
 end

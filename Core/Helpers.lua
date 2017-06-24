@@ -304,6 +304,7 @@ function ct.GetPreviousSpell()
     local TableLenght = getn(ct.SpellHistory)
     return ct.SpellHistory[TableLenght].spell
   end
+  return nil
 end
 
 -- returns the time in ms since the last spell was casted
@@ -312,4 +313,5 @@ function ct.GetTimeSinceLastSpell()
     local TableLenght = getn(ct.SpellHistory)
     return GetTime() - ct.SpellHistory[TableLenght].time
   end
+  return nil
 end
