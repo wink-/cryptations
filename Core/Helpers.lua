@@ -297,3 +297,19 @@ end
 function ct.PercentHealth(unit)
   return math.floor((UnitHealth(unit) / UnitHealthMax(unit)) * 100)
 end
+
+-- returns ID of the spell that was previously casted
+function ct.GetPreviousSpell()
+  if ct.SpellHistory ~= nil and getn(ct.SpellHistory) ~= 0 then
+    local TableLenght = getn(ct.SpellHistory)
+    return ct.SpellHistory[TableLenght].spell
+  end
+end
+
+-- returns the time in ms since the last spell was casted
+function ct.GetTimeSinceLastSpell()
+  if ct.SpellHistory ~= nil and getn(ct.SpellHistory) ~= 0 then
+    local TableLenght = getn(ct.SpellHistory)
+    return GetTime() - ct.SpellHistory[TableLenght].time
+  end
+end
