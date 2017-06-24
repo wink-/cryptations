@@ -144,8 +144,8 @@ end
 function ct.PaladinProtectionTaunt(unit)
 
   -- Hand of Reckoning
-  if ct.UnitIsHostile(unit) and ct.IsInLOS(unit)
-  and ct.CanCast(62124, unit) then
+  if ct.CanCast(62124, unit) and ct.UnitIsHostile(unit) and ct.IsInLOS(unit)
+  and (ct.GetPreviousSpell() ~= 62124 or ct.GetTimeSinceLastSpell() >= 500) then
     print("Taunted with Hand of Reckoning")
     return ct.AddSpellToQueue(62124, unit)
   end

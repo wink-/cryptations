@@ -29,8 +29,6 @@ function ct.PulseQueue()
     -- Cast Spell
     if (not ct.UnitIsMoving("player") or ct.CanCastWhileMoving(SpellID))
     and not ct.PlayerIsCasting() and (UnitGUID("target") ~= nil or SpecificTarget == true) then
-      CastSpellByID(SpellID, TargetUnit)
-
       -- maximum lenght of spell history is 10 entries
       if getn(ct.SpellHistory) > 10 then
         table.remove(ct.SpellHistory, 1)
@@ -39,6 +37,8 @@ function ct.PulseQueue()
       -- add spell to history like : SPELL; TARGET; TIME
       local Entry = {spell = SpellID, target = TargetUnit, time = GetTime()}
       table.insert(ct.SpellHistory, Entry)
+
+      return CastSpellByID(SpellID, TargetUnit)
     end
   end
 end
