@@ -29,14 +29,17 @@ function ct.TargetEngine(table)
 end
 
 -- Handles Taunting
--- TODO: recognize when unit is already tanked by another tank
+-- This does not handle taunting logic for encounters
 function ct.TauntEngine()
   for index, value in ipairs(ct.enemys) do
     local Unit = ct.enemys[index][1]
+    local MainTank, OffTank = ct.FindTanks()
+    local IsOtherTankTanking = select(1, UnitDetailedThreatSituation(MainTank, Unit)) ~= nil
+                               or select(1, UnitDetailedThreatSituation(OffTank, Unit)) ~= nil
     local IsTanking = select(1, UnitDetailedThreatSituation(ct.player, Unit))
 
     if UnitAffectingCombat(Unit) and not IsTanking and ct.IsInRange(ct.player, Unit, 30)
-    and ct.Taunt ~= nil then
+    and ct.Taunt ~= nil and not IsOtherTankTanking then
       ct.Taunt(Unit)
     end
   end
