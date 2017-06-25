@@ -34,6 +34,16 @@ function ct.StartUp()
       if event == "UNIT_SPELLCAST_SUCCEEDED" and arg1 == "player" then
         -- removes the spell from the Queue
         ct.DeQueueSpell(arg5)
+
+        -- Spell History
+        -- maximum lenght of spell history is 10 entries
+        if getn(ct.SpellHistory) > 10 then
+          table.remove(ct.SpellHistory, 1)
+        end
+
+        -- add spell to history like : SPELL; TARGET; TIME
+        local Entry = {spell = arg5, time = GetTime()}
+        table.insert(ct.SpellHistory, Entry)
       end
       if event == "PLAYER_REGEN_ENABLED" then
         -- player left any combat action (or the target died) so the queue will be cleaned up
