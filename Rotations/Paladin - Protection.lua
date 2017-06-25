@@ -144,6 +144,7 @@ end
 function ct.PaladinProtectionTaunt(unit)
 
   -- Hand of Reckoning
+  -- TODO: fix double casting
   if ct.CanCast(62124, unit) and ct.UnitIsHostile(unit) and ct.IsInLOS(unit)
   and (ct.GetPreviousSpell() ~= 62124 or ct.GetTimeSinceLastSpell() >= 500) then
     print("Taunted with Hand of Reckoning")
@@ -153,14 +154,12 @@ function ct.PaladinProtectionTaunt(unit)
   -- Avenger's Shield
   if ct.UnitIsHostile(unit) and ct.IsInLOS(unit)
   and ct.CanCast(31935, unit) and ct.IsFacing(unit, ct.CastAngle) then
-    print("Taunted with Avenger's Shield")
     return ct.AddSpellToQueue(31935, unit)
   end
 
   -- Judgment
   if ct.UnitIsHostile(unit) and ct.IsInLOS(unit)
   and ct.CanCast(20271, unit) and ct.IsFacing(unit, ct.CastAngle) then
-    print("Taunted with Judgment")
     return ct.AddSpellToQueue(20271, unit)
   end
 end

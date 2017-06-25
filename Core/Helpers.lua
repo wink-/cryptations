@@ -311,7 +311,7 @@ end
 function ct.GetTimeSinceLastSpell()
   if ct.SpellHistory ~= nil and getn(ct.SpellHistory) ~= 0 then
     local TableLenght = getn(ct.SpellHistory)
-    return GetTime() - ct.SpellHistory[TableLenght].time
+    return (GetTime() - ct.SpellHistory[TableLenght].time) * 1000
   end
   return nil
 end

@@ -57,7 +57,7 @@ end
 -- TODO: add setting to interrupt any unit
 function ct.InterruptEngine()
   local Unit = nil
-  if UnitGUID("target") == nil then
+  if UnitGUID("target") ~= nil then
     Unit = GetObjectWithGUID(UnitGUID("target"))
   end
   if Unit ~= nil and select(9, UnitCastingInfo(Unit)) == false and ct.UnitIsHostile(Unit) then
