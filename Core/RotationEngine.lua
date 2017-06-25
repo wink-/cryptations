@@ -12,20 +12,22 @@ end
 -- this handles all the targeting logic and it's called by the rotation functions
 -- table specifies from which table the target should be chosen (usually ct.enemys)
 function ct.TargetEngine(table)
-  -- re targeting logic
-  if UnitGUID("target") == nil then
-    if ct.ReTargetHighestUnit then
-      TargetUnit(ct.FindHighestUnit(table))
-    elseif ct.ReTargetLowestUnit then
-      TargetUnit(ct.FindLowestUnit(table))
-    elseif ct.ReTargetNearestUnit then
-      local NearestUnit = ct.FindNearestUnit(table)
-      if NearestUnit ~= nil then
-        TargetUnit(NearestUnit)
+  if UnitAffectingCombat("player") then
+    -- re targeting logic
+    if UnitGUID("target") == nil then
+      if ct.ReTargetHighestUnit then
+        TargetUnit(ct.FindHighestUnit(table))
+      elseif ct.ReTargetLowestUnit then
+        TargetUnit(ct.FindLowestUnit(table))
+      elseif ct.ReTargetNearestUnit then
+        local NearestUnit = ct.FindNearestUnit(table)
+        if NearestUnit ~= nil then
+          TargetUnit(NearestUnit)
+        end
       end
     end
+    StartAttack()
   end
-  StartAttack()
 end
 
 -- Handles Taunting

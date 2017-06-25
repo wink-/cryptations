@@ -12,8 +12,8 @@ function ct.PaladinProtection()
   ct.TauntEngine()
 
   -- combat rotation
-  -- TODO: add "engage out of combat" setting
-  if UnitAffectingCombat(ct.player) then
+  if UnitAffectingCombat(ct.player)
+  or (ct.AllowOutOfCombatRoutine and UnitGUID("target") ~= nil and ct.UnitIsHostile("target")) then
 
     -- pulse target engine and remember target
     ct.TargetEngine(ct.enemys)

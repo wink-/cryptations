@@ -15,7 +15,7 @@ function Pulse(self, elapsed)
 
     -- only pulse the queue when player is in combat or in a group
     -- EXPERIMENTAL
-    if UnitAffectingCombat("player") or IsInGroup() then
+    if UnitAffectingCombat("player") or IsInGroup() or ct.AllowOutOfCombatRoutine then
       ct.PulseQueue()
     end
 

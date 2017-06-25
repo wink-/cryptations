@@ -9,17 +9,18 @@ ct.ReTargetHighestUnit      = false
 ct.ReTargetLowestUnit       = false
 
 -- Combat behavior
-ct.AllowOutOfCombatRoutine  = false
+ct.AllowOutOfCombatRoutine  = true
 
 -- Interrupt behavior
 ct.EnableInterrupt          = true
+ct.InterruptAnyUnit         = true
 ct.InterruptMinPercent      = 20
 ct.InterruptMaxPercent      = 80
 
 -- Cast Logic Settings
 ct.CastDelay                = 100           -- The lower, the more delay will be between each spellcast
 ct.CastAngle                =  90           -- Facing angle for casted spells
-ct.ConeAngle                =  45           -- Facing angle for cone logic    
+ct.ConeAngle                =  45           -- Facing angle for cone logic
 
 function ct.StartUp()
   if FireHack ~= nil then
