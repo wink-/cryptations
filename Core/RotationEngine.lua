@@ -55,22 +55,34 @@ end
 
 -- Handles Interrupting
 -- this can currently only interrupt the current target
--- TODO: add setting to interrupt any unit
 function ct.InterruptEngine()
   local Unit = nil
-  if UnitGUID("target") ~= nil then
-    Unit = GetObjectWithGUID(UnitGUID("target"))
-  end
-  if Unit ~= nil and select(9, UnitCastingInfo(Unit)) == false and ct.UnitIsHostile(Unit) then
-    local PercentCasted = ct.CastedPercent(Unit)
-    if ct.InterruptMinPercent < PercentCasted
-    and PercentCasted < ct.InterruptMaxPercent and ct.Interrupt ~= nil then
-      ct.Interrupt(Unit)
+  -- interrupt any unit
+  if ct.InterruptAnyUnit then
+    for i = 0, getn(ct.enemys) do
+      Unit = ct.enemys[i][1]
+      if Unit ~= nil and select(9, UnitCastingInfo(Unit)) == false and ct.UnitIsHostile(Unit) then
+        local PercentCasted = ct.CastedPercent(Unit)
+        if ct.InterruptMinPercent < PercentCasted
+        and PercentCasted < ct.InterruptMaxPercent and ct.Interrupt ~= nil then
+          ct.Interrupt(Unit)
+        end
+      end
+    end
+    -- interrupt target
+  else
+    if UnitGUID("target") ~= nil then
+      Unit = GetObjectWithGUID(UnitGUID("target"))
+    end
+    if Unit ~= nil and select(9, UnitCastingInfo(Unit)) == false and ct.UnitIsHostile(Unit) then
+      local PercentCasted = ct.CastedPercent(Unit)
+      if ct.InterruptMinPercent < PercentCasted
+      and PercentCasted < ct.InterruptMaxPercent and ct.Interrupt ~= nil then
+        ct.Interrupt(Unit)
+      end
     end
   end
 end
-
--- TODO: add function to predict incoming healing and absorbs on a unit
 
 -- Handles Disspelling
 function ct.DisspellEngine()
