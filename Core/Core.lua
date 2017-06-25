@@ -16,7 +16,7 @@ ct.ReTargetHighestUnit      = false
 ct.ReTargetLowestUnit       = false
 
 -- Combat behavior
-ct.AllowOutOfCombatRoutine  = true
+ct.AllowOutOfCombatRoutine  = false
 
 -- Interrupt behavior
 ct.EnableInterrupt          = true

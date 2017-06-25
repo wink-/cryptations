@@ -182,7 +182,7 @@ function ct.PaladinProtectionInterrupt(unit)
   end
 
   -- Blinding Light
-  if ct.CanCast(115750) and ct.IsInLOS(unit) and ct.IsInRange(ct.player, unit 10) then
+  if ct.CanCast(115750) and ct.IsInLOS(unit) and ct.IsInRange(ct.player, unit, 10) then
     print("Interrupted with Blinding Light")
     return ct.AddSpellToQueue(115750)
   end
