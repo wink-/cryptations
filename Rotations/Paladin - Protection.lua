@@ -176,9 +176,22 @@ end
 function ct.PaladinProtectionInterrupt(unit)
 
   -- Rebuke
-  if ct.CanCast(96231, unit) then
+  if ct.CanCast(96231, unit) and ct.IsInLOS(unit) then
     print("Interrupted with Rebuke")
     return ct.AddSpellToQueue(96231)
+  end
+
+  -- Blinding Light
+  if ct.CanCast(115750) and ct.IsInLOS(unit) and ct.IsInRange(ct.player, unit 10) then
+    print("Interrupted with Blinding Light")
+    return ct.AddSpellToQueue(115750)
+  end
+
+  -- Hammer of Justice
+  if ct.CanCast(853, unit) and ct.IsInLOS(unit)
+  and UnitClassification(Unit) ~= "elite" and UnitClassification(Unit) ~= "worldboss" then
+    print("Interrupted with Hammer of Justice (Stun)")
+    return ct.AddSpellToQueue(853)
   end
 end
 
