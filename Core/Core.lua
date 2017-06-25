@@ -7,6 +7,7 @@ ct.Spelltarget              = nil           -- The unit on which a spell shall b
 ct.SpellUniqueIdentifier    = 0             -- Every spell will have this value (like a primary key in a database)
 ct.CurrentUniqueIdentifier  = nil           -- This is the primary key of the spell that is currently being casted
 ct.SpellIsInstant           = true
+ct.CurrentSpell             = nil
 
 -- GLOBAL SETTINGS
 
@@ -16,7 +17,7 @@ ct.ReTargetHighestUnit      = false
 ct.ReTargetLowestUnit       = false
 
 -- Combat behavior
-ct.AllowOutOfCombatRoutine  = false
+ct.AllowOutOfCombatRoutine  = true
 
 -- Interrupt behavior
 ct.EnableInterrupt          = true
@@ -38,20 +39,20 @@ function ct.StartUp()
     frame:RegisterEvent("PLAYER_REGEN_ENABLED")
     frame:RegisterEvent("UNIT_SPELLCAST_START")
     frame:RegisterEvent("UNIT_SPELLCAST_SENT")
-    frame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
     -- This handles the removing of spells from the spellqueue
+    -- TODO: fix user cast removing spells from queue
     local function spellDetectionHandler()
       -- for instant spells
       if ct.SpellIsInstant and ct.SpellQueue[1] ~= nil
       and ct.CurrentUniqueIdentifier == ct.SpellQueue[1].key then
-        ct.DeQueueSpell(ct.SpellQueue[1].spell)
+        ct.DeQueueSpell(ct.CurrentSpell)
       end
 
       -- for casted spells
       if not ct.IsCasting(ct.player) and ct.CastedPercent(ct.player) ~= nil
       and ct.SpellQueue[1] ~= nil and ct.CurrentUniqueIdentifier == ct.SpellQueue[1].key then
-        ct.DeQueueSpell(ct.SpellQueue[1].spell)
+        ct.DeQueueSpell(ct.CurrentSpell)
         -- Spell History
         -- maximum lenght of spell history is 10 entries
         if getn(ct.SpellHistory) > 10 then
@@ -77,6 +78,7 @@ function ct.StartUp()
       end
       if event == "UNIT_SPELLCAST_SENT" and arg1 == "player" and getn(ct.SpellQueue) ~= 0 then
         ct.CurrentUniqueIdentifier = ct.SpellQueue[1].key
+        ct.CurrentSpell = ct.GetSpellID(arg2)
       end
     end
 
