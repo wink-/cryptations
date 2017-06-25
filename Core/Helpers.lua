@@ -191,9 +191,9 @@ function ct.FindNearestUnit(table)
 end
 
 -- returns true if player is currently casting a spell
-function ct.PlayerIsCasting()
-  if select(6, UnitCastingInfo(ct.player)) == nil
-  or GetTime() * 1000 >= select(6, UnitCastingInfo(ct.player)) - ct.CastDelay then
+function ct.IsCasting(unit)
+  if select(6, UnitCastingInfo(unit)) == nil
+  or GetTime() * 1000 >= select(6, UnitCastingInfo(unit)) - ct.CastDelay then
     return false
   else
     return true
@@ -314,4 +314,7 @@ function ct.GetTimeSinceLastSpell()
     return (GetTime() - ct.SpellHistory[TableLenght].time) * 1000
   end
   return nil
+end
+
+function ct.SpellCastSucceeded()
 end

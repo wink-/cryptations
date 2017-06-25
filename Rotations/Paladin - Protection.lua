@@ -17,7 +17,7 @@ function ct.PaladinProtection()
 
     -- pulse target engine and remember target
     ct.TargetEngine(ct.enemys)
-    local TargetObj = GetObjectWithGUID(UnitGUID("target"))
+    ct.Target = GetObjectWithGUID(UnitGUID("target"))
 
     -- call interrupt engine
     ct.InterruptEngine()
@@ -45,7 +45,7 @@ function ct.PaladinProtection()
 
     -- Eye of Tyr (Use when 3 enemys are within 8 yards)
     if getn(ct.GetUnitsInRadius(ct.player, ct.enemys, 8)) >= 3 and ct.CanCast(209202)
-    and ct.IsInRange(ct.player, TargetObj, 8) then
+    and ct.IsInRange(ct.player, ct.Target, 8) then
       return ct.AddSpellToQueue(209202)
     end
 
@@ -58,8 +58,8 @@ function ct.PaladinProtection()
     -- use when not having the buff
     -- use when 3 charges
     -- keep one charge in reserve (use the reserve when below 40% health)
-    if ct.UnitIsHostile(TargetObj) and ct.CanCast(53600, TargetObj)
-    and not ct.UnitHasAura(53600) and ct.IsFacing(TargetObj, ct.CastAngle) then
+    if ct.UnitIsHostile(ct.Target) and ct.CanCast(53600, ct.Target)
+    and not ct.UnitHasAura(53600) and ct.IsFacing(ct.Target, ct.CastAngle) then
       if select(1, GetSpellCharges(53600)) > 1 then
         return ct.AddSpellToQueue(53600)
       elseif UnitHealth(ct.player) <= MaxHealth * 0.4 then
@@ -78,32 +78,32 @@ function ct.PaladinProtection()
     if getn(ct.GetUnitsInRadius(ct.player, ct.enemys, 8)) >= 3 then
 
       -- Consecration (when not moving)
-      if ct.UnitIsHostile(TargetObj) and not ct.UnitIsMoving(ct.player)
-      and ct.CanCast(26573) and ct.IsInRange(ct.player, TargetObj, 8) then
+      if ct.UnitIsHostile(ct.Target) and not ct.UnitIsMoving(ct.player)
+      and ct.CanCast(26573) and ct.IsInRange(ct.player, ct.Target, 8) then
         return ct.AddSpellToQueue(26573)
       end
 
       -- Avenger's Shield
-      if ct.UnitIsHostile(TargetObj) and ct.IsInLOS(TargetObj)
-      and ct.CanCast(31935, TargetObj) and ct.IsFacing(TargetObj, ct.CastAngle) then
+      if ct.UnitIsHostile(ct.Target) and ct.IsInLOS(ct.Target)
+      and ct.CanCast(31935, ct.Target) and ct.IsFacing(ct.Target, ct.CastAngle) then
         return ct.AddSpellToQueue(31935)
       end
 
       -- Judgment
-      if ct.UnitIsHostile(TargetObj) and ct.IsInLOS(TargetObj)
-      and ct.CanCast(20271, TargetObj) and ct.IsFacing(TargetObj, ct.CastAngle) then
+      if ct.UnitIsHostile(ct.Target) and ct.IsInLOS(ct.Target)
+      and ct.CanCast(20271, ct.Target) and ct.IsFacing(ct.Target, ct.CastAngle) then
         return ct.AddSpellToQueue(20271)
       end
 
       -- Blessed Hammer (or Hammer of the Righteous)
       if IsSpellKnown(204019) then
-        if ct.UnitIsHostile(TargetObj) and ct.CanCast(204019)
-        and ct.IsInRange(ct.player, TargetObj, 8) then
+        if ct.UnitIsHostile(ct.Target) and ct.CanCast(204019)
+        and ct.IsInRange(ct.player, ct.Target, 8) then
           return ct.AddSpellToQueue(204019)
         end
       elseif IsSpellKnown(53595) then
-        if ct.UnitIsHostile(TargetObj) and ct.CanCast(53595)
-        and ct.IsInRange(ct.player, TargetObj, 8) then
+        if ct.UnitIsHostile(ct.Target) and ct.CanCast(53595)
+        and ct.IsInRange(ct.player, ct.Target, 8) then
           return ct.AddSpellToQueue(53595)
         end
       end
@@ -112,28 +112,28 @@ function ct.PaladinProtection()
     else
 
       -- Judgement
-      if ct.UnitIsHostile(TargetObj) and ct.IsInLOS(TargetObj)
-      and ct.CanCast(20271, TargetObj) and ct.IsFacing(TargetObj, ct.CastAngle) then
+      if ct.UnitIsHostile(ct.Target) and ct.IsInLOS(ct.Target)
+      and ct.CanCast(20271, ct.Target) and ct.IsFacing(ct.Target, ct.CastAngle) then
         return ct.AddSpellToQueue(20271)
       end
 
       -- Consecration (when not moving)
-      if ct.UnitIsHostile(TargetObj) and not ct.UnitIsMoving(ct.player)
-      and ct.CanCast(26573) and ct.IsInRange(ct.player, TargetObj, 8) then
+      if ct.UnitIsHostile(ct.Target) and not ct.UnitIsMoving(ct.player)
+      and ct.CanCast(26573) and ct.IsInRange(ct.player, ct.Target, 8) then
         return ct.AddSpellToQueue(26573)
       end
 
       -- Avenger's Shield
-      if ct.UnitIsHostile(TargetObj) and ct.IsInLOS(TargetObj)
-      and ct.CanCast(31935, TargetObj) and ct.IsFacing(TargetObj, ct.CastAngle) then
+      if ct.UnitIsHostile(ct.Target) and ct.IsInLOS(ct.Target)
+      and ct.CanCast(31935, ct.Target) and ct.IsFacing(ct.Target, ct.CastAngle) then
         return ct.AddSpellToQueue(31935)
       end
 
       -- Blessed Hammer
       -- use when fully charged
-      if IsSpellKnown(204019) and ct.UnitIsHostile(TargetObj)
+      if IsSpellKnown(204019) and ct.UnitIsHostile(ct.Target)
       and ct.CanCast(204019) and select(1, GetSpellCharges(204019)) == 3
-      and ct.IsInRange(ct.player, TargetObj, 8) then
+      and ct.IsInRange(ct.player, ct.Target, 8) then
           return ct.AddSpellToQueue(204019)
       end
     end
@@ -144,7 +144,7 @@ end
 function ct.PaladinProtectionTaunt(unit)
 
   -- Hand of Reckoning
-  -- TODO: fix double casting
+  -- TODO: fix double casting i think the double casting is caused by how the taunt engine calls this
   if ct.CanCast(62124, unit) and ct.UnitIsHostile(unit) and ct.IsInLOS(unit)
   and (ct.GetPreviousSpell() ~= 62124 or ct.GetTimeSinceLastSpell() >= 500) then
     print("Taunted with Hand of Reckoning")

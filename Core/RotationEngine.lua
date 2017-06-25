@@ -33,17 +33,18 @@ end
 -- Handles Taunting
 -- This does not handle taunting logic for encounters
 function ct.TauntEngine()
+  local MainTank, OffTank = ct.FindTanks()
+  local IsOtherTankTanking = nil
+  local IsTanking = select(1, UnitDetailedThreatSituation(ct.player, Unit))
+
+  if MainTank ~= nil then
+    IsOtherTankTanking = select(1, UnitDetailedThreatSituation(MainTank, Unit)) ~= nil
+  elseif OffTank ~= nil then
+    IsOtherTankTanking =select(1, UnitDetailedThreatSituation(OffTank, Unit)) ~= nil
+  end
+
   for index, value in ipairs(ct.enemys) do
     local Unit = ct.enemys[index][1]
-    local MainTank, OffTank = ct.FindTanks()
-    local IsOtherTankTanking = nil
-    local IsTanking = select(1, UnitDetailedThreatSituation(ct.player, Unit))
-
-    if MainTank ~= nil then
-      IsOtherTankTanking = select(1, UnitDetailedThreatSituation(MainTank, Unit)) ~= nil
-    elseif OffTank ~= nil then
-      IsOtherTankTanking =select(1, UnitDetailedThreatSituation(OffTank, Unit)) ~= nil
-    end
 
     if GetNumGroupMembers() > 1 and UnitAffectingCombat(Unit) and not IsTanking
     and ct.IsInRange(ct.player, Unit, 30) and ct.Taunt ~= nil and not IsOtherTankTanking then

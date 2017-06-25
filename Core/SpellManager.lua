@@ -4,32 +4,43 @@ ct.SpellHistory = {}
 -- pulses the SpellQueue and tries to cast from it
 -- spells will be casted on the current target by default
 
+-- TODO: fix spells double casting becasuse they were not removed quick enough
 function ct.PulseQueue()
 
   -- pulse appropriate rotation if spellQueue is empty
   if getn(ct.SpellQueue) == 0 then
     ct.PulseRotation()
-  end
-
-  for i = 1, getn(ct.SpellQueue) do
+  elseif getn(ct.SpellQueue) ~= 0 then
     local SpellID = nil
-    local TargetUnit = "target"
-    local SpecificTarget = false
+    ct.SpellTarget = "target"
 
     -- if the entry contains a target, cast the spell on it (if it exists)
-    if ct.SpellQueue[i].unit ~= nil
-    and ObjectExists(ct.SpellQueue[i].unit)
-    and not UnitIsDeadOrGhost(ct.SpellQueue[i].unit) then
-      TargetUnit = ct.SpellQueue[i].unit
-      SpecificTarget = true
+    if ct.SpellQueue[1].unit ~= nil
+    and ObjectExists(ct.SpellQueue[1].unit)
+    and not UnitIsDeadOrGhost(ct.SpellQueue[1].unit) then
+      ct.SpellTarget = ct.SpellQueue[1].unit
     end
 
     -- only cast the spell if a specific target was given or if the player has a target
-    SpellID = ct.SpellQueue[i].spell
+    SpellID = ct.SpellQueue[1].spell
     -- Cast Spell
-    if (not ct.UnitIsMoving("player") or ct.CanCastWhileMoving(SpellID))
-    and not ct.PlayerIsCasting() and (UnitGUID("target") ~= nil or SpecificTarget == true) then
-      CastSpellByID(SpellID, TargetUnit)
+    if (not ct.UnitIsMoving(ct.player) or ct.CanCastWhileMoving(SpellID))
+    and not ct.IsCasting(ct.player) and UnitGUID(ct.SpellTarget) ~= nil then
+      -- try to cast spell
+      CastSpellByID(SpellID, ct.SpellTarget)
+
+      -- remove the spell from the Queue
+      ct.DeQueueSpell(SpellID)
+
+      -- Spell History
+      -- maximum lenght of spell history is 10 entries
+      if getn(ct.SpellHistory) > 10 then
+        table.remove(ct.SpellHistory, 1)
+      end
+
+      -- add spell to history like : SPELL; TARGET; TIME
+      local Entry = {spell = arg5, time = GetTime()}
+      table.insert(ct.SpellHistory, Entry)
     end
   end
 end
