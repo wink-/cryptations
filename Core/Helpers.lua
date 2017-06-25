@@ -138,7 +138,8 @@ function ct.FindUnitsWithAura(auraID)
 end
 
 -- return the unit with the most health percentage out of the given table
-function ct.FindHighestUnit(table)
+-- onlyCombat is a optional boolean value
+function ct.FindHighestUnit(table, onlyCombat)
   local Highest = nil
 
   if getn(table) == 0 then
@@ -147,7 +148,8 @@ function ct.FindHighestUnit(table)
 
   for index, value in ipairs(table) do
     local Unit = table[index][1]
-    if Highest == nil or ct.PercentHealth(Unit) > ct.PercentHealth(Highest) then
+    if Highest == nil or (ct.PercentHealth(Unit) > ct.PercentHealth(Highest)
+    and (onlyCombat == nil or onlyCombat == false or UnitAffectingCombat(Unit))) then
       Highest = Unit
     end
   end
@@ -156,7 +158,8 @@ end
 
 -- return the unit with the least health percentage out of the given table
 -- ignores dead units
-function ct.FindLowestUnit(table)
+-- onlyCombat is a optional boolean value
+function ct.FindLowestUnit(table, onlyCombat)
   local Lowest = nil
 
   if getn(table) == 0 then
@@ -165,7 +168,8 @@ function ct.FindLowestUnit(table)
 
   for index, value in ipairs(table) do
     local Unit = table[index][1]
-    if Lowest == nil or (ct.PercentHealth(Unit) < ct.PercentHealth(Lowest) and UnitHealth(Unit) ~= 0) then
+    if Lowest == nil or ((ct.PercentHealth(Unit) < ct.PercentHealth(Lowest)
+    and UnitHealth(Unit) ~= 0) and (onlyCombat == nil or onlyCombat == false or UnitAffectingCombat(Unit))) then
       Lowest = Unit
     end
   end
@@ -174,7 +178,8 @@ end
 
 -- return the unit from the given table which is closest to the player
 -- ignores dead units
-function ct.FindNearestUnit(table)
+-- onlyCombat is a optional boolean value
+function ct.FindNearestUnit(table, onlyCombat)
   local Nearest = nil
 
   if getn(table) == 0 then
@@ -182,9 +187,11 @@ function ct.FindNearestUnit(table)
   end
 
   for index, value in ipairs(table) do
+    local Unit = table[index][1]
     if Nearest == nil
-    or GetDistanceBetweenObjects(ct.player, table[index][1]) < GetDistanceBetweenObjects(ct.player, Nearest) then
-      Nearest = table[index][1]
+    or (GetDistanceBetweenObjects(ct.player, table[index][1]) < GetDistanceBetweenObjects(ct.player, Nearest)
+    and (onlyCombat == nil or onlyCombat == false or UnitAffectingCombat(Unit))) then
+      Nearest = Unit
     end
   end
   return Nearest

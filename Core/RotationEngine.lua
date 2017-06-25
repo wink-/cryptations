@@ -16,11 +16,11 @@ function ct.TargetEngine(table)
     -- re targeting logic
     if UnitGUID("target") == nil then
       if ct.ReTargetHighestUnit then
-        TargetUnit(ct.FindHighestUnit(table))
+        TargetUnit(ct.FindHighestUnit(table, true))
       elseif ct.ReTargetLowestUnit then
-        TargetUnit(ct.FindLowestUnit(table))
+        TargetUnit(ct.FindLowestUnit(table, true))
       elseif ct.ReTargetNearestUnit then
-        local NearestUnit = ct.FindNearestUnit(table)
+        local NearestUnit = ct.FindNearestUnit(table, true)
         if NearestUnit ~= nil then
           TargetUnit(NearestUnit)
         end
@@ -35,20 +35,20 @@ end
 function ct.TauntEngine()
   local MainTank, OffTank = ct.FindTanks()
   local IsOtherTankTanking = nil
-  local IsTanking = select(1, UnitDetailedThreatSituation(ct.player, Unit))
-
-  if MainTank ~= nil then
-    IsOtherTankTanking = select(1, UnitDetailedThreatSituation(MainTank, Unit)) ~= nil
-  elseif OffTank ~= nil then
-    IsOtherTankTanking =select(1, UnitDetailedThreatSituation(OffTank, Unit)) ~= nil
-  end
 
   for index, value in ipairs(ct.enemys) do
     local Unit = ct.enemys[index][1]
+    local IsTanking = select(1, UnitDetailedThreatSituation(ct.player, Unit))
+
+    if MainTank ~= nil then
+      IsOtherTankTanking = select(1, UnitDetailedThreatSituation(MainTank, Unit)) ~= nil
+    elseif OffTank ~= nil then
+      IsOtherTankTanking = select(1, UnitDetailedThreatSituation(OffTank, Unit)) ~= nil
+    end
 
     if GetNumGroupMembers() > 1 and UnitAffectingCombat(Unit) and not IsTanking
     and ct.IsInRange(ct.player, Unit, 30) and ct.Taunt ~= nil and not IsOtherTankTanking then
-      ct.Taunt(Unit)
+      return ct.Taunt(Unit)
     end
   end
 end

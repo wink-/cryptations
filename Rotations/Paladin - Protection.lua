@@ -23,6 +23,11 @@ function ct.PaladinProtection()
     ct.InterruptEngine()
 
     -- COOLDOWNS
+    -- Avenging Wrath (Use on Cooldown)
+    if ct.CanCast(31884) then
+      return ct.AddSpellToQueue(31884)
+    end
+
     -- Guardian of the Ancient Kings (use when below 30%)
     if ct.CanCast(86659) and UnitHealth(ct.player) <= MaxHealth * 0.3 then
       return ct.AddSpellToQueue(86659)
@@ -30,7 +35,7 @@ function ct.PaladinProtection()
 
     -- Ardent Defender (use when below 20%)
     if ct.CanCast(31850) and UnitHealth(ct.player) <= MaxHealth * 0.2 then
-      return ct.AddSpellToQueue(31850)
+      return ct.AddSpellToQueue(31850, ct.player)
     end
 
     -- Lay on Hands (use when player or lowest raid member is below 15%)
@@ -44,8 +49,7 @@ function ct.PaladinProtection()
     end
 
     -- Eye of Tyr (Use when 3 enemys are within 8 yards)
-    if getn(ct.GetUnitsInRadius(ct.player, ct.enemys, 8)) >= 3 and ct.CanCast(209202)
-    and ct.IsInRange(ct.player, ct.Target, 8) then
+    if getn(ct.GetUnitsInRadius(ct.player, ct.enemys, 8)) >= 3 and ct.CanCast(209202) then
       return ct.AddSpellToQueue(209202)
     end
 
@@ -72,6 +76,12 @@ function ct.PaladinProtection()
     if ct.CanCast(184092) and UnitHealth(ct.player) <= MaxHealth * 0.5
     and (ct.GetPreviousSpell() ~= 184092 or ct.GetTimeSinceLastSpell() >= 500) then
       return ct.AddSpellToQueue(184092)
+    end
+
+    -- Flash of Light (use when below 30% health)
+    if ct.CanCast(19750, ct.player) and UnitHealth(ct.player) <= MaxHealth * 0.3
+    and not ct.UnitIsMoving(ct.player) then
+      return ct.AddSpellToQueue(19750, ct.player)
     end
 
     -- AOE ROTATION
@@ -144,10 +154,8 @@ end
 function ct.PaladinProtectionTaunt(unit)
 
   -- Hand of Reckoning
-  -- TODO: fix double casting i think the double casting is caused by how the taunt engine calls this
   if ct.CanCast(62124, unit) and ct.UnitIsHostile(unit) and ct.IsInLOS(unit)
-  and (ct.GetPreviousSpell() ~= 62124 or ct.GetTimeSinceLastSpell() >= 500) then
-    print("Taunted with Hand of Reckoning")
+  and ct.IsInRange(ct.player, unit, 25) then
     return ct.AddSpellToQueue(62124, unit)
   end
 
