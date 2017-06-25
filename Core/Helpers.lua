@@ -316,5 +316,7 @@ function ct.GetTimeSinceLastSpell()
   return nil
 end
 
-function ct.SpellCastSucceeded()
+-- returns the spell id of the given spell name
+function ct.GetSpellID(name)
+  return select(7, GetSpellInfo(name))
 end
