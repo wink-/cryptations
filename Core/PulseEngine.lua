@@ -19,7 +19,6 @@ function Pulse(self, elapsed)
       ct.PulseQueue()
     end
 
-
     self.TimeSinceLastUpdate = self.TimeSinceLastUpdate - UpdateInterval;
   end
 end
