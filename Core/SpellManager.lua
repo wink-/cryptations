@@ -1,10 +1,9 @@
 ct.SpellQueue = {}
 ct.SpellHistory = {}
 
--- pulses the SpellQueue and tries to cast from it
--- spells will be casted on the current target by default
-
--- TODO: fix spells double casting becasuse they were not removed quick enough
+-- The Spell Queue does only contain casted or channeled spells
+-- However, the PulseQueue function also pulses the Rotation file (which also contains instant casts)
+-- Unless there is some real necessity Instant casts shall always be casted by the rotation file (with CastSpellByID)
 function ct.PulseQueue()
 
   -- pulse appropriate rotation if spellQueue is empty
@@ -25,6 +24,11 @@ function ct.PulseQueue()
     if (not ct.UnitIsMoving(ct.player) or ct.CanCastWhileMoving(SpellID))
     and not ct.IsCasting(ct.player) and UnitGUID(ct.SpellTarget) ~= nil then
       CastSpellByID(SpellID, ct.SpellTarget)
+
+      -- instantly remove the spell if it is an instant cast
+      if select(4, GetSpellInfo(SpellID)) == 0 then
+        ct.DeQueueSpell(SpellID)
+      end
     end
   end
 end
