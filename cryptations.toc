@@ -14,8 +14,6 @@ Tables\Auras.lua
 Tables\Spells.lua
 
 # Rotations
-Rotations\Rogue - Assasination.lua
-Rotations\Mage - Frost.lua
 Rotations\Paladin - Protection.lua
 Rotations\Paladin - Holy.lua
 

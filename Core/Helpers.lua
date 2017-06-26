@@ -330,14 +330,17 @@ end
 -- returns the number of units that are below the given health threshold
 -- mode : friendly or hostile
 -- onlyCombat (optional) : true or false
-function ct.GetUnitCountBelowHealth(healthPercent, mode, onlyCombat)
+-- unit (optional) : needed for range
+-- range (optional) : the range which shall be scanned for units
+function ct.GetUnitCountBelowHealth(healthPercent, mode, onlyCombat, unit, range)
   local Count = 0
   local ObjectCount = GetObjectCount()
   local Object = nil
   for i = 1, ObjectCount do
     Object = GetObjectWithIndex(i)
     if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
-    and ct.PercentHealth(Object) < healthPercent then
+    and ct.PercentHealth(Object) < healthPercent
+    and ((range == nil and unit == nil) or ct.IsInRange(unit, Object, range)) then
       if mode == "friendly" and ((not ct.UnitIsHostile(Object) and UnitIsPlayer(Object))
       or (UnitInParty(Object) or UnitInRaid(Object)))
       and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then

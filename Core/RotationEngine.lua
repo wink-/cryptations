@@ -107,7 +107,7 @@ function ct.SetUpRotationEngine()
     elseif GetSpecialization() == 3 then           message("This class/spec is not yet supported.")
     end
   elseif select(3, UnitClass("player")) ==  4 then
-    if     GetSpecialization() == 1 then           ct.Spec = ct.RogueAssasination
+    if     GetSpecialization() == 1 then           message("This class/spec is not yet supported.")
     elseif GetSpecialization() == 2 then           message("This class/spec is not yet supported.")
     elseif GetSpecialization() == 3 then           message("This class/spec is not yet supported.")
     end
@@ -129,7 +129,7 @@ function ct.SetUpRotationEngine()
   elseif select(3, UnitClass("player")) ==  8 then
     if     GetSpecialization() == 1 then           message("This class/spec is not yet supported.")
     elseif GetSpecialization() == 2 then           message("This class/spec is not yet supported.")
-    elseif GetSpecialization() == 3 then           ct.Spec = ct.MageFrost
+    elseif GetSpecialization() == 3 then           message("This class/spec is not yet supported.")
     end
   elseif select(3, UnitClass("player")) ==  9 then
     if     GetSpecialization() == 1 then           message("This class/spec is not yet supported.")
