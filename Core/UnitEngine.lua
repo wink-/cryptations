@@ -1,5 +1,4 @@
 ct.friends = {}     -- contains all friendly players
-ct.npcs = {}        -- contains all friendly non - players
 ct.enemys = {}      -- contains all enemy units (npc and player)
 
 local Distance = 100
@@ -63,27 +62,6 @@ function ct.GetUnitTables()
           FriendIndex = FriendIndex + 1
         end
         AlreadyInTable = false
-      else
-        -- NPCS --
-        -- check if not already in table
-        for index, value in ipairs(ct.npcs) do
-          if ct.npcs[index][1] == Unit then
-            AlreadyInTable = true
-            break
-          end
-        end
-
-        if not AlreadyInTable then
-          -- add all friendly player units to the enemy table
-          ct.npcs[NpcIndex] = {}
-          ct.npcs[NpcIndex][1] = Unit
-
-          -- add the units auras to the table
-          ct.npcs[NpcIndex][2] = ct.GetUnitAuras(Unit)
-
-          NpcIndex = NpcIndex + 1
-        end
-        AlreadyInTable = false
       end
     end
   end
@@ -101,19 +79,6 @@ function ct.UpdateTables()
       else
         -- update unit auras
         ct.friends[index][2] = ct.GetUnitAuras(Unit)
-      end
-  end
-
-  -- update ct.npcs
-  for index, value in ipairs(ct.npcs) do
-    Unit = ct.npcs[index][1]
-      if not ObjectExists(Unit) or UnitHealth(Unit) <= 1
-      or not ct.IsInLOS(Unit) or not ct.IsInRange(ct.player, Unit, Distance) then
-        -- delete invalid unit
-        table.remove(ct.npcs, index)
-      else
-        -- update unit auras
-        ct.npcs[index][2] = ct.GetUnitAuras(Unit)
       end
   end
 

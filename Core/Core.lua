@@ -36,6 +36,7 @@ function ct.StartUp()
 
   frame:RegisterEvent("PLAYER_REGEN_ENABLED")
   frame:RegisterEvent("UNIT_SPELLCAST_START")
+  frame:RegisterEvent("UNIT_AURA")
 
   -- This handles the removing of casted spells from the spellqueue
   local function spellDetectionHandler()
@@ -62,6 +63,11 @@ function ct.StartUp()
     if event == "PLAYER_REGEN_ENABLED" then
       -- player left any combat action so the queue will be cleaned up
       ct.CleanUpQueue()
+    end
+    if event == "UNIT_AURA" and FireHack ~= nil and ct.player ~= nil then
+      -- Potential fix for performance issues connected to the UnitEngine
+      ct.GetUnitTables()
+      ct.UpdateTables()
     end
   end
 
