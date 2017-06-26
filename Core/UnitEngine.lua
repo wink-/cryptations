@@ -3,6 +3,8 @@ ct.enemys = {}      -- contains all enemy units (npc and player)
 
 local Distance = 100
 
+-- TODO: improve performance
+
 -- fills the units tables with appropriate units and their applied auras
 function ct.GetUnitTables()
   local ObjectCount     =  GetObjectCount()

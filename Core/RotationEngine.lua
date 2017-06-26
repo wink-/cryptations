@@ -1,6 +1,8 @@
 -- this should be straightforward
 function ct.PulseRotation()
   if ct.Spec ~= nil then
+    ct.GetUnitTables()
+    ct.UpdateTables()
     ct.Spec()
   end
 end

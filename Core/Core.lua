@@ -10,6 +10,10 @@ ct.CurrentSpell             = nil
 
 -- GLOBAL SETTINGS
 
+-- Update Values
+ct.UpdateInterval           = 0.1           -- Update interval for the rotation
+ct.UnitUpdateInterval       =   1           -- Update interval for the unit engine
+
 -- Targeting behavior : Only one can be true
 ct.ReTargetNearestUnit      = true
 ct.ReTargetHighestUnit      = false
@@ -63,11 +67,6 @@ function ct.StartUp()
     if event == "PLAYER_REGEN_ENABLED" then
       -- player left any combat action so the queue will be cleaned up
       ct.CleanUpQueue()
-    end
-    if event == "UNIT_AURA" and FireHack ~= nil and ct.player ~= nil then
-      -- Potential fix for performance issues connected to the UnitEngine
-      ct.GetUnitTables()
-      ct.UpdateTables()
     end
   end
 
