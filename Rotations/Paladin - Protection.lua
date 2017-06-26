@@ -156,7 +156,6 @@ function ct.PaladinProtectionTaunt(unit)
   -- Hand of Reckoning
   if ct.CanCast(62124, unit) and ct.UnitIsHostile(unit) and ct.IsInLOS(unit) then
     -- Here it is necessary to let the queue cast the spell
-    print("Taunting with Hand of Reckoning")
     return ct.AddSpellToQueue(62124, unit)
   end
 
