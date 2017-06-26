@@ -52,7 +52,7 @@ end
 -- returns true if distance between unit and otherunit
 -- is lower or equal to given distance
 function ct.IsInRange(unit, otherUnit, distance)
-  if unit == nil then
+  if unit == nil or otherUnit == nil then
     return nil
   end
 
@@ -144,81 +144,95 @@ function ct.GetAuraCount(unit)
   return AuraCount
 end
 
--- returns table containing every unit in ct.units that has the given aura
+-- returns table containing every unit that has the given aura
 function ct.FindUnitsWithAura(auraID)
-  local UnitsWithAura = {}
-  local UnitIndex = 1
-  for i = 1, table.getn(ct.units) do
-    for j = 1, ct.GetAuraCount(ct.units[i][1]) do
-      if ct.units[i][2][j] == auraID then
-        UnitsWithAura[UnitIndex] = ct.units[i][1]
-        UnitIndex = UnitIndex + 1
-      end
+  local ObjectCount = GetObjectCount ()
+  local Object = nil
+  local Units = {}
+  for i = 1, ObjectCount do
+    Object = GetObjectWithIndex(i)
+    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    and ct.UnitHasAura(Object, auraID) then
+      table.insert(Units, Object)
     end
   end
-
-  if table.getn(UnitsWithAura) ~= 0 then
-    return UnitsWithAura
-  else
-    return nil
-  end
+  return Units
 end
 
--- return the unit with the most health percentage out of the given table
--- onlyCombat is a optional boolean value
-function ct.FindHighestUnit(table, onlyCombat)
+-- return the unit with the most health percentage
+-- mode : friendly or hostile
+-- onlyCombat (optional) : true or false
+function ct.FindHighestUnit(mode, onlyCombat)
   local Highest = nil
-
-  if getn(table) == 0 then
-    return nil
-  end
-
-  for index, value in ipairs(table) do
-    local Unit = table[index][1]
-    if Highest == nil or (ct.PercentHealth(Unit) > ct.PercentHealth(Highest)
-    and (onlyCombat == nil or onlyCombat == false or UnitAffectingCombat(Unit))) then
-      Highest = Unit
+  local ObjectCount = GetObjectCount()
+  local Object = nil
+  for i = 1, ObjectCount do
+    Object = GetObjectWithIndex(i)
+    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    and (Highest == nil or ct.PercentHealth(Object) > ct.PercentHealth(Highest)) then
+      if mode == "friendly" and ((not ct.UnitIsHostile(Object) and UnitIsPlayer(Object))
+      or (UnitInParty(Object) or UnitInRaid(Object)))
+      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+        Highest = Object
+      elseif mode == "hostile" and ct.UnitIsHostile(Object)
+      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+        Highest = Object
+      end
     end
   end
   return Highest
 end
 
--- return the unit with the least health percentage out of the given table
--- ignores dead units
--- onlyCombat is a optional boolean value
-function ct.FindLowestUnit(table, onlyCombat)
+-- return the unit with the least health percentage
+-- mode : friendly or hostile
+-- onlyCombat (optional) : true or false
+function ct.FindLowestUnit(mode, onlyCombat)
   local Lowest = nil
-
-  if getn(table) == 0 then
-    return nil
-  end
-
-  for index, value in ipairs(table) do
-    local Unit = table[index][1]
-    if Lowest == nil or ((ct.PercentHealth(Unit) < ct.PercentHealth(Lowest)
-    and UnitHealth(Unit) ~= 0) and (onlyCombat == nil or onlyCombat == false or UnitAffectingCombat(Unit))) then
-      Lowest = Unit
+  local ObjectCount = GetObjectCount()
+  local Object = nil
+  for i = 1, ObjectCount do
+    Object = GetObjectWithIndex(i)
+    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    and (Lowest == nil or ct.PercentHealth(Object) < ct.PercentHealth(Lowest))
+    and UnitHealth(Object) > 1 then
+      if mode == "friendly" and ((not ct.UnitIsHostile(Object) and UnitIsPlayer(Object))
+      or (UnitInParty(Object) or UnitInRaid(Object)))
+      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+        Lowest = Object
+      elseif mode == "hostile" and ct.UnitIsHostile(Object)
+      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+        Lowest = Object
+      end
     end
   end
   return Lowest
 end
 
--- return the unit from the given table which is closest to the player
+-- return the unit which is closest to the given unit
 -- ignores dead units
--- onlyCombat is a optional boolean value
-function ct.FindNearestUnit(table, onlyCombat)
-  local Nearest = nil
-
-  if getn(table) == 0 then
+-- mode : friendly or hostile
+-- onlyCombat (optional) : true or false
+function ct.FindNearestUnit(otherUnit, mode, onlyCombat)
+  if otherUnit == nil then
     return nil
   end
 
-  for index, value in ipairs(table) do
-    local Unit = table[index][1]
-    if Nearest == nil
-    or (GetDistanceBetweenObjects(ct.player, table[index][1]) < GetDistanceBetweenObjects(ct.player, Nearest)
-    and (onlyCombat == nil or onlyCombat == false or UnitAffectingCombat(Unit)) and UnitHealth(Unit) ~= 0) then
-      Nearest = Unit
+  local Nearest = nil
+  local ObjectCount = GetObjectCount()
+  local Object = nil
+  for i = 1, ObjectCount do
+    Object = GetObjectWithIndex(i)
+    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    and (Nearest == nil or GetDistanceBetweenObjects(otherUnit, Object) < GetDistanceBetweenObjects(otherUnit, Nearest))
+    and UnitHealth(Object) > 1 and Object ~= ct.player then
+      if mode == "friendly" and ((not ct.UnitIsHostile(Object) and UnitIsPlayer(Object))
+      or (UnitInParty(Object) or UnitInRaid(Object)))
+      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+        Nearest = Object
+      elseif mode == "hostile" and ct.UnitIsHostile(Object)
+      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+        Nearest = Object
+      end
     end
   end
   return Nearest
@@ -237,36 +251,61 @@ function ct.IsCasting(unit)
   end
 end
 
--- returns table containing units from the given table
--- that are within the given radius of the given unit
-function ct.GetUnitsInRadius(unit, unitTable, radius)
-  if unit == nil then
+-- returns table containing units that are within the given radius of the given unit
+-- ignores dead units
+-- mode : friendly or hostile
+-- onlyCombat (optional) : true or false
+function ct.GetUnitsInRadius(otherUnit, radius, mode, onlyCombat)
+  if otherUnit == nil then
     return nil
   end
 
+  local ObjectCount = GetObjectCount()
+  local Object = nil
   local Units = {}
-  for index, value in ipairs(unitTable) do
-    OtherUnit = unitTable[index][1]
-    if OtherUnit ~= nil and ct.IsInRange(unit, OtherUnit, radius) then
-      table.insert(Units, OtherUnit)
+  for i = 1, ObjectCount do
+    Object = GetObjectWithIndex(i)
+    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    and ct.IsInRange(otherUnit, Object, radius)
+    and UnitHealth(Object) > 1 then
+      if mode == "friendly" and ((not ct.UnitIsHostile(Object) and UnitIsPlayer(Object))
+      or (UnitInParty(Object) or UnitInRaid(Object)))
+      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+        table.insert(Units, Object)
+      elseif mode == "hostile" and ct.UnitIsHostile(Object)
+      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+        table.insert(Units, Object)
+      end
     end
   end
   return Units
 end
 
--- returns table containing units from the given table
--- that are within the given unit's given cone angle and distance
-function ct.GetUnitsInCone(unit, unitTable, angle, distance)
-  if unit == nil then
+-- returns table containing units that are within the given unit's given cone angle and distance
+-- ignores dead units
+-- mode : friendly or hostile
+-- onlyCombat (optional) : true or false
+function ct.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat)
+  if otherUnit == nil then
     return nil
   end
 
+  local ObjectCount = GetObjectCount()
+  local Object = nil
   local Units = {}
-  for index, value in ipairs(unitTable) do
-    local OtherUnit = unitTable[index][1]
-    if OtherUnit ~= nil and ct.IsFacing(OtherUnit, angle)
-    and ct.IsInRange(unit, OtherUnit, distance) then
-      table.insert(Units, Unit)
+  for i = 1, ObjectCount do
+    Object = GetObjectWithIndex(i)
+    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    and ct.IsFacing(Object, angle) and ct.IsInRange(otherUnit, Object, distance)
+    and UnitHealth(Object) > 1 then
+      if mode == "friendly" and ((not ct.UnitIsHostile(Object) and UnitIsPlayer(Object))
+      or (UnitInParty(Object) or UnitInRaid(Object)))
+      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+        table.insert(Units, Object)
+      elseif mode == "hostile" and ct.UnitIsHostile(Object)
+      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+        table.insert(Units, Object)
+      end
     end
   end
   return Units
@@ -288,13 +327,25 @@ function ct.CastedPercent(unit)
   return PercentCasted
 end
 
--- returns the number of units from the given table that are below the given health threshold
-function ct.GetUnitCountBelowHealth(table, healthPercent)
+-- returns the number of units that are below the given health threshold
+-- mode : friendly or hostile
+-- onlyCombat (optional) : true or false
+function ct.GetUnitCountBelowHealth(healthPercent, mode, onlyCombat)
   local Count = 0
-  for index, value in ipairs(table) do
-    Unit = table[index][1]
-    if Unit ~= nil and (UnitHealth(Unit) / UnitHealthMax(Unit)) * 100 < healthPercent then
-      Count = Count + 1
+  local ObjectCount = GetObjectCount()
+  local Object = nil
+  for i = 1, ObjectCount do
+    Object = GetObjectWithIndex(i)
+    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    and ct.PercentHealth(Object) < healthPercent then
+      if mode == "friendly" and ((not ct.UnitIsHostile(Object) and UnitIsPlayer(Object))
+      or (UnitInParty(Object) or UnitInRaid(Object)))
+      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+        Count = Count + 1
+      elseif mode == "hostile" and ct.UnitIsHostile(Object)
+      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+        Count = Count + 1
+      end
     end
   end
   return Count
@@ -308,12 +359,14 @@ function ct.FindTanks()
 
   -- find tanks
   local Tanks = {}
-
-  for index, value in ipairs(ct.friends) do
-    local Unit = ct.friends[index][1]
-    if (UnitInParty(Unit) or UnitInRaid(Unit))
-    and UnitGroupRolesAssigned(Unit) == "TANK" or ObjectID(Unit) == 72218 then
-      table.insert(Tanks, Unit)
+  local ObjectCount = GetObjectCount()
+  local Object = nil
+  for i = 1, ObjectCount do
+    Object = GetObjectWithIndex(i)
+    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    and (UnitInParty(Object) or UnitInRaid(Object))
+    and (UnitGroupRolesAssigned(Object) == "TANK" or ObjectID(Object) == 72218) then
+      table.insert(Tanks, Object)
     end
   end
 
@@ -376,4 +429,14 @@ end
 -- returns the spell id of the given spell name
 function ct.GetSpellID(name)
   return select(7, GetSpellInfo(name))
+end
+
+-- given an unit, returns table of all of the unit's auras
+function ct.GetUnitAuras(unit)
+  Auras = {}
+  AuraCount = ct.GetAuraCount(unit)
+  for i = 1, AuraCount do
+    Auras[i] = select(11, UnitAura(unit, i))
+  end
+  return Auras
 end

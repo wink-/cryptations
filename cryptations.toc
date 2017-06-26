@@ -4,7 +4,6 @@
 
 # Core
 Core\Core.lua
-Core\UnitEngine.lua
 Core\SpellManager.lua
 Core\PulseEngine.lua
 Core\Helpers.lua
