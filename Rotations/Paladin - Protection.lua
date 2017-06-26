@@ -13,7 +13,8 @@ function ct.PaladinProtection()
 
   -- combat rotation
   if UnitAffectingCombat(ct.player)
-  or (ct.AllowOutOfCombatRoutine and UnitGUID("target") ~= nil and ct.UnitIsHostile("target")) then
+  or (ct.AllowOutOfCombatRoutine and UnitGUID("target") ~= nil
+  and ct.UnitIsHostile("target")) and UnitHealth("target") ~= 0 then
 
     -- pulse target engine and remember target
     ct.TargetEngine(ct.enemys)
@@ -141,7 +142,7 @@ function ct.PaladinProtection()
 
       -- Blessed Hammer
       -- use when fully charged
-      if IsSpellKnown(204019) and ct.UnitIsHostile(ct.Target)
+      if ct.UnitIsHostile(ct.Target)
       and ct.CanCast(204019) and select(1, GetSpellCharges(204019)) == 3
       and ct.IsInRange(ct.player, ct.Target, 8) then
           return CastSpellByID(204019)

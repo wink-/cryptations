@@ -1,10 +1,6 @@
 -- this should be straightforward
 function ct.PulseRotation()
   if ct.Spec ~= nil then
-    -- unit manager shall only be updated when the rotation needs it
-    ct.GetUnitTables()
-    ct.UpdateTables()
-
     ct.Spec()
   end
 end
@@ -12,6 +8,9 @@ end
 -- this handles all the targeting logic and it's called by the rotation functions
 -- table specifies from which table the target should be chosen (usually ct.enemys)
 function ct.TargetEngine(table)
+  if getn(table) == 0 then
+    return
+  end
   if UnitAffectingCombat("player") then
     -- re targeting logic
     if UnitGUID("target") == nil then
@@ -33,6 +32,10 @@ end
 -- Handles Taunting
 -- This does not handle taunting logic for encounters
 function ct.TauntEngine()
+  if getn(ct.enemys) == 0 then
+    return
+  end
+
   local MainTank, OffTank = ct.FindTanks()
   local IsOtherTankTanking = nil
 
@@ -56,6 +59,10 @@ end
 -- Handles Interrupting
 -- this can currently only interrupt the current target
 function ct.InterruptEngine()
+  if getn(ct.enemys) == 0 then
+    return
+  end
+
   local Unit = nil
   -- interrupt any unit
   if ct.InterruptAnyUnit then

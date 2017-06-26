@@ -1,7 +1,10 @@
--- returns true if a given unit is valid to be attacked
+-- returns true if a given unit is hostile and therefore can be attacked
 function ct.UnitIsHostile(unit)
-  if unit ~= nil
-  and (UnitIsEnemy(ct.player, unit) or UnitCanAttack(ct.player, unit)) then
+  if unit == nil then
+    return nil
+  end
+
+  if (UnitIsEnemy(ct.player, unit) or UnitCanAttack(ct.player, unit)) then
     return true
   else
     return false
@@ -18,7 +21,7 @@ end
 -- produces true if the facing angle between player and unit is smaller or equal to given angle
 function ct.IsFacing(unit, angle)
   if unit == nil then
-    return false
+    return nil
   end
 
   local MyAngle = ObjectFacing(ct.player)
@@ -32,6 +35,10 @@ end
 
 -- returns true if given unit is in player's los
 function ct.IsInLOS(unit)
+  if unit == nil then
+    return nil
+  end
+
   if not ObjectExists(unit) then
     return nil
   end
@@ -45,11 +52,19 @@ end
 -- returns true if distance between unit and otherunit
 -- is lower or equal to given distance
 function ct.IsInRange(unit, otherUnit, distance)
+  if unit == nil then
+    return nil
+  end
+
   return GetDistanceBetweenObjects(unit, otherUnit) <= distance
 end
 
 -- same as above but this one considers the boundingboxes and combat reach
 function ct.IsInAttackRange(spell, unit)
+  if unit == nil then
+    return nil
+  end
+
   -- for casted spells
   if IsSpellInRange(select(1, GetSpellInfo(spell)), unit) == 1 then
     return true
@@ -63,6 +78,10 @@ end
 
 -- returns true if given unit is moving (in any direction)
 function ct.UnitIsMoving(unit)
+  if unit == nil then
+    return nil
+  end
+
   return UnitMovementFlags(unit) ~= 0
 end
 
@@ -93,6 +112,10 @@ end
 
 -- given an unit and an auraID, produces true if unit has aura
 function ct.UnitHasAura(unit, auraID)
+  if unit == nil then
+    return nil
+  end
+
   local AuraCount = ct.GetAuraCount(unit)
 
   -- iterate over unit's auras
@@ -107,6 +130,10 @@ end
 
 -- returns number of how many auras the given unit has
 function ct.GetAuraCount(unit)
+  if unit == nil then
+    return nil
+  end
+
   local AuraIndex = 1
   local AuraCount = 0
 
@@ -190,7 +217,7 @@ function ct.FindNearestUnit(table, onlyCombat)
     local Unit = table[index][1]
     if Nearest == nil
     or (GetDistanceBetweenObjects(ct.player, table[index][1]) < GetDistanceBetweenObjects(ct.player, Nearest)
-    and (onlyCombat == nil or onlyCombat == false or UnitAffectingCombat(Unit))) then
+    and (onlyCombat == nil or onlyCombat == false or UnitAffectingCombat(Unit)) and UnitHealth(Unit) ~= 0) then
       Nearest = Unit
     end
   end
@@ -199,6 +226,9 @@ end
 
 -- returns true if player is currently casting a spell
 function ct.IsCasting(unit)
+  if unit == nil then
+    return nil
+  end
   if select(6, UnitCastingInfo(unit)) == nil
   or GetTime() * 1000 >= select(6, UnitCastingInfo(unit)) - ct.CastDelay then
     return false
@@ -210,6 +240,10 @@ end
 -- returns table containing units from the given table
 -- that are within the given radius of the given unit
 function ct.GetUnitsInRadius(unit, unitTable, radius)
+  if unit == nil then
+    return nil
+  end
+
   local Units = {}
   for index, value in ipairs(unitTable) do
     OtherUnit = unitTable[index][1]
@@ -223,6 +257,10 @@ end
 -- returns table containing units from the given table
 -- that are within the given unit's given cone angle and distance
 function ct.GetUnitsInCone(unit, unitTable, angle, distance)
+  if unit == nil then
+    return nil
+  end
+
   local Units = {}
   for index, value in ipairs(unitTable) do
     local OtherUnit = unitTable[index][1]
@@ -236,6 +274,10 @@ end
 
 -- returns the percent value of the unit's spellcast progress
 function ct.CastedPercent(unit)
+  if unit == nil then
+    return nil
+  end
+
   local CastTime = nil
   local PercentCasted = nil
 
@@ -292,6 +334,10 @@ end
 
 -- returns true when the given unit is tanking a boss
 function ct.IsTankingBoss(unit)
+  if unit == nil then
+    return nil
+  end
+
   local Target = UnitTarget(unit)
   if Target ~= nil and (UnitClassification(Target) == "elite"
   or UnitClassification(Target) == "worldboss") then
@@ -302,6 +348,10 @@ end
 
 -- returns the percent value of the unit's current health
 function ct.PercentHealth(unit)
+  if unit == nil then
+    return nil
+  end
+
   return math.floor((UnitHealth(unit) / UnitHealthMax(unit)) * 100)
 end
 

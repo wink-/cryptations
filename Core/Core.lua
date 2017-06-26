@@ -10,6 +10,10 @@ ct.CurrentSpell             = nil
 
 -- GLOBAL SETTINGS
 
+-- Update Values
+ct.UpdateInterval           = 0.1           -- Update interval for the rotation
+ct.UnitUpdateInterval       =   1           -- Update interval for the unit engine
+
 -- Targeting behavior : Only one can be true
 ct.ReTargetNearestUnit      = true
 ct.ReTargetHighestUnit      = false
@@ -30,50 +34,43 @@ ct.CastAngle                =  90           -- Facing angle for casted spells
 ct.ConeAngle                =  45           -- Facing angle for cone logic
 
 function ct.StartUp()
-  if FireHack ~= nil then
-    -- Setup event frame
-    local frame = CreateFrame("FRAME", "EventFrame")
-    local spellframe = CreateFrame("FRAME", "SpellFrame")
+  -- Setup event frame
+  local frame = CreateFrame("FRAME", "EventFrame")
+  local spellframe = CreateFrame("FRAME", "SpellFrame")
 
-    frame:RegisterEvent("PLAYER_REGEN_ENABLED")
-    frame:RegisterEvent("UNIT_SPELLCAST_START")
+  frame:RegisterEvent("PLAYER_REGEN_ENABLED")
+  frame:RegisterEvent("UNIT_SPELLCAST_START")
 
-    -- This handles the removing of casted spells from the spellqueue
-    local function spellDetectionHandler()
-      if not ct.IsCasting(ct.player) and ct.CastedPercent(ct.player) ~= nil
-      and ct.SpellQueue[1] ~= nil and ct.CurrentUniqueIdentifier == ct.SpellQueue[1].key then
-        ct.DeQueueSpell(ct.CurrentSpell)
-        -- Spell History
-        -- maximum lenght of spell history is 10 entries
-        if getn(ct.SpellHistory) > 10 then
-          table.remove(ct.SpellHistory, 1)
-        end
-
-        -- add spell to history like : SPELL; TARGET; TIME
-        local Entry = {spell = arg5, time = GetTime()}
-        table.insert(ct.SpellHistory, Entry)
+  -- This handles the removing of casted spells from the spellqueue
+  local function spellDetectionHandler()
+    if not ct.IsCasting(ct.player) and ct.CastedPercent(ct.player) ~= nil
+    and ct.SpellQueue[1] ~= nil and ct.CurrentUniqueIdentifier == ct.SpellQueue[1].key then
+      ct.DeQueueSpell(ct.CurrentSpell)
+      -- Spell History
+      -- maximum lenght of spell history is 10 entries
+      if getn(ct.SpellHistory) > 10 then
+        table.remove(ct.SpellHistory, 1)
       end
+
+      -- add spell to history like : SPELL; TARGET; TIME
+      local Entry = {spell = arg5, time = GetTime()}
+      table.insert(ct.SpellHistory, Entry)
     end
-
-    local function eventHandler(self, event, arg1, arg2, arg3, arg4, arg5, arg6)
-      if event == "UNIT_SPELLCAST_START" and arg1 == "player" and getn(ct.SpellQueue) ~= 0 then
-        ct.CurrentUniqueIdentifier = ct.SpellQueue[1].key
-        ct.CurrentSpell = ct.GetSpellID(arg2)
-      end
-      if event == "PLAYER_REGEN_ENABLED" then
-        -- player left any combat action so the queue will be cleaned up
-        ct.CleanUpQueue()
-      end
-    end
-
-    frame:SetScript("OnEvent", eventHandler)
-    spellframe:SetScript("OnUpdate", spellDetectionHandler)
-
-    -- define player object (needed for ewt)
-    ct.player = GetObjectWithGUID(UnitGUID("player"))
-
-    ct.SetUpRotationEngine()
-  else
-    message("No unlocker loaded")
   end
+
+  local function eventHandler(self, event, arg1, arg2, arg3, arg4, arg5, arg6)
+    if event == "UNIT_SPELLCAST_START" and arg1 == "player" and getn(ct.SpellQueue) ~= 0 then
+      ct.CurrentUniqueIdentifier = ct.SpellQueue[1].key
+      ct.CurrentSpell = ct.GetSpellID(arg2)
+    end
+    if event == "PLAYER_REGEN_ENABLED" then
+      -- player left any combat action so the queue will be cleaned up
+      ct.CleanUpQueue()
+    end
+  end
+
+  frame:SetScript("OnEvent", eventHandler)
+  spellframe:SetScript("OnUpdate", spellDetectionHandler)
+
+  ct.SetUpRotationEngine()
 end
