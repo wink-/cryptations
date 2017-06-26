@@ -1,4 +1,4 @@
--- returns true if a given unit is valid to be attacked
+-- returns true if a given unit is hostile and therefore can be attacked
 function ct.UnitIsHostile(unit)
   if unit == nil then
     return nil
@@ -217,7 +217,7 @@ function ct.FindNearestUnit(table, onlyCombat)
     local Unit = table[index][1]
     if Nearest == nil
     or (GetDistanceBetweenObjects(ct.player, table[index][1]) < GetDistanceBetweenObjects(ct.player, Nearest)
-    and (onlyCombat == nil or onlyCombat == false or UnitAffectingCombat(Unit))) then
+    and (onlyCombat == nil or onlyCombat == false or UnitAffectingCombat(Unit)) and UnitHealth(Unit) ~= 0) then
       Nearest = Unit
     end
   end
