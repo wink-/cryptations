@@ -3,10 +3,10 @@ function ct.PaladinProtection()
   local MaxMana       = UnitPowerMax(ct.player , 0)
   local MaxHealth     = UnitHealthMax(ct.player)
 
-  local LowestFriend  = ct.FindLowestUnit(ct.friends)
+  local LowestFriend  = ct.FindLowestUnit("friendly")
 
-  local LowestEnemy   = ct.FindLowestUnit(ct.enemys)
-  local HighestEnemy  = ct.FindHighestUnit(ct.enemys)
+  local LowestEnemy   = ct.FindLowestUnit("hostile", true)
+  local HighestEnemy  = ct.FindHighestUnit("hostile", true)
 
   -- Call Taunt engine
   ct.TauntEngine()
@@ -50,7 +50,7 @@ function ct.PaladinProtection()
     end
 
     -- Eye of Tyr (Use when 3 enemys are within 8 yards)
-    if getn(ct.GetUnitsInRadius(ct.player, ct.enemys, 8)) >= 3 and ct.CanCast(209202) then
+    if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3 and ct.CanCast(209202) then
       return CastSpellByID(209202)
     end
 
@@ -64,7 +64,7 @@ function ct.PaladinProtection()
     -- use when 3 charges
     -- keep one charge in reserve (use the reserve when below 40% health)
     if ct.UnitIsHostile(ct.Target) and ct.CanCast(53600, ct.Target)
-    and not ct.UnitHasAura(53600) and ct.IsFacing(ct.Target, ct.CastAngle) then
+    and not ct.UnitHasAura(ct.player, 53600) and ct.IsFacing(ct.Target, ct.CastAngle) then
       if select(1, GetSpellCharges(53600)) > 1 then
         return CastSpellByID(53600)
       elseif UnitHealth(ct.player) <= MaxHealth * 0.4 then
@@ -86,7 +86,7 @@ function ct.PaladinProtection()
     end
 
     -- AOE ROTATION
-    if getn(ct.GetUnitsInRadius(ct.player, ct.enemys, 8)) >= 3 then
+    if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3 then
 
       -- Consecration (when not moving)
       if ct.UnitIsHostile(ct.Target) and not ct.UnitIsMoving(ct.player)
@@ -153,11 +153,10 @@ end
 
 -- Taunt spells are handled here
 function ct.PaladinProtectionTaunt(unit)
-
   -- Hand of Reckoning
-  if ct.CanCast(62124, unit) and ct.UnitIsHostile(unit) and ct.IsInLOS(unit)
-  and ct.IsInRange(ct.player, unit, 25) then
+  if ct.CanCast(62124, unit) and ct.UnitIsHostile(unit) and ct.IsInLOS(unit) then
     -- Here it is necessary to let the queue cast the spell
+    print("Taunting with Hand of Reckoning")
     return ct.AddSpellToQueue(62124, unit)
   end
 

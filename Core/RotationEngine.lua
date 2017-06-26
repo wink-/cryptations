@@ -6,20 +6,17 @@ function ct.PulseRotation()
 end
 
 -- this handles all the targeting logic and it's called by the rotation functions
--- table specifies from which table the target should be chosen (usually ct.enemys)
-function ct.TargetEngine(table)
-  if getn(table) == 0 then
-    return
-  end
+-- mode : friendly or hostile
+function ct.TargetEngine(mode)
   if UnitAffectingCombat("player") then
     -- re targeting logic
     if UnitGUID("target") == nil then
       if ct.ReTargetHighestUnit then
-        TargetUnit(ct.FindHighestUnit(table, true))
+        TargetUnit(ct.FindHighestUnit(mode, true))
       elseif ct.ReTargetLowestUnit then
-        TargetUnit(ct.FindLowestUnit(table, true))
+        TargetUnit(ct.FindLowestUnit(mode, true))
       elseif ct.ReTargetNearestUnit then
-        local NearestUnit = ct.FindNearestUnit(table, true)
+        local NearestUnit = ct.FindNearestUnit(mode, true)
         if NearestUnit ~= nil then
           TargetUnit(NearestUnit)
         end
@@ -32,60 +29,56 @@ end
 -- Handles Taunting
 -- This does not handle taunting logic for encounters
 function ct.TauntEngine()
-  if getn(ct.enemys) == 0 then
-    return
-  end
-
   local MainTank, OffTank = ct.FindTanks()
   local IsOtherTankTanking = nil
 
-  for index, value in ipairs(ct.enemys) do
-    local Unit = ct.enemys[index][1]
-    local IsTanking = select(1, UnitDetailedThreatSituation(ct.player, Unit))
+  local ObjectCount = GetObjectCount()
+  local Object = nil
+
+  for i = 1, ObjectCount do
+    Object = GetObjectWithIndex(i)
+    local IsTanking = select(1, UnitDetailedThreatSituation(ct.player, Object))
 
     if MainTank ~= nil then
-      IsOtherTankTanking = select(1, UnitDetailedThreatSituation(MainTank, Unit)) ~= nil
+      IsOtherTankTanking = select(1, UnitDetailedThreatSituation(MainTank, Object)) ~= nil
     elseif OffTank ~= nil then
-      IsOtherTankTanking = select(1, UnitDetailedThreatSituation(OffTank, Unit)) ~= nil
+      IsOtherTankTanking = select(1, UnitDetailedThreatSituation(OffTank, Object)) ~= nil
     end
 
-    if GetNumGroupMembers() > 1 and UnitAffectingCombat(Unit) and not IsTanking
-    and ct.IsInRange(ct.player, Unit, 30) and ct.Taunt ~= nil and not IsOtherTankTanking then
-      return ct.Taunt(Unit)
+    if GetNumGroupMembers() >= 1 and ObjectIsType(Object, ObjectTypes.Unit)
+    and UnitAffectingCombat(Object) and not IsTanking
+    and ct.IsInRange(ct.player, Object, 30) and ct.Taunt ~= nil and not IsOtherTankTanking then
+      return ct.Taunt(Object)
     end
   end
 end
 
 -- Handles Interrupting
--- this can currently only interrupt the current target
 function ct.InterruptEngine()
-  if getn(ct.enemys) == 0 then
-    return
-  end
-
-  local Unit = nil
+  local ObjectCount = GetObjectCount()
+  local Object = nil
   -- interrupt any unit
   if ct.InterruptAnyUnit then
-    for i = 0, getn(ct.enemys) do
-      Unit = ct.enemys[i][1]
-      if Unit ~= nil and select(9, UnitCastingInfo(Unit)) == false and ct.UnitIsHostile(Unit) then
-        local PercentCasted = ct.CastedPercent(Unit)
+    for i = 1, ObjectCount do
+      Object = GetObjectWithIndex(i)
+      if Object ~= nil and select(9, UnitCastingInfo(Object)) == false and ct.UnitIsHostile(Object) then
+        local PercentCasted = ct.CastedPercent(Object)
         if ct.InterruptMinPercent < PercentCasted
         and PercentCasted < ct.InterruptMaxPercent and ct.Interrupt ~= nil then
-          ct.Interrupt(Unit)
+          ct.Interrupt(Object)
         end
       end
     end
     -- interrupt target
   else
     if UnitGUID("target") ~= nil then
-      Unit = GetObjectWithGUID(UnitGUID("target"))
+      Object = GetObjectWithGUID(UnitGUID("target"))
     end
-    if Unit ~= nil and select(9, UnitCastingInfo(Unit)) == false and ct.UnitIsHostile(Unit) then
-      local PercentCasted = ct.CastedPercent(Unit)
+    if Object ~= nil and select(9, UnitCastingInfo(Unit)) == false and ct.UnitIsHostile(Object) then
+      local PercentCasted = ct.CastedPercent(Object)
       if ct.InterruptMinPercent < PercentCasted
       and PercentCasted < ct.InterruptMaxPercent and ct.Interrupt ~= nil then
-        ct.Interrupt(Unit)
+        ct.Interrupt(Object)
       end
     end
   end
