@@ -40,7 +40,6 @@ function ct.StartUp()
 
   frame:RegisterEvent("PLAYER_REGEN_ENABLED")
   frame:RegisterEvent("UNIT_SPELLCAST_START")
-  frame:RegisterEvent("UNIT_AURA")
 
   -- This handles the removing of casted spells from the spellqueue
   local function spellDetectionHandler()
