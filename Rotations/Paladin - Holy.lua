@@ -2,35 +2,36 @@ function ct.PaladinHoly()
   local MaxMana                 = UnitPowerMax(ct.player , 0)
   local MaxHealth               = UnitHealthMax(ct.player)
 
-  local LowestFriend            = ct.FindLowestUnit(ct.friends)
-  local HighestFriend           = ct.FindHighestUnit(ct.friends)
+  local LowestFriend            = ct.FindLowestUnit("friendly")
+  local HighestFriend           = ct.FindHighestUnit("friendly")
 
   local MainTank, OffTank       = ct.FindTanks()
+  local HealTarget              = nil
 
   if UnitAffectingCombat(ct.player) then
-    -- Call Targeting engine and remember target
-    ct.TargetEngine(ct.enemys)
-    local TargetObj = GetObjectWithGUID(UnitGUID("target"))
+
+    -- pulse target engine and remember target
+    ct.TargetEngine("hostile")
+    ct.Target = GetObjectWithGUID(UnitGUID("target"))
 
     -- COOLDOWNS
     -- Avenging Wrath (Use when 50% of group is below 70% health)
     if ct.CanCast(31842) and GetNumGroupMembers() ~= 1
-    and ct.GetUnitCountBelowHealth(ct.friends, 70) >= math.floor(GetNumGroupMembers() * 0.5) then
-      return ct.AddSpellToQueue(31842)
+    and ct.GetUnitCountBelowHealth(70, "friendly", true) >= math.floor(GetNumGroupMembers() * 0.5) then
+      return CastSpellByID(31842)
     end
 
     -- Lay on Hands (use when player or lowest raid member is below 15% health)
     if ct.CanCast(633) and UnitHealth(ct.player) <= MaxHealth * 0.15 then
-      return ct.AddSpellToQueue(633)
+      return CastSpellByID(633)
     end
 
     if ct.CanCast(633) and LowestFriend ~= nil
     and UnitHealth(LowestFriend) <= UnitHealthMax(LowestFriend) * 0.15 then
-      return ct.AddSpellToQueue(633, LowestFriend)
+      return CastSpellByID(633, LowestFriend)
     end
 
     -- Blessing of Sacrifice (Use together with Divine Protection on units below 20% health)
-    -- TODO: rotation freezing after this was casted
     if ct.CanCast(6940) and ct.CanCast(498) and LowestFriend ~= nil
     and not ct.UnitHasAura(LowestFriend, 6940)
     and ct.PercentHealth(LowestFriend) <= 20 then
@@ -45,139 +46,106 @@ function ct.PaladinHoly()
 
     -- Tyr's Deliverance (Used when 30% of group are below 70% health)
     if ct.CanCast(200652) then
-      local UnitsInRadius = ct.GetUnitsInRadius(ct.player, ct.friends, 15)
       if GetNumGroupMembers() ~= 1
-      and ct.GetUnitCountBelowHealth(UnitsInRadius, 70) >= math.floor(GetNumGroupMembers() * 0.3) then
+      and ct.GetUnitCountBelowHealth(70, "friendly", true, ct.player, 15) >= math.floor(GetNumGroupMembers() * 0.3) then
         return ct.AddSpellToQueue(200652)
       end
     end
 
-    -- TANK HEALING --
-    if MainTank ~= nil and MainTank == LowestFriend
-    and ct.PercentHealth(MainTank) <= ct.TankHealthThreshold
-    and not ct.GetUnitCountBelowHealth(ct.friends, ct.OtherHealthThreshold) >= math.floor(GetNumGroupMembers() * 0.2) then
-      -- Beacon of Light (Cast on Main Tank if BOV is not Talented)
-      if not IsSpellKnown(200025) and ct.CanCast(53563, MainTank)
-      and not ct.UnitHasAura(MainTank, 53563) and ct.IsInLOS(MainTank) then
-        return ct.AddSpellToQueue(53563, MainTank)
-      end
-
-      -- Infusion of Light Proc (Either Holy Light or Flash of Light)
-      if ct.UnitHasAura(ct.player, 53576) then
-        if ct.UseHolyLightOnInfusion then
-          if ct.CanCast(82326, MainTank) and ct.IsInLOS(MainTank) then
-            return ct.AddSpellToQueue(82326, MainTank)
-          end
-        elseif ct.UseFlashOfLightOnInfusion then
-          if ct.CanCast(19750, MainTank) and ct.IsInLOS(MainTank) then
-            return ct.AddSpellToQueue(19750, MainTank)
-          end
-        end
-      end
-
-      -- Holy Shock on cooldown (or Light of the Martyr if moving and Holy Shock has CD)
-      if not ct.UnitIsMoving(ct.player) then
-        if ct.CanCast(20473, MainTank) and ct.IsInLOS(MainTank) then
-          return ct.AddSpellToQueue(20473)
-        end
-      else
-        if ct.CanCast(183998, MainTank) and ct.IsInLOS(MainTank) then
-          return ct.AddSpellToQueue(183998)
-        end
-      end
-
-      -- Bestow Faith on cooldown
-      if ct.CanCast(223306, MainTank) and not ct.UnitHasAura(MainTank, 223306)
-      and ct.IsInLOS(MainTank) then
-        return ct.AddSpellToQueue(223306, MainTank)
-      end
-
-      -- Holy Light (Flash of Light for greater damage)
-      if ct.PercentHealth(MainTank) <= ct.FlashOfLightThreshold then
-        if ct.CanCast(19750, MainTank) and ct.IsInLOS(MainTank) then
-          return ct.AddSpellToQueue(19750, MainTank)
-        end
-      else
-        if ct.CanCast(82326, MainTank) and ct.IsInLOS(MainTank) then
-          return ct.AddSpellToQueue(82326, MainTank)
-        end
-      end
-
-    -- RAID / AOE HEALING (Use this during periods of high damage)
+    -- HEAL LOGIC
+    -- TODO: add topping logic
+    if ct.PercentHealth(MainTank) <= ct.TankHealthThreshold then
+      HealTarget = MainTank
     elseif ct.PercentHealth(LowestFriend) <= ct.OtherHealthThreshold then
+      HealTarget = LowestFriend
+    elseif ct.PercentHealth(LowestFriend) <= ct.ToppingHealthThreshold then
+      HealTarget = LowestFriend
+    end
+
+    if HealTarget ~= nil then
       -- Beacon of Light on Tank (If not Talented BOV)
-      if not IsSpellKnown(200025) and ct.CanCast(53563, LowestFriend)
-      and not ct.UnitHasAura(LowestFriend, 53563) and ct.IsInLOS(LowestFriend) then
-        return ct.AddSpellToQueue(53563, LowestFriend)
+      if MainTank ~= nil and not select(4, GetTalentInfo(7, 3, 1))
+      and ct.CanCast(53563, MainTank, 0, MaxMana * 0.025) and ct.IsInLOS(MainTank)
+      and not ct.UnitHasAura(MainTank, 53563) then
+        return CastSpellByID(53563, MainTank)
       end
 
       -- Beacon of Faith on LowestFriend (If Talented BOF)
-      if LowestFriend ~= nil and ct.CanCast(156910, LowestFriend)
+      if LowestFriend ~= nil and ct.CanCast(156910, LowestFriend, 0, MaxMana * 0.03125)
       and not UnitHasAura(LowestFriend, 156910) and ct.IsInLOS(LowestFriend) then
-        return ct.AddSpellToQueue(156910, LowestFriend)
+        return CastSpellByID(156910, LowestFriend)
+      end
+
+      -- Bestow Faith (Alywas use on MainTank)
+      if ct.CanCast(223306, MainTank, 0, MaxMana * 0.06) and ct.IsInLOS(MainTank)
+      and not ct.UnitHasAura(MainTank, 223306) and
+      ct.PercentHealth(MainTank) <= ct.BestowFaithThreshold then
+        return CastSpellByID(223306, MainTank)
       end
 
       -- Infusion of Light Proc (Either Holy Light or Flash of Light)
       if ct.UnitHasAura(ct.player, 53576) then
         if ct.UseHolyLightOnInfusion then
-          if ct.CanCast(82326, LowestFriend) and ct.IsInLOS(LowestFriend) then
-            return ct.AddSpellToQueue(82326, LowestFriend)
+          if ct.CanCast(82326, HealTarget, 0, MaxMana * 0.12) and ct.IsInLOS(HealTarget) then
+            return ct.AddSpellToQueue(82326, HealTarget)
           end
         elseif ct.UseFlashOfLightOnInfusion then
-          if ct.CanCast(19750, LowestFriend) and ct.IsInLOS(LowestFriend) then
-            return ct.AddSpellToQueue(19750, LowestFriend)
+          if ct.CanCast(19750, HealTarget, 0, MaxMana * 0.18) and ct.IsInLOS(HealTarget) then
+            return ct.AddSpellToQueue(19750, HealTarget)
           end
         end
       end
 
-      -- Holy Shock on cooldown (or Light of the Martyr if moving and Holy Shock has CD)
-      if not ct.UnitIsMoving(ct.player) then
-        if ct.CanCast(20473, LowestFriend) and ct.IsInLOS(LowestFriend) then
-          return ct.AddSpellToQueue(20473)
-        end
-      else
-        if ct.CanCast(183998, LowestFriend) and ct.IsInLOS(LowestFriend) then
-          return ct.AddSpellToQueue(183998)
+      -- Holy Shock on cooldown (or Light of the Martyr if Holy Shock has CD)
+      if ct.CanCast(20473, HealTarget, 0, MaxMana * 0.1) and ct.IsInLOS(HealTarget) then
+        return CastSpellByID(20473, HealTarget)
+      elseif ct.UnitIsMoving(ct.player) and not ct.CanCast(20473, HealTarget, 0, MaxMana * 0.1) then
+        if ct.CanCast(183998, HealTarget, 0, MaxMana * 0.075) and ct.IsInLOS(HealTarget) then
+          return CastSpellByID(183998, HealTarget)
         end
       end
 
       -- Judgment (when Judgment of Light is talented)
-      if IsSpellKnown(183778) and ct.CanCast(20271, TargetObj)
-      and ct.IsInLOS(TargetObj) then
-        return ct.AddSpellToQueue(20271, TargetObj)
+      if ct.Target ~= nil and IsSpellKnown(183778)
+      and ct.CanCast(20271, ct.Target, 0, MaxMana * 0.03) and ct.IsInLOS(ct.Target) then
+        return CastSpellByID(20271, ct.Target)
       end
 
       -- Light of Dawn (Use when 2 Units are in the cone)
-      if ct.CanCast(85222) and getn(ct.GetUnitsInCone(ct.player, ct.friends, ct.ConeAngle, 15)) >= 2 then
-        return ct.AddSpellToQueue(85222)
+      if ct.CanCast(85222, nil, 0, MaxMana * 0.14)
+      and getn(ct.GetUnitsInCone(ct.player, ct.CastAngle, 15, "friendly", true)) >= 2 then
+        return CastSpellByID(85222)
       end
 
       -- Holy Prism (Use on Enemys with at least 4 Players around them)
-      if ct.CanCast(114165) then
-        for index, value in ipairs(ct.enemys) do
-          Enemy = ct.enemys[index][1]
-          if Enemy ~= nil and ct.CanCast(114165, Enemy) and ct.IsInLOS(Enemy)
-          and getn(ct.GetUnitsInRadius(Enemy, ct.friends, 15)) >= 4 then
-            return ct.AddSpellToQueue(114165, Enemy)
+      if ct.CanCast(114165, nil, 0, MaxMana * 0.17) then
+        local ObjectCount = GetObjectCount()
+        local Object = nil
+        for i = 1, ObjectCount do
+          Object = GetObjectWithIndex(i)
+          if ObjectExists(Object) and ct.CanCast(114165, Object) and ct.IsInLOS(Object)
+          and ObjectIsType(Object, ObjectTypes.Unit) and ct.UnitIsHostile(Object)
+          and getn(ct.GetUnitsInRadius(Object, 15, "friendly", true)) >= 4 then
+            return CastSpellByID(114165, Object)
           end
         end
       end
 
       -- Beacon of Virtue TODO: add mana logic
-      if ct.CanCast(200025, LowestFriend) and ct.IsInLOS(LowestFriend)
-      and getn(ct.GetUnitsInRadius(LowestFriend, ct.friends, 30)) >= 3 then
-        return ct.AddSpellToQueue(200025, LowestFriend)
+      if ct.CanCast(200025, HealTarget, 0, MaxMana * 0.1) and ct.IsInLOS(HealTarget)
+      and getn(ct.GetUnitsInRadius(HealTarget, 30, "friendly", true)) >= 3 then
+        return CastSpellByID(200025, HealTarget)
       end
 
 
       -- Holy Light (Flash of Light for greater damage)
-      if ct.PercentHealth(LowestFriend) <= ct.FlashOfLightThreshold then
-        if ct.CanCast(19750, LowestFriend) and ct.IsInLOS(LowestFriend) then
-          return ct.AddSpellToQueue(19750, LowestFriend)
+      if ct.PercentHealth(HealTarget) <= ct.FlashOfLightThreshold then
+        if ct.CanCast(19750, HealTarget, 0, MaxMana * 0.18) and ct.IsInLOS(HealTarget) then
+          return ct.AddSpellToQueue(19750, HealTarget)
         end
       else
-        if ct.CanCast(82326, LowestFriend) and ct.IsInLOS(LowestFriend) then
-          return ct.AddSpellToQueue(82326, LowestFriend)
+        if ct.CanCast(82326, HealTarget, 0, MaxMana * 0.12) and ct.IsInLOS(HealTarget) then
+          return ct.AddSpellToQueue(82326, HealTarget)
         end
       end
     end
@@ -199,6 +167,8 @@ function ct.PaldinHolySetUp()
   -- Health thresholds
   ct.TankHealthThreshold              = 90
   ct.OtherHealthThreshold             = 70
+  ct.ToppingHealthThreshold           = 95
 
   ct.FlashOfLightThreshold            = 50
+  ct.BestowFaithThreshold             = 80
 end
