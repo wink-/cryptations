@@ -45,8 +45,8 @@ function ct.TauntEngine()
       IsOtherTankTanking = select(1, UnitDetailedThreatSituation(OffTank, Object)) ~= nil
     end
 
-    if GetNumGroupMembers() >= 1 and ObjectIsType(Object, ObjectTypes.Unit)
-    and UnitAffectingCombat(Object) and not IsTanking
+    if ct.UnitIsHostile(Object) and GetNumGroupMembers() >= 1
+    and ObjectIsType(Object, ObjectTypes.Unit) and UnitAffectingCombat(Object) and not IsTanking
     and ct.IsInRange(ct.player, Object, 30) and ct.Taunt ~= nil and not IsOtherTankTanking then
       return ct.Taunt(Object)
     end
