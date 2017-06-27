@@ -15,9 +15,9 @@ function ct.PaladinHoly()
     ct.Target = GetObjectWithGUID(UnitGUID("target"))
 
     -- COOLDOWNS
-    -- Avenging Wrath (Use when 50% of group is below 70% health)
+    -- Avenging Wrath (Use when 3 units are below 60% health)
     if ct.CanCast(31842) and GetNumGroupMembers() ~= 1
-    and ct.GetUnitCountBelowHealth(70, "friendly", true) >= math.floor(GetNumGroupMembers() * 0.5) then
+    and ct.GetUnitCountBelowHealth(70, "friendly", true) >= 3 then
       return CastSpellByID(31842)
     end
 
@@ -44,22 +44,49 @@ function ct.PaladinHoly()
     -- Blessing of Protection (SHOULD BE HANDELED BY BOSS MANAGER)
     -- Blessing of Freedom (SHOULD BE HANDELED BY BOSS MANAGER)
 
-    -- Tyr's Deliverance (Used when 30% of group are below 70% health)
+    -- Tyr's Deliverance (Used when 2 units in group are below 70% health)
     if ct.CanCast(200652) then
       if GetNumGroupMembers() ~= 1
-      and ct.GetUnitCountBelowHealth(70, "friendly", true, ct.player, 15) >= math.floor(GetNumGroupMembers() * 0.3) then
+      and ct.GetUnitCountBelowHealth(70, "friendly", true, ct.player, 15) >= 2 then
         return ct.AddSpellToQueue(200652)
       end
     end
 
     -- HEAL LOGIC
-    -- TODO: add topping logic
-    if ct.PercentHealth(MainTank) <= ct.TankHealthThreshold then
+    if ct.PercentHealth(MainTank) <= ct.TankHealthThreshold
+    and (not (ct.PercentHealth(LowestFriend) <= ct.OtherHealthThreshold)
+    or LowestFriend == MainTank) then
       HealTarget = MainTank
     elseif ct.PercentHealth(LowestFriend) <= ct.OtherHealthThreshold then
       HealTarget = LowestFriend
+    -- TOPPING LOGIC
     elseif ct.PercentHealth(LowestFriend) <= ct.ToppingHealthThreshold then
-      HealTarget = LowestFriend
+      -- Infusion of Light Proc (Either Holy Light or Flash of Light)
+      if ct.UnitHasAura(ct.player, 53576) then
+        if ct.UseHolyLightOnInfusion then
+          if ct.CanCast(82326, LowestFriend, 0, MaxMana * 0.12) and ct.IsInLOS(LowestFriend) then
+            return ct.AddSpellToQueue(82326, LowestFriend)
+          end
+        elseif ct.UseFlashOfLightOnInfusion then
+          if ct.CanCast(19750, LowestFriend, 0, MaxMana * 0.18) and ct.IsInLOS(LowestFriend) then
+            return ct.AddSpellToQueue(19750, LowestFriend)
+          end
+        end
+      end
+
+      -- Holy Shock on cooldown (or Light of the Martyr if Holy Shock has CD)
+      if ct.CanCast(20473, LowestFriend, 0, MaxMana * 0.1) and ct.IsInLOS(LowestFriend) then
+        return CastSpellByID(20473, LowestFriend)
+      elseif ct.UnitIsMoving(ct.player) and not ct.CanCast(20473, LowestFriend, 0, MaxMana * 0.1) then
+        if ct.CanCast(183998, LowestFriend, 0, MaxMana * 0.075) and ct.IsInLOS(LowestFriend) then
+          return CastSpellByID(183998, LowestFriend)
+        end
+      end
+
+      -- Holy Light
+      if ct.CanCast(82326, LowestFriend, 0, MaxMana * 0.12) and ct.IsInLOS(LowestFriend) then
+        return ct.AddSpellToQueue(82326, LowestFriend)
+      end
     end
 
     if HealTarget ~= nil then
@@ -111,9 +138,9 @@ function ct.PaladinHoly()
         return CastSpellByID(20271, ct.Target)
       end
 
-      -- Light of Dawn (Use when 2 Units are in the cone)
+      -- Light of Dawn (Use when 2 Units are in the cone and at 70% or lower)
       if ct.CanCast(85222, nil, 0, MaxMana * 0.14)
-      and getn(ct.GetUnitsInCone(ct.player, ct.CastAngle, 15, "friendly", true)) >= 2 then
+      and getn(ct.GetUnitsInCone(ct.player, ct.ConeAngle, 15, "friendly", true, 70)) >= 2 then
         return CastSpellByID(85222)
       end
 
@@ -133,7 +160,7 @@ function ct.PaladinHoly()
 
       -- Beacon of Virtue TODO: add mana logic
       if ct.CanCast(200025, HealTarget, 0, MaxMana * 0.1) and ct.IsInLOS(HealTarget)
-      and getn(ct.GetUnitsInRadius(HealTarget, 30, "friendly", true)) >= 3 then
+      and ct.GetUnitCountBelowHealth(70, "friendly", true, MainTank, 30) >= 3 then
         return CastSpellByID(200025, HealTarget)
       end
 
