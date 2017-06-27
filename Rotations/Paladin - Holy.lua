@@ -44,10 +44,10 @@ function ct.PaladinHoly()
     -- Blessing of Protection (SHOULD BE HANDELED BY BOSS MANAGER)
     -- Blessing of Freedom (SHOULD BE HANDELED BY BOSS MANAGER)
 
-    -- Tyr's Deliverance (Used when 2 units in group are below 70% health)
+    -- Tyr's Deliverance (Used when 2 units in group are below 80% health)
     if ct.CanCast(200652) then
-      if GetNumGroupMembers() ~= 1
-      and ct.GetUnitCountBelowHealth(70, "friendly", true, ct.player, 15) >= 2 then
+      if GetNumGroupMembers() ~= 1 and ct.GetPreviousSpell() ~= 200652
+      and ct.GetUnitCountBelowHealth(80, "friendly", true, ct.player, 20) >= 2 then
         return ct.AddSpellToQueue(200652)
       end
     end
@@ -194,7 +194,7 @@ function ct.PaldinHolySetUp()
   -- Health thresholds
   ct.TankHealthThreshold              = 90
   ct.OtherHealthThreshold             = 70
-  ct.ToppingHealthThreshold           = 95
+  ct.ToppingHealthThreshold           = 90
 
   ct.FlashOfLightThreshold            = 50
   ct.BestowFaithThreshold             = 80
