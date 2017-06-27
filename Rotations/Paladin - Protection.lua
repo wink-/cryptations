@@ -17,7 +17,7 @@ function ct.PaladinProtection()
   and ct.UnitIsHostile("target")) and UnitHealth("target") ~= 0 then
 
     -- pulse target engine and remember target
-    ct.TargetEngine(ct.enemys)
+    ct.TargetEngine("hostile")
     ct.Target = GetObjectWithGUID(UnitGUID("target"))
 
     -- call interrupt engine
