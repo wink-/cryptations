@@ -12,6 +12,7 @@ Core\RotationEngine.lua
 # Tables
 Tables\Auras.lua
 Tables\Spells.lua
+Tables\Units.lua
 
 # Rotations
 Rotations\Paladin - Protection.lua

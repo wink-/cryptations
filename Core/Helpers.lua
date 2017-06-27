@@ -357,9 +357,7 @@ end
 
 -- returns the unit objects of the tanks and specifies them as main and off tank, return nil if not found
 function ct.FindTanks()
-  if GetNumGroupMembers() == 1 then
-    return nil
-  end
+
 
   -- find tanks
   local Tanks = {}
@@ -396,9 +394,17 @@ function ct.IsTankingBoss(unit)
   end
 
   local Target = UnitTarget(unit)
-  if Target ~= nil and (UnitClassification(Target) == "elite"
-  or UnitClassification(Target) == "worldboss") then
-    return true
+  -- Dungeon Bosses
+  for i = 1, getn(ct.DungeonBosses) do
+    if ct.GetCreatureID(Target) == ct.DungeonBosses[i] then
+      return true
+    end
+  end
+  -- Raid Bosses
+  for i = 1, getn(ct.RaidBosses) do
+    if ct.GetCreatureID(Target) == ct.RaidBosses[i] then
+      return true
+    end
   end
   return false
 end
@@ -443,4 +449,27 @@ function ct.GetUnitAuras(unit)
     Auras[i] = select(11, UnitAura(unit, i))
   end
   return Auras
+end
+
+-- produces the time to die for the given unit
+function ct.ComputeTTD(unit)
+end
+
+-- returns the ID of the given unit (must be a creature)
+function ct.GetCreatureID(unit)
+  -- catch errors
+  if unit == nil or not ObjectExists(unit) then
+    return nil
+  end
+
+  local guid = UnitGUID(unit)
+  local type = select(1, strsplit("-", guid))
+
+  -- catch invalid units
+  if type ~= "Creature" then
+    return nil
+  end
+
+  local creatureID = select(6, strsplit("-", guid))
+  return tonumber(creatureID)
 end
