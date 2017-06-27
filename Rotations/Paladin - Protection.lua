@@ -27,9 +27,11 @@ function ct.PaladinProtection()
 
     -- COOLDOWNS
     -- Avenging Wrath (Use on Cooldown)
-    if ct.CanCast(31884) then
+    if ct.CanCast(31884) and ct.IsInRange(ct.player, ct.Target, 30) then
       return CastSpellByID(31884)
     end
+
+    -- Bastion of Light (Talent)
 
     -- Guardian of the Ancient Kings (use when below 30%)
     if ct.CanCast(86659) and UnitHealth(ct.player) <= MaxHealth * 0.3 then
@@ -60,7 +62,7 @@ function ct.PaladinProtection()
     -- when not actively tanking (or tanking trash)
     -- at least one charge of Shield of the Righteous
     -- in melee range of target
-    if (ct.player ~= MainTank or not ct.IsTankingBoss(ct.player)) 
+    if (ct.player ~= MainTank or not ct.IsTankingBoss(ct.player))
     and select(4, GetTalentInfo(7, 2, 1)) and ct.CanCast(152262)
     and ct.IsInAttackRange(53600, ct.Target) and select(1, GetSpellCharges(53600)) >= 1 then
       return CastSpellByID(152262)
@@ -88,10 +90,24 @@ function ct.PaladinProtection()
     end
 
     -- Light of the Protector:
+    -- if not talented Hand of the Protector
     -- use when below 50% health
-    if ct.CanCast(184092) and UnitHealth(ct.player) <= MaxHealth * 0.5
+    if ct.CanCast(184092) and ct.PercentHealth(ct.player) <= 50
+    and not select(4, GetTalentInfo(5, 1, 1))
     and (ct.GetPreviousSpell() ~= 184092 or ct.GetTimeSinceLastSpell() >= 500) then
       return CastSpellByID(184092)
+    end
+
+    -- Hand of the Protector (Talent)
+    -- same as Light of the Protector
+    -- use when lowest friend below 30%
+    if select(4, GetTalentInfo(5, 1, 1)) and ct.CanCast(213652, nil, nil, nil, false)
+    and (ct.GetPreviousSpell() ~= 213652 or ct.GetTimeSinceLastSpell() >= 500) then
+      if ct.PercentHealth(ct.player) <= 50 then
+        return CastSpellByID(213652)
+      elseif ct.PercentHealth(LowestFriend) <= 30 then
+        return CastSpellByID(213652, LowestFriend)
+      end
     end
 
     -- Flash of Light (use when below 30% health)
@@ -122,12 +138,12 @@ function ct.PaladinProtection()
       end
 
       -- Blessed Hammer (or Hammer of the Righteous)
-      if IsSpellKnown(204019) then
-        if ct.UnitIsHostile(ct.Target) and ct.CanCast(204019)
+      if select(4, GetTalentInfo(1, 2, 1)) then
+        if ct.UnitIsHostile(ct.Target) and ct.CanCast(204019, nil, nil, nil, false)
         and ct.IsInRange(ct.player, ct.Target, 8) then
           return CastSpellByID(204019)
         end
-      elseif IsSpellKnown(53595) then
+      else
         if ct.UnitIsHostile(ct.Target) and ct.CanCast(53595)
         and ct.IsInRange(ct.player, ct.Target, 8) then
           return CastSpellByID(53595)
