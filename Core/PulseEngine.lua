@@ -15,6 +15,7 @@ function Pulse(self, elapsed)
     if ct.player == nil or not ObjectExists(ct.player) then
       ReloadUI()
     end
+
     -- TODO: pulse engine delays for:
     -- when player left combat
     -- when player is looting
