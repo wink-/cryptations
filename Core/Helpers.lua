@@ -285,7 +285,8 @@ end
 -- ignores dead units
 -- mode : friendly or hostile
 -- onlyCombat (optional) : true or false
-function ct.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat)
+-- healthPercent (optional) : only units below or equal to this threshold will be added
+function ct.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat, healthPercent)
   if otherUnit == nil then
     return nil
   end
@@ -297,7 +298,7 @@ function ct.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat)
     Object = GetObjectWithIndex(i)
     if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
     and ct.IsFacing(Object, angle) and ct.IsInRange(otherUnit, Object, distance)
-    and UnitHealth(Object) > 1 then
+    and UnitHealth(Object) > 1 and (healthPercent == nil or ct.PercentHealth(Object) <= healthPercent) then
       if mode == "friendly" and ((not ct.UnitIsHostile(Object) and UnitIsPlayer(Object))
       or (UnitInParty(Object) or UnitInRaid(Object)))
       and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
