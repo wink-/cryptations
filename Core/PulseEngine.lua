@@ -10,6 +10,11 @@ function Pulse(self, elapsed)
       -- define player object
       ct.player = GetObjectWithGUID(UnitGUID("player"))
     end
+
+    -- If the engie still could not find the right playerobject, Reload
+    if ct.player == nil or not ObjectExists(ct.player) then
+      ReloadUI()
+    end
     -- TODO: pulse engine delays for:
     -- when player left combat
     -- when player is looting

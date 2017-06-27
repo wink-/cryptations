@@ -42,10 +42,12 @@ function ct.StartUp()
   frame:RegisterEvent("UNIT_SPELLCAST_START")
 
   -- This handles the removing of casted spells from the spellqueue
+  -- TODO: fix spells with cooldown double casting
   local function spellDetectionHandler()
     if not ct.IsCasting(ct.player) and ct.CastedPercent(ct.player) ~= nil
-    and ct.SpellQueue[1] ~= nil and ct.CurrentUniqueIdentifier == ct.SpellQueue[1].key then
-      ct.DeQueueSpell(ct.CurrentSpell)
+    and ct.SpellQueue[1] ~= nil
+    and ct.CurrentUniqueIdentifier == ct.SpellQueue[1].key then
+      -- TODO: add functionality for instant spells
       -- Spell History
       -- maximum lenght of spell history is 10 entries
       if getn(ct.SpellHistory) > 10 then
@@ -53,8 +55,10 @@ function ct.StartUp()
       end
 
       -- add spell to history like : SPELL; TARGET; TIME
-      local Entry = {spell = arg5, time = GetTime()}
+      local Entry = {spell = ct.CurrentSpell, time = GetTime()}
       table.insert(ct.SpellHistory, Entry)
+
+      ct.DeQueueSpell(ct.CurrentSpell)
     end
   end
 
