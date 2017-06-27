@@ -47,17 +47,19 @@ function ct.PaladinHoly()
     -- Tyr's Deliverance (Used when 2 units in group are below 80% health)
     if ct.CanCast(200652) then
       if GetNumGroupMembers() ~= 1 and ct.GetPreviousSpell() ~= 200652
-      and ct.GetUnitCountBelowHealth(80, "friendly", true, ct.player, 20) >= 2 then
+      and ct.GetUnitCountBelowHealth(80, "friendly", true, ct.player, 15) >= 2 then
         return ct.AddSpellToQueue(200652)
       end
     end
 
     -- HEAL LOGIC
-    if ct.PercentHealth(MainTank) <= ct.TankHealthThreshold
+    if ct.IsInRange(ct.player, MainTank, 40) and ct.IsInLOS(MainTank)
+    and ct.PercentHealth(MainTank) <= ct.TankHealthThreshold
     and (not (ct.PercentHealth(LowestFriend) <= ct.OtherHealthThreshold)
     or LowestFriend == MainTank) then
       HealTarget = MainTank
-    elseif ct.PercentHealth(LowestFriend) <= ct.OtherHealthThreshold then
+    elseif ct.IsInRange(ct.player, LowestFriend, 40) and ct.IsInLOS(LowestFriend)
+    and ct.PercentHealth(LowestFriend) <= ct.OtherHealthThreshold then
       HealTarget = LowestFriend
     -- TOPPING LOGIC
     elseif ct.PercentHealth(LowestFriend) <= ct.ToppingHealthThreshold then
