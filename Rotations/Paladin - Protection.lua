@@ -107,12 +107,12 @@ function ct.PaladinProtection()
       end
 
       -- Blessed Hammer (or Hammer of the Righteous)
-      if IsSpellKnown(204019) then
-        if ct.UnitIsHostile(ct.Target) and ct.CanCast(204019)
+      if IsSpellKnown(53595) and select(4, GetTalentInfo(1, 2, 1)) then
+        if ct.UnitIsHostile(ct.Target) and ct.CanCast(53595)
         and ct.IsInRange(ct.player, ct.Target, 8) then
           return CastSpellByID(204019)
         end
-      elseif IsSpellKnown(53595) then
+      elseif IsSpellKnown(53595) and not select(4, GetTalentInfo(1, 2, 1)) then
         if ct.UnitIsHostile(ct.Target) and ct.CanCast(53595)
         and ct.IsInRange(ct.player, ct.Target, 8) then
           return CastSpellByID(53595)
@@ -142,8 +142,8 @@ function ct.PaladinProtection()
 
       -- Blessed Hammer
       -- use when fully charged
-      if ct.UnitIsHostile(ct.Target)
-      and ct.CanCast(204019) and select(1, GetSpellCharges(204019)) == 3
+      if ct.UnitIsHostile(ct.Target) and select(4, GetTalentInfo(1, 2, 1))
+      and ct.CanCast(53595) and select(1, GetSpellCharges(204019)) == 3
       and ct.IsInRange(ct.player, ct.Target, 8) then
           return CastSpellByID(204019)
       end
