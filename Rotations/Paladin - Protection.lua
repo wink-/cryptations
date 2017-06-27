@@ -1,12 +1,14 @@
 -- contains all the rotation logic and will be pulsed OnUpdate
 function ct.PaladinProtection()
-  local MaxMana       = UnitPowerMax(ct.player , 0)
-  local MaxHealth     = UnitHealthMax(ct.player)
+  local MaxMana           = UnitPowerMax(ct.player , 0)
+  local MaxHealth         = UnitHealthMax(ct.player)
 
-  local LowestFriend  = ct.FindLowestUnit("friendly")
+  local LowestFriend      = ct.FindLowestUnit("friendly")
 
-  local LowestEnemy   = ct.FindLowestUnit("hostile", true)
-  local HighestEnemy  = ct.FindHighestUnit("hostile", true)
+  local LowestEnemy       = ct.FindLowestUnit("hostile", true)
+  local HighestEnemy      = ct.FindHighestUnit("hostile", true)
+
+  local MainTank, OffTank = ct.FindTanks()
 
   -- Call Taunt engine
   ct.TauntEngine()
@@ -54,6 +56,16 @@ function ct.PaladinProtection()
       return CastSpellByID(209202)
     end
 
+    -- Sepharim (Talent)
+    -- when not actively tanking (or tanking trash)
+    -- at least one charge of Shield of the Righteous
+    -- in melee range of target
+    if (ct.player ~= MainTank or not ct.IsTankingBoss(ct.player)) 
+    and select(4, GetTalentInfo(7, 2, 1)) and ct.CanCast(152262)
+    and ct.IsInAttackRange(53600, ct.Target) and select(1, GetSpellCharges(53600)) >= 1 then
+      return CastSpellByID(152262)
+    end
+
     -- Divine Shield (do not use yet)
 
     -- MITIGATION
@@ -62,10 +74,13 @@ function ct.PaladinProtection()
     -- Shield of the Righteous:
     -- use when not having the buff
     -- use when 3 charges
-    -- keep one charge in reserve (use the reserve when below 40% health)
+    -- keep one charge in reserve (two charges when having sepharim and not actively tanking)
     if ct.UnitIsHostile(ct.Target) and ct.CanCast(53600, ct.Target)
     and not ct.UnitHasAura(ct.player, 53600) and ct.IsFacing(ct.Target, ct.CastAngle) then
-      if select(1, GetSpellCharges(53600)) > 1 then
+      if select(4, GetTalentInfo(7, 2, 1)) and select(1, GetSpellCharges(53600)) > 2
+      and ct.player ~= MainTank then
+        return CastSpellByID(53600)
+      elseif select(1, GetSpellCharges(53600)) > 1 and not select(4, GetTalentInfo(7, 2, 1)) then
         return CastSpellByID(53600)
       elseif UnitHealth(ct.player) <= MaxHealth * 0.4 then
         return CastSpellByID(53600)
