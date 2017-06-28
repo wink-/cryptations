@@ -39,6 +39,7 @@ function ct.PaladinRetribution()
       elseif getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3 then
         return ct.Cast(184662)
       end
+    end
 
     -- Crusade (Talent, Use on Cooldown)
     if ct.CanCast(231895) then
@@ -57,7 +58,8 @@ function ct.PaladinRetribution()
 
     -- Don't overcap Holy Power
     -- Only cast during Judgment debuff when there is need to generate Holy Power
-    if HolyPower < 5 and (not ct.UnitHasDebuff(ct.Target, 197277) or HolyPower < 3) then
+    if (HolyPower < 5 and not ct.UnitHasDebuff(ct.Target, 197277)) or HolyPower < 3
+    or ct.GetRemainingCooldown(20271) >= 1 then
       -- Consecration (Use when at least 2 targets within 8 yards and not moving)
       if ct.CanCast(205228) and not ct.UnitIsMoving(ct.player)
       and getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 2 then
@@ -66,7 +68,8 @@ function ct.PaladinRetribution()
 
       -- Wake of Ashes (Use when having the Ashes to Ashes trait
       -- to generate Holy Power during Judgment debuff)
-      if HolyPower == 0 and ct.PlayerHasArtifactTrait(179546) and ct.CanCast(205273) then
+      if HolyPower == 0 and ct.PlayerHasArtifactTrait(179546) and ct.CanCast(205273)
+      and ct.IsFacing(ct.Target, 90) then
         return ct.Cast(205273)
 
       -- Crusader Strike (or Zeal if Talented)
@@ -79,7 +82,7 @@ function ct.PaladinRetribution()
 
       -- Blade of Justice (or Divine Hammer talent)
       -- Use together with Righteous Verdict if available
-      elseif ct.CanCast(ct.BladeOrHammer, ct.Target) then
+      elseif ct.CanCast(ct.BladeOrHammer, ct.Target, nil, nil, false) then
         -- Use Spender before using Blade of Justice to benefit from Righteous Verdict
         if ct.PlayerHasArtifactTrait(238062) and HolyPower >= 3 then
           -- Use AOE Spender (Divine Storm)
@@ -103,7 +106,7 @@ function ct.PaladinRetribution()
     -- Phase Independent Spells --
 
     -- Justicar's Vengeance (Talent, use if 5 HolyPower and below 80% health)
-    if HolyPower == 5 and ct.PercentHealth(ct.player) and ct.CanCast(215661) then
+    if HolyPower == 5 and ct.PercentHealth(ct.player) <= 80 and ct.CanCast(215661) then
       return ct.Cast(215661)
     end
 
@@ -120,21 +123,21 @@ function ct.PaladinRetribution()
 
     -- Holy Power Spending Phase --
 
-    -- Judgment (Cast when 5 Holy Power)
-    if HolyPower == 5 and not ct.UnitHasDebuff(ct.Target, 197277)
+    -- Judgment (Cast when Holy Power >= 4)
+    if HolyPower >= 4 and not ct.UnitHasDebuff(ct.Target, 197277)
     and ct.CanCast(20271, ct.Target) and ct.IsInLOS(ct.Target) then
       return ct.Cast(20271, ct.Target)
     end
 
     -- Execution Sentence (Talent, Cast during Judgment debuff)
-    if ct.UnitHasDebuff(ct.Target, 197277) and ct.CanCast(213757, ct.Target)
-    and ct.IsInLOS(ct.Target) then
+    if ct.UnitHasDebuff(ct.Target, 197277) and ct.CanCast(213757, ct.Target, 9, 3)
+    and ct.IsInLOS(ct.Target) or ct.GetRemainingCooldown(20271) >= 1 then
       return ct.Cast(213757, ct.Target)
     end
 
     -- Templar's Verdict (Cast during Judgment debuff)
     -- or Divine Storm during AOE
-    if ct.UnitHasDebuff(ct.Target, 197277) then
+    if ct.UnitHasDebuff(ct.Target, 197277) or ct.GetRemainingCooldown(20271) >= 1 then
       if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3
       and ct.CanCast(53385, nil, 9, 3) then
         return ct.Cast(53385)
@@ -166,6 +169,9 @@ function ct.PaladinRetributionInterrupt(unit)
 end
 
 function ct.PaladinRetributionSetUp()
+  -- Interrupt function
+  ct.Interrupt = ct.PaladinRetributionInterrupt
+
   -- Use Blade or Hammer
   ct.BladeOrHammer = nil
   if select(4, GetTalentInfo(4, 3, 1)) then

@@ -600,3 +600,16 @@ function ct.PlayerHasArtifactTrait(spellID)
   end
   return false
 end
+
+-- returns the remaining cooldown of the given spell in seconds
+function ct.GetRemainingCooldown(spell)
+  if select(1, GetSpellCooldown(spell)) == 0 then
+    return 0
+  end
+
+  local Start = select(1, GetSpellCooldown(spell))
+  local Duration = select(2, GetSpellCooldown(spell))
+  local EndTime = Start + Duration
+
+  return EndTime - GetTime()
+end

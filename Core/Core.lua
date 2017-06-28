@@ -41,6 +41,7 @@ function ct.StartUp()
 
   frame:RegisterEvent("PLAYER_REGEN_ENABLED")
   frame:RegisterEvent("UNIT_SPELLCAST_START")
+  frame:RegisterEvent("PLAYER_TALENT_UPDATE")
 
   -- This detects the completition of casted spells
   -- This is needed because of the way how the rotation chains up spells
@@ -70,6 +71,9 @@ function ct.StartUp()
     if event == "PLAYER_REGEN_ENABLED" then
       -- player left any combat action so the queue will be cleaned up
       ct.CleanUpQueue()
+    end
+    if event == "PLAYER_TALENT_UPDATE" then
+      ct.SetUpRotationEngine()
     end
   end
 
