@@ -78,7 +78,7 @@ function ct.PaladinProtection()
     -- use when 3 charges
     -- keep one charge in reserve (two charges when having sepharim and not actively tanking)
     if ct.UnitIsHostile(ct.Target) and ct.CanCast(53600, ct.Target)
-    and not ct.UnitHasAura(ct.player, 53600) and ct.IsFacing(ct.Target, ct.CastAngle) then
+    and not ct.UnitHasBuff(ct.player, 53600) and ct.IsFacing(ct.Target, ct.CastAngle) then
       if select(4, GetTalentInfo(7, 2, 1)) and select(1, GetSpellCharges(53600)) > 2
       and ct.player ~= MainTank then
         return ct.Cast(53600)

@@ -84,8 +84,18 @@ function ct.InterruptEngine()
   end
 end
 
--- Handles Disspelling
-function ct.DisspellEngine()
+-- Handles Disspelling of group members
+function ct.DispellEngine()
+  local Units = ct.GetGroupMembers()
+  local Unit = nil
+  for i = 1, getn(Units) do
+    Unit = Units[i]
+    for j = 1, ct.GetDebuffCount(Unit) do
+      if select(5, UnitDebuff(Unit, j)) ~= nil then
+        ct.Dispell(Unit, select(5, UnitDebuff(Unit, j)))
+      end
+    end
+  end
 end
 
 function ct.SetUpRotationEngine()

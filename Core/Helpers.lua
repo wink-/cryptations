@@ -40,6 +40,7 @@ end
 function ct.CanCast(spell, unit, powerType, power, checkIfKnown)
   return select(1, GetSpellCooldown(spell)) == 0 and (unit == nil or ct.IsInAttackRange(spell, unit))
   and (IsSpellKnown(spell) or checkIfKnown == false)
+  and (not ct.UnitIsMoving(ct.player) or ct.CanCastWhileMoving(spell))
   and ((powerType == nil and power == nil) or UnitPower(ct.player, powerType) >= power)
 end
 
@@ -113,9 +114,16 @@ end
 -- returns true if player can cast while moving (e.g. ice floes)
 -- or if given spell can be casted while moving (e.g. instant cast, scorch, ...)
 function ct.CanCastWhileMoving(spell)
+  -- check if a spell is instant cast
+  if select(4, GetSpellInfo(spell)) == 0 then
+    return true
+  else
+    return false
+  end
+
   -- check if player is affected by auras that allow casting while moving
   for i, v in ipairs(ct.CastWhileMovingAuras) do
-    if ct.UnitHasAura(ct.player, ct.CastWhileMovingAuras[i]) then
+    if ct.UnitHasBuff(ct.player, ct.CastWhileMovingAuras[i]) then
       return true
     end
   end
@@ -126,58 +134,98 @@ function ct.CanCastWhileMoving(spell)
       return true
     end
   end
-
-  -- check if a spell is instant cast
-  if select(4, GetSpellInfo(spell)) == 0 then
-    return true
-  else
-    return false
-  end
 end
 
--- given an unit and an auraID, produces true if unit has aura
-function ct.UnitHasAura(unit, auraID)
+-- given an unit and a buffID, produces true if unit has Buff
+function ct.UnitHasBuff(unit, buffID)
   if unit == nil then
     return nil
   end
 
-  local AuraCount = ct.GetAuraCount(unit)
+  local BuffCount = ct.GetBuffCount(unit)
 
   -- iterate over unit's auras
-  for i = 1, AuraCount do
-    if select(11, UnitAura(unit, i)) == auraID then
+  for i = 1, BuffCount do
+    if select(11, UnitBuff(unit, i)) == buffID then
       return true
     end
   end
-
   return false
 end
 
--- returns number of how many auras the given unit has
-function ct.GetAuraCount(unit)
+-- given an unit and debuffID, produces true if unit has debuff
+function ct.UnitHasDebuff(unit, debuffID)
   if unit == nil then
     return nil
   end
 
-  local AuraIndex = 1
-  local AuraCount = 0
+  local DebuffCount = ct.GetDebuffCount(unit)
 
-  while (select(1, UnitAura(unit, AuraIndex))) do
-    AuraIndex = AuraIndex + 1
-    AuraCount = AuraCount + 1
+  -- iterate over unit's auras
+  for i = 1, DebuffCount do
+    if select(11, UnitDebuff(unit, i)) == debuffID then
+      return true
+    end
   end
-  return AuraCount
+  return false
 end
 
--- returns table containing every unit that has the given aura
-function ct.FindUnitsWithAura(auraID)
-  local ObjectCount = GetObjectCount ()
+-- returns number of how many buffs the given unit has
+function ct.GetBuffCount(unit)
+  if unit == nil then
+    return nil
+  end
+
+  local BuffIndex = 1
+  local BuffCount = 0
+
+  while (select(1, UnitBuff(unit, BuffIndex))) do
+    BuffIndex = BuffIndex + 1
+    BuffCount = BuffCount + 1
+  end
+  return BuffCount
+end
+
+-- returns number of how many debuffs the given unit has
+function ct.GetDebuffCount(unit)
+  if unit == nil then
+    return nil
+  end
+
+  local DebuffIndex = 1
+  local DebuffCount = 0
+
+  while (select(1, UnitDebuff(unit, DebuffIndex))) do
+    DebuffIndex = DebuffIndex + 1
+    DebuffCount = DebuffCount + 1
+  end
+  return DebuffCount
+end
+
+-- returns table containing every unit that has the given buff
+function ct.FindUnitsWithBuff(buffID)
+  local ObjectCount = GetObjectCount()
   local Object = nil
   local Units = {}
   for i = 1, ObjectCount do
     Object = GetObjectWithIndex(i)
     if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
-    and ct.UnitHasAura(Object, auraID) then
+    and ct.UnitHasBuff(Object, buffID) then
+      table.insert(Units, Object)
+    end
+  end
+  return Units
+end
+
+-- returns table containing every unit that has the given debuff
+function ct.FindUnitsWithDebuff(debuffID)
+  local ObjectCount = GetObjectCount()
+  local Object = nil
+  local Units = {}
+  for i = 1, ObjectCount do
+    Object = GetObjectWithIndex(i)
+    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    and ct.UnitHasDebuff(Object, debuffID) then
       table.insert(Units, Object)
     end
   end
@@ -480,14 +528,23 @@ function ct.GetSpellID(name)
   return select(7, GetSpellInfo(name))
 end
 
--- given an unit, returns table of all of the unit's auras
-function ct.GetUnitAuras(unit)
-  Auras = {}
-  AuraCount = ct.GetAuraCount(unit)
-  for i = 1, AuraCount do
-    Auras[i] = select(11, UnitAura(unit, i))
+-- given an unit, returns table of all of the unit's buff id's
+function ct.GetUnitBuffs(unit)
+  Buffs = {}
+  BuffCount = ct.GetBuffCount(unit)
+  for i = 1, BuffCount do
+    table.insert(Buffs, select(11, UnitBuff(unit, i)))
   end
-  return Auras
+  return Buffs
+end
+
+function ct.GetUnitDebuffs(unit)
+  Debuffs = {}
+  DebuffCount = ct.GetDebuffCount(unit)
+  for i = 1, DebuffCount do
+    table.insert(Debuffs, select(11, UnitDebuff(unit, i)))
+  end
+  return Debuffs
 end
 
 -- produces the time to die for the given unit

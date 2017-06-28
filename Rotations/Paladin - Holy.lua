@@ -10,6 +10,9 @@ function ct.PaladinHoly()
 
   if UnitAffectingCombat(ct.player) then
 
+    -- Dispell engine
+    ct.DispellEngine()
+
     -- pulse target engine and remember target
     ct.TargetEngine("hostile")
     ct.Target = GetObjectWithGUID(UnitGUID("target"))
@@ -39,7 +42,7 @@ function ct.PaladinHoly()
 
     -- Blessing of Sacrifice (Use together with Divine Protection on units below 20% health)
     if ct.CanCast(6940) and ct.CanCast(498) and LowestFriend ~= nil
-    and not ct.UnitHasAura(LowestFriend, 6940)
+    and not ct.UnitHasBuff(LowestFriend, 6940)
     and ct.PercentHealth(LowestFriend) <= 20 then
       local Sequence = {498, 6940}
       return ct.AddSpellToQueue(Sequence, LowestFriend)
@@ -70,7 +73,7 @@ function ct.PaladinHoly()
     -- TOPPING LOGIC
     elseif ct.PercentHealth(LowestFriend) <= ct.ToppingHealthThreshold then
       -- Infusion of Light Proc (Either Holy Light or Flash of Light)
-      if ct.UnitHasAura(ct.player, 53576) then
+      if ct.UnitHasBuff(ct.player, 53576) then
         if ct.UseHolyLightOnInfusion then
           if ct.CanCast(82326, LowestFriend, 0, MaxMana * 0.12) and ct.IsInLOS(LowestFriend) then
             return ct.Cast(82326, LowestFriend)
@@ -107,25 +110,25 @@ function ct.PaladinHoly()
       -- Beacon of Light on Tank (If not Talented BOV)
       if MainTank ~= nil and not select(4, GetTalentInfo(7, 3, 1))
       and ct.CanCast(53563, MainTank, 0, MaxMana * 0.025) and ct.IsInLOS(MainTank)
-      and not ct.UnitHasAura(MainTank, 53563) then
+      and not ct.UnitHasBuff(MainTank, 53563) then
         return ct.Cast(53563, MainTank)
       end
 
       -- Beacon of Faith on LowestFriend (If Talented BOF)
       if LowestFriend ~= nil and ct.CanCast(156910, LowestFriend, 0, MaxMana * 0.03125)
-      and not UnitHasAura(LowestFriend, 156910) and ct.IsInLOS(LowestFriend) then
+      and not UnitHasBuff(LowestFriend, 156910) and ct.IsInLOS(LowestFriend) then
         return ct.Cast(156910, LowestFriend)
       end
 
       -- Bestow Faith (Alywas use on MainTank)
       if ct.CanCast(223306, MainTank, 0, MaxMana * 0.06) and ct.IsInLOS(MainTank)
-      and not ct.UnitHasAura(MainTank, 223306) and
+      and not ct.UnitHasBuff(MainTank, 223306) and
       ct.PercentHealth(MainTank) <= ct.BestowFaithThreshold then
         return ct.Cast(223306, MainTank)
       end
 
       -- Infusion of Light Proc (Either Holy Light or Flash of Light)
-      if ct.UnitHasAura(ct.player, 53576) then
+      if ct.UnitHasBuff(ct.player, 53576) then
         if ct.UseHolyLightOnInfusion then
           if ct.CanCast(82326, HealTarget, 0, MaxMana * 0.12) and ct.IsInLOS(HealTarget) then
             return ct.Cast(82326, HealTarget)
@@ -179,7 +182,7 @@ function ct.PaladinHoly()
       -- Light of Dawn (Use when 2 Units are in the cone and at 70% or lower)
       if ct.CanCast(85222, nil, 0, MaxMana * 0.14) then
         -- Rule of Law
-        if ct.UnitHasAura(ct.player, 214202)
+        if ct.UnitHasBuff(ct.player, 214202)
         and getn(ct.GetUnitsInCone(ct.player, ct.ConeAngle, 22.5, "friendly", true, 70)) >= 2 then
           return ct.Cast(85222)
         -- Beacon of the Lightbringer
@@ -230,7 +233,12 @@ function ct.PaladinHoly()
 end
 
 -- TODO: Disspell Spells are handled here
-function ct.PaladinHolyDisspell()
+function ct.PaladinHolyDispell(unit, dispelType)
+  local MaxMana = UnitPowerMax(ct.player , 0)
+
+  if ct.CanCast(4987, unit, 0, MaxMana * 0.13) and dispelType ~= "Curse" then
+    return ct.Cast(4987, unit)
+  end
 end
 
 -- This sets up basic settings
@@ -246,4 +254,7 @@ function ct.PaldinHolySetUp()
 
   ct.FlashOfLightThreshold            = 50
   ct.BestowFaithThreshold             = 80
+
+  -- Disspelling
+  ct.Dispell = ct.PaladinHolyDispell
 end

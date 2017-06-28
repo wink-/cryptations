@@ -7,8 +7,7 @@ ct.SpellHistory = {}
 function ct.PulseQueue()
 
   -- pulse appropriate rotation if spellQueue is empty
-  if getn(ct.SpellQueue) == 0 and not ct.IsCasting(ct.player)
-  and (not ct.UnitIsMoving(ct.player) or ct.CanCastWhileMoving(SpellID)) then
+  if getn(ct.SpellQueue) == 0 and not ct.IsCasting(ct.player) then
     ct.PulseRotation()
   elseif getn(ct.SpellQueue) ~= 0 then
     local SpellID = ct.SpellQueue[1].spell
