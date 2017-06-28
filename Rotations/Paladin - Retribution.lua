@@ -27,8 +27,9 @@ function ct.PaladinRetribution()
 
     -- COOLDOWNLS
 
-    -- Avenging Wrath (On Cooldown, when Judgment debuff is applied on target)
-    if ct.CanCast(31884) and ct.UnitHasDebuff(ct.Target, 197277) then
+    -- Avenging Wrath (On Cooldown, when Judgment debuff is applied on target and when in melee range)
+    if ct.CanCast(31884) and ct.UnitHasDebuff(ct.Target, 197277)
+    and ct.IsInAttackRange(85256, ct.Target) then
       return ct.Cast(31884)
     end
 
@@ -58,8 +59,7 @@ function ct.PaladinRetribution()
 
     -- Don't overcap Holy Power
     -- Only cast during Judgment debuff when there is need to generate Holy Power
-    if (HolyPower < 5 and not ct.UnitHasDebuff(ct.Target, 197277)) or HolyPower < 3
-    or ct.GetRemainingCooldown(20271) >= 1 then
+    if (HolyPower < 5 and not ct.UnitHasDebuff(ct.Target, 197277)) or HolyPower < 3 then
       -- Consecration (Use when at least 2 targets within 8 yards and not moving)
       if ct.CanCast(205228) and not ct.UnitIsMoving(ct.player)
       and getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 2 then
@@ -124,14 +124,14 @@ function ct.PaladinRetribution()
     -- Holy Power Spending Phase --
 
     -- Judgment (Cast when Holy Power >= 4)
-    if HolyPower >= 4 and not ct.UnitHasDebuff(ct.Target, 197277)
+    if HolyPower >= 4 and not ct.UnitHasDebuff(ct.Target, 197277) and ct.IsInAttackRange(85256, ct.Target)
     and ct.CanCast(20271, ct.Target) and ct.IsInLOS(ct.Target) then
       return ct.Cast(20271, ct.Target)
     end
 
     -- Execution Sentence (Talent, Cast during Judgment debuff)
-    if ct.UnitHasDebuff(ct.Target, 197277) and ct.CanCast(213757, ct.Target, 9, 3)
-    and ct.IsInLOS(ct.Target) or ct.GetRemainingCooldown(20271) >= 1 then
+    if (ct.UnitHasDebuff(ct.Target, 197277) or ct.GetRemainingCooldown(20271) >= 1)
+    and ct.CanCast(213757, ct.Target, 9, 3) and ct.IsInLOS(ct.Target) then
       return ct.Cast(213757, ct.Target)
     end
 
