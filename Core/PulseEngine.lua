@@ -6,9 +6,14 @@ function Pulse(self, elapsed)
     if FireHack == nil then
       ct.UpdateInterval = 0
       return message("No Unlocker Loaded. Attatch Unlocker and Reload")
-    else
-      -- Testing this
+    elseif FireHack ~= nil and (ct.player == nil or not ObjectExists(ct.player)) then
+      -- define player object
       ct.player = GetObjectWithGUID(UnitGUID("player"))
+    end
+
+    -- If the engie still could not find the right playerobject, Reload
+    if ct.player == nil or not ObjectExists(ct.player) then
+      ReloadUI()
     end
 
     -- TODO: pulse engine delays for:
