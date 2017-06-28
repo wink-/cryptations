@@ -7,7 +7,8 @@ ct.SpellHistory = {}
 function ct.PulseQueue()
 
   -- pulse appropriate rotation if spellQueue is empty
-  if getn(ct.SpellQueue) == 0 and not ct.IsCasting(ct.player) then
+  if getn(ct.SpellQueue) == 0 and not ct.IsCasting(ct.player)
+  and (not ct.UnitIsMoving(ct.player) or ct.CanCastWhileMoving(SpellID)) then
     ct.PulseRotation()
   elseif getn(ct.SpellQueue) ~= 0 then
     local SpellID = ct.SpellQueue[1].spell
@@ -82,5 +83,4 @@ function ct.AddSpellToHistory(spell)
   -- add spell to history like : SPELL; TARGET; TIME
   local Entry = {spell = spell, time = GetTime()}
   table.insert(ct.SpellHistory, Entry)
-  print("added " .. spell .. " to the spell history")
 end

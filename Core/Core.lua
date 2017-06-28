@@ -42,6 +42,9 @@ function ct.StartUp()
   frame:RegisterEvent("UNIT_SPELLCAST_START")
 
   -- This detects the completition of casted spells
+  -- This is needed because of the way how the rotation chains up spells
+  -- The rotation tries to cast spells with as little delay as possible
+  -- and therefore using the "succeeded" event would not be fast enough
   local function spellDetectionHandler()
     -- add spell to the history (no matter if it was on the queue or not)
     if not ct.IsCasting(ct.player) and ct.CurrentSpell ~= nil then
