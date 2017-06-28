@@ -5,9 +5,6 @@ function ct.PaladinProtection()
 
   local LowestFriend      = ct.FindLowestUnit("friendly")
 
-  local LowestEnemy       = ct.FindLowestUnit("hostile", true)
-  local HighestEnemy      = ct.FindHighestUnit("hostile", true)
-
   local MainTank, OffTank = ct.FindTanks()
 
   -- Call Taunt engine
@@ -204,7 +201,6 @@ end
 
 -- Interrupt spells are handled here
 function ct.PaladinProtectionInterrupt(unit)
-
   -- Rebuke
   if ct.CanCast(96231, unit) and ct.IsInLOS(unit) then
     return ct.Cast(96231, unit)

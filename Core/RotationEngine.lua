@@ -109,7 +109,7 @@ function ct.SetUpRotationEngine()
   elseif select(3, UnitClass("player")) ==  2 then
     if     GetSpecialization() == 1 then           ct.Spec = ct.PaladinHoly;        ct.PaldinHolySetUp()
     elseif GetSpecialization() == 2 then           ct.Spec = ct.PaladinProtection;  ct.PaladinProtectionSetUp()
-    elseif GetSpecialization() == 3 then           message("This class/spec is not yet supported.")
+    elseif GetSpecialization() == 3 then           ct.Spec = ct.PaladinRetribution; ct.PaladinRetributionSetUp()
     end
   elseif select(3, UnitClass("player")) ==  3 then
     if     GetSpecialization() == 1 then           message("This class/spec is not yet supported.")

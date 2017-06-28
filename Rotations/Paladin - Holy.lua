@@ -3,7 +3,6 @@ function ct.PaladinHoly()
   local MaxHealth               = UnitHealthMax(ct.player)
 
   local LowestFriend            = ct.FindLowestUnit("friendly")
-  local HighestFriend           = ct.FindHighestUnit("friendly")
 
   local MainTank, OffTank       = ct.FindTanks()
   local HealTarget              = nil
@@ -201,15 +200,15 @@ function ct.PaladinHoly()
         local Object = nil
         for i = 1, ObjectCount do
           Object = GetObjectWithIndex(i)
-          if ObjectExists(Object) and ct.CanCast(114165, Object) and ct.IsInLOS(Object)
-          and ObjectIsType(Object, ObjectTypes.Unit) and ct.UnitIsHostile(Object)
+          if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit) and ct.IsInLOS(Object)
+          and ct.CanCast(114165, Object) and ct.UnitIsHostile(Object)
           and getn(ct.GetUnitsInRadius(Object, 15, "friendly", true)) >= 4 then
             return ct.Cast(114165, Object)
           end
         end
       end
 
-      -- Beacon of Virtue TODO: add mana logic
+      -- Beacon of Virtue
       if ct.CanCast(200025, HealTarget, 0, MaxMana * 0.1) and ct.IsInLOS(HealTarget)
       and getn(ct.GetUnitsBelowHealth(70, "friendly", true, MainTank, 30)) >= 3 then
         return ct.Cast(200025, HealTarget)
