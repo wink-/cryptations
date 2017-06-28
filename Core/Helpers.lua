@@ -528,7 +528,7 @@ function ct.GetSpellID(name)
   return select(7, GetSpellInfo(name))
 end
 
--- given an unit, returns table of all of the unit's buff id's
+-- given a unit, returns table of all of the unit's buff id's
 function ct.GetUnitBuffs(unit)
   Buffs = {}
   BuffCount = ct.GetBuffCount(unit)
@@ -588,4 +588,15 @@ end
 -- returns the distance between x1,y1,z1 and x2,y2,z2
 -- TODO: implement
 function ct.GetDistanceBetweenPositions(x1, y1, z1, x2, y2, z2)
+end
+
+-- given the spellID of the artifact trait, produces true if currently equipped artifact has this trait unlocked
+function ct.PlayerHasArtifactTrait(spellID)
+  local traits = select(2, ct.LAD:GetArtifactTraits())
+  for i = 1, #traits do
+    if traits[i].spellID == spellID then
+      return true
+    end
+  end
+  return false
 end

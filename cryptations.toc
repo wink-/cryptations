@@ -2,6 +2,11 @@
 ## Title: cryptations
 ## Version: 0.1
 
+# Libs
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibArtifactData-1.0\LibArtifactData-1.0.lua
+
 # Core
 Core\Core.lua
 Core\SpellManager.lua
@@ -17,5 +22,6 @@ Tables\Units.lua
 # Rotations
 Rotations\Paladin - Protection.lua
 Rotations\Paladin - Holy.lua
+Rotations\Paladin - Retribution.lua
 
 frame.xml

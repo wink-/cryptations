@@ -2,11 +2,12 @@
 ct = {}
 
 -- Global Variables
-ct.Target                   = nil           -- The unit which the player is targeting
-ct.Spelltarget              = nil           -- The unit on which a spell shall be casted
-ct.SpellUniqueIdentifier    = 0             -- Every spell will have this value (like a primary key in a database)
-ct.CurrentUniqueIdentifier  = nil           -- This is the primary key of the spell that is currently being casted
-ct.CurrentSpell             = nil           -- This holds the id of the spell that is currently being casted (also for instant spells)
+ct.Target                   = nil                             -- The unit which the player is targeting
+ct.Spelltarget              = nil                             -- The unit on which a spell shall be casted
+ct.SpellUniqueIdentifier    = 0                               -- Every spell will have this value (like a primary key in a database)
+ct.CurrentUniqueIdentifier  = nil                             -- This is the primary key of the spell that is currently being casted
+ct.CurrentSpell             = nil                             -- This holds the id of the spell that is currently being casted (also for instant spells)
+ct.LAD                      = LibStub("LibArtifactData-1.0")  -- Library for getting Artifact info
 
 -- GLOBAL SETTINGS
 
