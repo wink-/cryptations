@@ -593,6 +593,11 @@ end
 -- given the spellID of the artifact trait, produces true if currently equipped artifact has this trait unlocked
 function ct.PlayerHasArtifactTrait(spellID)
   local traits = select(2, ct.LAD:GetArtifactTraits())
+
+  if traits == nil or getn(traits) == 0 then
+    return nil
+  end
+
   for i = 1, #traits do
     if traits[i].spellID == spellID then
       return true
