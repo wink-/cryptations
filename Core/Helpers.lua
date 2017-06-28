@@ -26,6 +26,14 @@ function ct.Cast(SpellID, unit)
   end
 end
 
+-- This casts a ground spell to the given coordinates
+function ct.CastGroundSpell(SpellID, x, y, z)
+  if x ~= nil and y ~= nil and z ~= nil then
+    ct.Cast(SpellID)
+    ClickPosition(x, y, z)
+  end
+end
+
 -- several checks to determine whether or not a spell can be casted
 -- returns true if all checks pass
 -- checkIfKnown (optional) : if true, checks if the spell is known
@@ -345,13 +353,27 @@ function ct.CastedPercent(unit)
   return PercentCasted
 end
 
--- returns the number of units that are below the given health threshold
+-- returns table containing units that are within the player's group or raid
+function ct.GetGroupMembers()
+  local Units = {}
+  local ObjectCount = GetObjectCount()
+  local Object = nil
+  for i = 1, ObjectCount do
+    Object = GetObjectWithIndex(i)
+    if ObjectExists(Object) and (UnitInRaid(Object) or UnitInParty(Object)) then
+      table.insert(Units, Object)
+    end
+  end
+  return Units
+end
+
+-- returns table containing units that are below the given health percentage
 -- mode : friendly or hostile
 -- onlyCombat (optional) : true or false
 -- unit (optional) : needed for range
 -- range (optional) : the range which shall be scanned for units
-function ct.GetUnitCountBelowHealth(healthPercent, mode, onlyCombat, unit, range)
-  local Count = 0
+function ct.GetUnitsBelowHealth(healthPercent, mode, onlyCombat, unit, range)
+  local Units = {}
   local ObjectCount = GetObjectCount()
   local Object = nil
   for i = 1, ObjectCount do
@@ -362,14 +384,14 @@ function ct.GetUnitCountBelowHealth(healthPercent, mode, onlyCombat, unit, range
       if mode == "friendly" and ((not ct.UnitIsHostile(Object) and UnitIsPlayer(Object))
       or (UnitInParty(Object) or UnitInRaid(Object)))
       and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
-        Count = Count + 1
+        table.insert(Units, Object)
       elseif mode == "hostile" and ct.UnitIsHostile(Object)
       and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
-        Count = Count + 1
+        table.insert(Units, Object)
       end
     end
   end
-  return Count
+  return Units
 end
 
 -- returns the unit objects of the tanks and specifies them as main and off tank, return nil if not found
@@ -491,8 +513,22 @@ function ct.GetCreatureID(unit)
   return tonumber(creatureID)
 end
 
--- returns the center (x and y center) between the units in the given table
+-- returns the center (x, y, z coordinates) between the units in the given table
 -- at least two units required
 function ct.GetCenterBetweenUnits(units)
+  local centerx, centery, centerz = 0, 0, 0
+  local count = 0
+  for i = 1, getn(units) do
+    unitx, unity, unitz = ObjectPosition(units[i])
+    centerx = centerx + unitx
+    centery = centery + unity
+    centerz = centerz + unitz
+    count = count + 1
+  end
+  return centerx / count, centery / count, centerz / count
+end
 
+-- returns the distance between x1,y1,z1 and x2,y2,z2
+-- TODO: implement
+function ct.GetDistanceBetweenPositions(x1, y1, z1, x2, y2, z2)
 end
