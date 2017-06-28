@@ -28,9 +28,28 @@ function ct.PaladinRetribution()
     -- COOLDOWNLS
 
     -- Avenging Wrath (On Cooldown, when Judgment debuff is applied on target)
-    -- Shield of Vengeance (Use when below 70% health (defensive) or when 3 Enemy Units are around (offensive))
+    if ct.CanCast(31884) and ct.UnitHasDebuff(ct.Target, 197277) then
+      return ct.Cast(31884)
+    end
+
+    -- Shield of Vengeance (Use when below 70% health (defensive) or when 3 Enemy Units are within 8 yards (offensive))
+    if ct.CanCast(184662) then
+      if ct.PercentHealth(ct.player) <= 70 then
+        return ct.Cast(184662)
+      elseif getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3 then
+        return ct.Cast(184662)
+      end
+
     -- Crusade (Talent, Use on Cooldown)
+    if ct.CanCast(231895) then
+      return ct.Cast(231895)
+    end
+
     -- Holy Wrath (Use when 4 Enemys are around and Health is below 50%)
+    if ct.CanCast(210220) and ct.PercentHealth(ct.player) <= 50
+    and getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 4 then
+      return ct.Cast(210220)
+    end
 
     -- ROTATION --
 
