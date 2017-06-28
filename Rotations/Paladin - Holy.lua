@@ -115,7 +115,8 @@ function ct.PaladinHoly()
 
       -- Beacon of Faith on LowestFriend (If Talented BOF)
       if LowestFriend ~= nil and ct.CanCast(156910, LowestFriend, 0, MaxMana * 0.03125)
-      and not UnitHasBuff(LowestFriend, 156910) and ct.IsInLOS(LowestFriend) then
+      and not ct.UnitHasBuff(LowestFriend, 156910) and ct.IsInLOS(LowestFriend)
+      and not ct.UnitHasBuff(LowestFriend, 53563) then
         return ct.Cast(156910, LowestFriend)
       end
 
