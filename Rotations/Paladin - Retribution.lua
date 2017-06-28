@@ -11,6 +11,7 @@ function ct.PaladinRetribution()
     -- pulse target engine and remember target
     ct.TargetEngine("hostile")
     ct.Target = GetObjectWithGUID(UnitGUID("target"))
+    local ttd = ct.ComputeTTD(ct.Target)
 
     -- call interrupt engine
     ct.InterruptEngine()

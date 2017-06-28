@@ -547,8 +547,29 @@ function ct.GetUnitDebuffs(unit)
   return Debuffs
 end
 
+-- This is not tested well and might not work as expected
 -- produces the time to die for the given unit
 function ct.ComputeTTD(unit)
+  if unit == nil or not ObjectExists(unit) or ct.IsDummy(unit) then
+    return 9999
+  end
+
+  -- check if the unit is already known to the ttd table
+  for i = 1, getn(ct.TTD) do
+    if ct.TTD[i].unit == unit then
+      -- update values
+      ct.TTD[i].duration = GetTime() - ct.TTD[i].start
+      ct.TTD[i].dps = (UnitHealthMax(ct.TTD[i].unit) - UnitHealth(ct.TTD[i].unit)) / ct.TTD[i].duration
+      ct.TTD[i].ttd = UnitHealth(ct.TTD[i].unit) / ct.TTD[i].dps
+
+      return ct.TTD[i].ttd
+    end
+  end
+
+  -- add the unit to the ttd table
+  local Entry = {unit = unit, start = GetTime(), duration = 0, dps = 0, ttd = 0}
+  table.insert(ct.TTD, Entry)
+  return 9999
 end
 
 -- returns the ID of the given unit (must be a creature)
@@ -617,4 +638,19 @@ function ct.GetRemainingCooldown(spell)
   local EndTime = Start + Duration
 
   return EndTime - GetTime()
+end
+
+-- returns true if the given unit is a training dummy
+function ct.IsDummy(unit)
+  if unit == nil then
+    return nil
+  end
+
+  -- Dungeon Bosses
+  for i = 1, getn(ct.TrainingDummies) do
+    if ct.GetCreatureID(unit) == ct.TrainingDummies[i] then
+      return true
+    end
+  end
+  return false
 end
