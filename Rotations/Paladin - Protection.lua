@@ -28,34 +28,34 @@ function ct.PaladinProtection()
     -- COOLDOWNS
     -- Avenging Wrath (Use on Cooldown)
     if ct.CanCast(31884) and ct.IsInRange(ct.player, ct.Target, 30) then
-      return CastSpellByID(31884)
+      return ct.Cast(31884)
     end
 
     -- Bastion of Light (Talent)
 
     -- Guardian of the Ancient Kings (use when below 30%)
     if ct.CanCast(86659) and UnitHealth(ct.player) <= MaxHealth * 0.3 then
-      return CastSpellByID(86659)
+      return ct.Cast(86659)
     end
 
     -- Ardent Defender (use when below 20%)
     if ct.CanCast(31850) and UnitHealth(ct.player) <= MaxHealth * 0.2 then
-      return CastSpellByID(31850)
+      return ct.Cast(31850)
     end
 
     -- Lay on Hands (use when player or lowest raid member is below 15%)
     if ct.CanCast(633) and UnitHealth(ct.player) <= MaxHealth * 0.15 then
-      return CastSpellByID(633)
+      return ct.Cast(633)
     end
 
     if ct.CanCast(633) and LowestFriend ~= nil
     and UnitHealth(LowestFriend) <= UnitHealthMax(LowestFriend) * 0.15 then
-      return CastSpellByID(633, LowestFriend)
+      return ct.Cast(633, LowestFriend)
     end
 
     -- Eye of Tyr (Use when 3 enemys are within 8 yards)
     if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3 and ct.CanCast(209202) then
-      return CastSpellByID(209202)
+      return ct.Cast(209202)
     end
 
     -- Sepharim (Talent)
@@ -65,7 +65,7 @@ function ct.PaladinProtection()
     if (ct.player ~= MainTank or not ct.IsTankingBoss(ct.player))
     and select(4, GetTalentInfo(7, 2, 1)) and ct.CanCast(152262)
     and ct.IsInAttackRange(53600, ct.Target) and select(1, GetSpellCharges(53600)) >= 1 then
-      return CastSpellByID(152262)
+      return ct.Cast(152262)
     end
 
     -- Divine Shield (do not use yet)
@@ -81,11 +81,11 @@ function ct.PaladinProtection()
     and not ct.UnitHasAura(ct.player, 53600) and ct.IsFacing(ct.Target, ct.CastAngle) then
       if select(4, GetTalentInfo(7, 2, 1)) and select(1, GetSpellCharges(53600)) > 2
       and ct.player ~= MainTank then
-        return CastSpellByID(53600)
+        return ct.Cast(53600)
       elseif select(1, GetSpellCharges(53600)) > 1 and not select(4, GetTalentInfo(7, 2, 1)) then
-        return CastSpellByID(53600)
+        return ct.Cast(53600)
       elseif UnitHealth(ct.player) <= MaxHealth * 0.4 then
-        return CastSpellByID(53600)
+        return ct.Cast(53600)
       end
     end
 
@@ -95,7 +95,7 @@ function ct.PaladinProtection()
     if ct.CanCast(184092) and ct.PercentHealth(ct.player) <= 50
     and not select(4, GetTalentInfo(5, 1, 1))
     and (ct.GetPreviousSpell() ~= 184092 or ct.GetTimeSinceLastSpell() >= 500) then
-      return CastSpellByID(184092)
+      return ct.Cast(184092)
     end
 
     -- Hand of the Protector (Talent)
@@ -104,16 +104,16 @@ function ct.PaladinProtection()
     if select(4, GetTalentInfo(5, 1, 1)) and ct.CanCast(213652, nil, nil, nil, false)
     and (ct.GetPreviousSpell() ~= 213652 or ct.GetTimeSinceLastSpell() >= 500) then
       if ct.PercentHealth(ct.player) <= 50 then
-        return CastSpellByID(213652)
+        return ct.Cast(213652)
       elseif ct.PercentHealth(LowestFriend) <= 30 then
-        return CastSpellByID(213652, LowestFriend)
+        return ct.Cast(213652, LowestFriend)
       end
     end
 
     -- Flash of Light (use when below 30% health)
     if ct.CanCast(19750, ct.player) and UnitHealth(ct.player) <= MaxHealth * 0.3
     and not ct.UnitIsMoving(ct.player) then
-      return ct.AddSpellToQueue(19750, ct.player)
+      return ct.Cast(19750, ct.player)
     end
 
     -- AOE ROTATION
@@ -122,31 +122,31 @@ function ct.PaladinProtection()
       -- Consecration (when not moving)
       if ct.UnitIsHostile(ct.Target) and not ct.UnitIsMoving(ct.player)
       and ct.CanCast(26573) and ct.IsInRange(ct.player, ct.Target, 8) then
-        return CastSpellByID(26573)
+        return ct.Cast(26573)
       end
 
       -- Avenger's Shield
       if ct.UnitIsHostile(ct.Target) and ct.IsInLOS(ct.Target)
       and ct.CanCast(31935, ct.Target) and ct.IsFacing(ct.Target, ct.CastAngle) then
-        return CastSpellByID(31935)
+        return ct.Cast(31935)
       end
 
       -- Judgment
       if ct.UnitIsHostile(ct.Target) and ct.IsInLOS(ct.Target)
       and ct.CanCast(20271, ct.Target) and ct.IsFacing(ct.Target, ct.CastAngle) then
-        return CastSpellByID(20271)
+        return ct.Cast(20271)
       end
 
       -- Blessed Hammer (or Hammer of the Righteous)
       if select(4, GetTalentInfo(1, 2, 1)) then
         if ct.UnitIsHostile(ct.Target) and ct.CanCast(204019, nil, nil, nil, false)
         and ct.IsInRange(ct.player, ct.Target, 8) then
-          return CastSpellByID(204019)
+          return ct.Cast(204019)
         end
       else
         if ct.UnitIsHostile(ct.Target) and ct.CanCast(53595)
         and ct.IsInRange(ct.player, ct.Target, 8) then
-          return CastSpellByID(53595)
+          return ct.Cast(53595)
         end
       end
 
@@ -156,27 +156,26 @@ function ct.PaladinProtection()
       -- Judgement
       if ct.UnitIsHostile(ct.Target) and ct.IsInLOS(ct.Target)
       and ct.CanCast(20271, ct.Target) and ct.IsFacing(ct.Target, ct.CastAngle) then
-        return CastSpellByID(20271)
+        return ct.Cast(20271)
       end
 
       -- Consecration (when not moving)
       if ct.UnitIsHostile(ct.Target) and not ct.UnitIsMoving(ct.player)
       and ct.CanCast(26573) and ct.IsInRange(ct.player, ct.Target, 8) then
-        return CastSpellByID(26573)
+        return ct.Cast(26573)
       end
 
       -- Avenger's Shield
       if ct.UnitIsHostile(ct.Target) and ct.IsInLOS(ct.Target)
       and ct.CanCast(31935, ct.Target) and ct.IsFacing(ct.Target, ct.CastAngle) then
-        return CastSpellByID(31935)
+        return ct.Cast(31935)
       end
 
-      -- Blessed Hammer
+      -- Blessed Hammer (Talent)
       -- use when fully charged
-      if ct.UnitIsHostile(ct.Target)
-      and ct.CanCast(204019) and select(1, GetSpellCharges(204019)) == 3
-      and ct.IsInRange(ct.player, ct.Target, 8) then
-          return CastSpellByID(204019)
+      if ct.UnitIsHostile(ct.Target) and ct.CanCast(204019, nil, nil, nil, false)
+      and select(1, GetSpellCharges(204019)) == 3 and ct.IsInRange(ct.player, ct.Target, 8) then
+          return ct.Cast(204019)
       end
     end
   end
@@ -193,13 +192,13 @@ function ct.PaladinProtectionTaunt(unit)
   -- Avenger's Shield
   if ct.UnitIsHostile(unit) and ct.IsInLOS(unit)
   and ct.CanCast(31935, unit) and ct.IsFacing(unit, ct.CastAngle) then
-    return CastSpellByID(31935, unit)
+    return ct.Cast(31935, unit)
   end
 
   -- Judgment
   if ct.UnitIsHostile(unit) and ct.IsInLOS(unit)
   and ct.CanCast(20271, unit) and ct.IsFacing(unit, ct.CastAngle) then
-    return CastSpellByID(20271, unit)
+    return ct.Cast(20271, unit)
   end
 end
 
@@ -208,18 +207,18 @@ function ct.PaladinProtectionInterrupt(unit)
 
   -- Rebuke
   if ct.CanCast(96231, unit) and ct.IsInLOS(unit) then
-    return CastSpellByID(96231, unit)
+    return ct.Cast(96231, unit)
   end
 
   -- Blinding Light
   if ct.CanCast(115750) and ct.IsInLOS(unit) and ct.IsInRange(ct.player, unit, 10) then
-    return CastSpellByID(115750, unit)
+    return ct.Cast(115750, unit)
   end
 
   -- Hammer of Justice
   -- TODO: fix using this on bosses
   if ct.CanCast(853, unit) and ct.IsInLOS(unit) then
-    return CastSpellByID(853, unit)
+    return ct.Cast(853, unit)
   end
 end
 

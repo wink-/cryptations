@@ -6,7 +6,7 @@ ct.Target                   = nil           -- The unit which the player is targ
 ct.Spelltarget              = nil           -- The unit on which a spell shall be casted
 ct.SpellUniqueIdentifier    = 0             -- Every spell will have this value (like a primary key in a database)
 ct.CurrentUniqueIdentifier  = nil           -- This is the primary key of the spell that is currently being casted
-ct.CurrentSpell             = nil
+ct.CurrentSpell             = nil           -- This holds the id of the spell that is currently being casted (also for instant spells)
 
 -- GLOBAL SETTINGS
 
@@ -41,24 +41,20 @@ function ct.StartUp()
   frame:RegisterEvent("PLAYER_REGEN_ENABLED")
   frame:RegisterEvent("UNIT_SPELLCAST_START")
 
-  -- This handles the removing of casted spells from the spellqueue
-  -- TODO: fix spells with cooldown double casting
+  -- This detects the completition of casted spells
   local function spellDetectionHandler()
+    -- add spell to the history (no matter if it was on the queue or not)
+    if not ct.IsCasting(ct.player) and ct.CurrentSpell ~= nil then
+      ct.AddSpellToHistory(ct.CurrentSpell)
+      ct.CurrentSpell = nil
+    end
+
+    -- remove them from the queue
     if not ct.IsCasting(ct.player) and ct.CastedPercent(ct.player) ~= nil
     and ct.SpellQueue[1] ~= nil
     and ct.CurrentUniqueIdentifier == ct.SpellQueue[1].key then
-      -- TODO: add functionality for instant spells
-      -- Spell History
-      -- maximum lenght of spell history is 10 entries
-      if getn(ct.SpellHistory) > 10 then
-        table.remove(ct.SpellHistory, 1)
-      end
-
-      -- add spell to history like : SPELL; TARGET; TIME
-      local Entry = {spell = ct.CurrentSpell, time = GetTime()}
-      table.insert(ct.SpellHistory, Entry)
-
       ct.DeQueueSpell(ct.CurrentSpell)
+      ct.CurrentSpell = nil
     end
   end
 

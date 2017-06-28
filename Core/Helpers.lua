@@ -11,6 +11,21 @@ function ct.UnitIsHostile(unit)
   end
 end
 
+-- This is a wrapper function for CastSpellByID
+-- Same functionality but adds instant casts to the spell history
+function ct.Cast(SpellID, unit)
+  if unit ~= nil and ObjectExists(unit) then
+    CastSpellByID(SpellID, unit)
+  else
+    CastSpellByID(SpellID)
+  end
+
+  -- Add to spell history if it is a instant cast
+  if select(4, GetSpellInfo(SpellID)) == 0 then
+    ct.AddSpellToHistory(SpellID)
+  end
+end
+
 -- several checks to determine whether or not a spell can be casted
 -- returns true if all checks pass
 -- checkIfKnown (optional) : if true, checks if the spell is known
@@ -474,4 +489,10 @@ function ct.GetCreatureID(unit)
 
   local creatureID = select(6, strsplit("-", guid))
   return tonumber(creatureID)
+end
+
+-- returns the center (x and y center) between the units in the given table
+-- at least two units required
+function ct.GetCenterBetweenUnits(units)
+
 end
