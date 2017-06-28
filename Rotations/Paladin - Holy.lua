@@ -17,8 +17,14 @@ function ct.PaladinHoly()
     -- COOLDOWNS
     -- Avenging Wrath (Use when 3 units are below 60% health)
     if ct.CanCast(31842) and GetNumGroupMembers() ~= 1
-    and getn(ct.GetUnitsBelowHealth(70, "friendly", true)) >= 3 then
+    and getn(ct.GetUnitsBelowHealth(60, "friendly", true)) >= 3 then
       return ct.Cast(31842)
+    end
+
+    -- Holy Avenger (Talent) use when 2 units are below 60% health
+    if ct.CanCast(105809) and GetNumGroupMembers() ~= 1
+    and getn(ct.GetUnitsBelowHealth(60, "friendly", true)) >= 2 then
+      return ct.Cast(105809)
     end
 
     -- Lay on Hands (use when player or lowest raid member is below 15% health)
@@ -93,6 +99,11 @@ function ct.PaladinHoly()
 
     -- HEAL ROTATION
     if HealTarget ~= nil then
+      -- Rule of Law (Talent)
+      if ct.CanCast(214202) then
+        return ct.Cast(214202)
+      end
+
       -- Beacon of Light on Tank (If not Talented BOV)
       if MainTank ~= nil and not select(4, GetTalentInfo(7, 3, 1))
       and ct.CanCast(53563, MainTank, 0, MaxMana * 0.025) and ct.IsInLOS(MainTank)
@@ -166,9 +177,19 @@ function ct.PaladinHoly()
       end
 
       -- Light of Dawn (Use when 2 Units are in the cone and at 70% or lower)
-      if ct.CanCast(85222, nil, 0, MaxMana * 0.14)
-      and getn(ct.GetUnitsInCone(ct.player, ct.ConeAngle, 15, "friendly", true, 70)) >= 2 then
-        return ct.Cast(85222)
+      if ct.CanCast(85222, nil, 0, MaxMana * 0.14) then
+        -- Rule of Law
+        if ct.UnitHasAura(ct.player, 214202)
+        and getn(ct.GetUnitsInCone(ct.player, ct.ConeAngle, 22.5, "friendly", true, 70)) >= 2 then
+          return ct.Cast(85222)
+        -- Beacon of the Lightbringer
+        elseif select(4, GetTalentInfo(7, 2, 1))
+        and getn(ct.GetUnitsInCone(ct.player, ct.ConeAngle, 19.5, "friendly", true, 70)) >= 2 then
+          return ct.Cast(85222)
+        -- Standard
+        elseif getn(ct.GetUnitsInCone(ct.player, ct.ConeAngle, 15, "friendly", true, 70)) >= 2 then
+          return ct.Cast(85222)
+        end
       end
 
       -- Holy Prism (Use on Enemys with at least 4 Players around them)
