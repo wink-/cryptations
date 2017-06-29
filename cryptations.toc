@@ -3,6 +3,7 @@
 ## Version: 0.1
 
 # Libs
+Libs\JSON\json.lua
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 Libs\LibArtifactData-1.0\LibArtifactData-1.0.lua
