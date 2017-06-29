@@ -10,7 +10,9 @@ function ct.PaladinHoly()
   if UnitAffectingCombat(ct.player) then
 
     -- Dispell engine
-    ct.DispellEngine()
+    if UseDispell then
+      ct.DispellEngine()
+    end
 
     -- pulse target engine and remember target
     ct.TargetEngine("hostile")
@@ -18,31 +20,29 @@ function ct.PaladinHoly()
 
     -- COOLDOWNS
     -- Avenging Wrath (Use when 3 units are below 60% health)
-    if ct.CanCast(31842) and GetNumGroupMembers() ~= 1
-    and getn(ct.GetUnitsBelowHealth(60, "friendly", true)) >= 3 then
+    if UseAvengingWrath and ct.CanCast(31842) and GetNumGroupMembers() ~= 1
+    and (getn(ct.GetUnitsBelowHealth(AvengingWrathHealthThreshold, "friendly", true))
+    >= AvengingWrathUnitThreshold) then
       return ct.Cast(31842)
     end
 
     -- Holy Avenger (Talent) use when 2 units are below 60% health
-    if ct.CanCast(105809) and GetNumGroupMembers() ~= 1
-    and getn(ct.GetUnitsBelowHealth(60, "friendly", true)) >= 2 then
+    if UseHolyAvenger and ct.CanCast(105809) and GetNumGroupMembers() ~= 1
+    and (getn(ct.GetUnitsBelowHealth(HolyAvengerHealthThreshold, "friendly", true))
+    >= HolyAvengerUnitThreshold) then
       return ct.Cast(105809)
     end
 
-    -- Lay on Hands (use when player or lowest raid member is below 15% health)
-    if ct.CanCast(633) and UnitHealth(ct.player) <= MaxHealth * 0.15 then
-      return ct.Cast(633)
-    end
-
-    if ct.CanCast(633) and LowestFriend ~= nil
-    and UnitHealth(LowestFriend) <= UnitHealthMax(LowestFriend) * 0.15 then
+    -- Lay on Hands (use when lowest raid member is below 15% health)
+    if UseLayOnHands and ct.CanCast(633) and LowestFriend ~= nil
+    and ct.PercentHealth(LowestFriend) <= LayOnHandsHealthThreshold then
       return ct.Cast(633, LowestFriend)
     end
 
     -- Blessing of Sacrifice (Use together with Divine Protection on units below 20% health)
-    if ct.CanCast(6940) and ct.CanCast(498) and LowestFriend ~= nil
+    if UseBlessingOfSacrifice and ct.CanCast(6940) and ct.CanCast(498) and LowestFriend ~= nil
     and not ct.UnitHasBuff(LowestFriend, 6940)
-    and ct.PercentHealth(LowestFriend) <= 20 then
+    and ct.PercentHealth(LowestFriend) <= BlessingOfSacrificeHealthThreshold then
       local Sequence = {498, 6940}
       return ct.AddSpellToQueue(Sequence, LowestFriend)
     end
@@ -53,31 +53,32 @@ function ct.PaladinHoly()
     -- Blessing of Freedom (SHOULD BE HANDELED BY BOSS MANAGER)
 
     -- Tyr's Deliverance (Used when 2 units in group are below 80% health)
-    if ct.CanCast(200652) then
+    if UseTyrsDeliverance and ct.CanCast(200652) then
       if GetNumGroupMembers() ~= 1 and ct.GetPreviousSpell() ~= 200652
-      and getn(ct.GetUnitsBelowHealth(80, "friendly", true, ct.player, 15)) >= 2 then
+      and (getn(ct.GetUnitsBelowHealth(TyrsDeliveranceHealthThreshold, "friendly", true, ct.player, 15))
+      >= TyrsDeliveranceUnitThreshold) then
         return ct.Cast(200652)
       end
     end
 
     -- HEAL LOGIC
     if ct.IsInRange(ct.player, MainTank, 40) and ct.IsInLOS(MainTank)
-    and ct.PercentHealth(MainTank) <= ct.TankHealthThreshold
-    and (not (ct.PercentHealth(LowestFriend) <= ct.OtherHealthThreshold)
+    and ct.PercentHealth(MainTank) <= TankHealthThreshold
+    and (not (ct.PercentHealth(LowestFriend) <= OtherHealthThreshold)
     or LowestFriend == MainTank) then
       HealTarget = MainTank
     elseif ct.IsInRange(ct.player, LowestFriend, 40) and ct.IsInLOS(LowestFriend)
-    and ct.PercentHealth(LowestFriend) <= ct.OtherHealthThreshold then
+    and ct.PercentHealth(LowestFriend) <= OtherHealthThreshold then
       HealTarget = LowestFriend
     -- TOPPING LOGIC
-    elseif ct.PercentHealth(LowestFriend) <= ct.ToppingHealthThreshold then
+    elseif ct.PercentHealth(LowestFriend) <= ToppingHealthThreshold then
       -- Infusion of Light Proc (Either Holy Light or Flash of Light)
       if ct.UnitHasBuff(ct.player, 53576) then
-        if ct.UseHolyLightOnInfusion then
+        if UseHolyLightOnInfusion then
           if ct.CanCast(82326, LowestFriend, 0, MaxMana * 0.12) and ct.IsInLOS(LowestFriend) then
             return ct.Cast(82326, LowestFriend)
           end
-        elseif ct.UseFlashOfLightOnInfusion then
+        elseif UseFlashOfLightOnInfusion then
           if ct.CanCast(19750, LowestFriend, 0, MaxMana * 0.18) and ct.IsInLOS(LowestFriend) then
             return ct.Cast(19750, LowestFriend)
           end
@@ -102,19 +103,20 @@ function ct.PaladinHoly()
     -- HEAL ROTATION
     if HealTarget ~= nil then
       -- Rule of Law (Talent)
-      if ct.CanCast(214202) then
+      if UseRuleOfLaw and ct.CanCast(214202) then
         return ct.Cast(214202)
       end
 
       -- Beacon of Light on Tank (If not Talented BOV)
-      if MainTank ~= nil and not select(4, GetTalentInfo(7, 3, 1))
+      if UseBeaconOfLight and MainTank ~= nil and not select(4, GetTalentInfo(7, 3, 1))
       and ct.CanCast(53563, MainTank, 0, MaxMana * 0.025) and ct.IsInLOS(MainTank)
       and not ct.UnitHasBuff(MainTank, 53563) then
         return ct.Cast(53563, MainTank)
       end
 
       -- Beacon of Faith on LowestFriend (If Talented BOF)
-      if LowestFriend ~= nil and ct.CanCast(156910, LowestFriend, 0, MaxMana * 0.03125)
+      if UseBeaconOfFaith and LowestFriend ~= nil
+      and ct.CanCast(156910, LowestFriend, 0, MaxMana * 0.03125)
       and not ct.UnitHasBuff(LowestFriend, 156910) and ct.IsInLOS(LowestFriend)
       and not ct.UnitHasBuff(LowestFriend, 53563) then
         return ct.Cast(156910, LowestFriend)
@@ -123,17 +125,17 @@ function ct.PaladinHoly()
       -- Bestow Faith (Alywas use on MainTank)
       if ct.CanCast(223306, MainTank, 0, MaxMana * 0.06) and ct.IsInLOS(MainTank)
       and not ct.UnitHasBuff(MainTank, 223306) and
-      ct.PercentHealth(MainTank) <= ct.BestowFaithThreshold then
+      ct.PercentHealth(MainTank) <= BestowFaithThreshold then
         return ct.Cast(223306, MainTank)
       end
 
       -- Infusion of Light Proc (Either Holy Light or Flash of Light)
       if ct.UnitHasBuff(ct.player, 53576) then
-        if ct.UseHolyLightOnInfusion then
+        if UseHolyLightOnInfusion then
           if ct.CanCast(82326, HealTarget, 0, MaxMana * 0.12) and ct.IsInLOS(HealTarget) then
             return ct.Cast(82326, HealTarget)
           end
-        elseif ct.UseFlashOfLightOnInfusion then
+        elseif UseFlashOfLightOnInfusion then
           if ct.CanCast(19750, HealTarget, 0, MaxMana * 0.18) and ct.IsInLOS(HealTarget) then
             return ct.Cast(19750, HealTarget)
           end
@@ -150,74 +152,79 @@ function ct.PaladinHoly()
       end
 
       -- Judgment (when Judgment of Light is talented)
-      if ct.Target ~= nil and IsSpellKnown(183778)
+      if UseJudgment and ct.Target ~= nil and IsSpellKnown(183778)
       and ct.CanCast(20271, ct.Target, 0, MaxMana * 0.03) and ct.IsInLOS(ct.Target) then
         return ct.Cast(20271, ct.Target)
       end
 
       -- Light's Hammer (Talent)
       -- Use when at least two units within 10 yards of each other are below 80% health
-      if ct.CanCast(114158, nil, 0, MaxMana * 0.28) then
+      if UseLightsHammer and ct.CanCast(114158, nil, 0, MaxMana * 0.28) then
         -- Find best fitting unit
         local GroupMembers = ct.GetGroupMembers()
         local BestUnit = nil
         local BestUnitTargetCount = 0
         for i = 1, getn(GroupMembers) do
           if (BestUnitTargetCount == 0
-          and getn(ct.GetUnitsBelowHealth(90, "friendly", true, GroupMembers[i], 10)) >= 2)
+          and getn(ct.GetUnitsBelowHealth(LightsHammerHealthThreshold, "friendly", true, GroupMembers[i], 10)) >= LightsHammerUnitThreshold)
           or (BestUnitTargetCount ~= 0
-          and getn(ct.GetUnitsBelowHealth(90, "friendly", true, GroupMembers[i], 10)) >= BestUnitTargetCount) then
+          and getn(ct.GetUnitsBelowHealth(LightsHammerHealthThreshold, "friendly", true, GroupMembers[i], 10)) >= BestUnitTargetCount) then
             BestUnit = GroupMembers[i]
-            BestUnitTargetCount = getn(ct.GetUnitsBelowHealth(90, "friendly", true, GroupMembers[i], 10))
+            BestUnitTargetCount = getn(ct.GetUnitsBelowHealth(LightsHammerHealthThreshold, "friendly", true, GroupMembers[i], 10))
           end
         end
         if BestUnit ~= nil then
           -- Place Hammer in center of suitable units (if in range)
-          local Units = ct.GetUnitsBelowHealth(90, "friendly", true, BestUnit, 10)
+          local Units = ct.GetUnitsBelowHealth(LightsHammerHealthThreshold, "friendly", true, BestUnit, 10)
           local x, y, z = ct.GetCenterBetweenUnits(Units)
           return ct.CastGroundSpell(114158, x, y, z)
         end
       end
 
       -- Light of Dawn (Use when 2 Units are in the cone and at 70% or lower)
-      if ct.CanCast(85222, nil, 0, MaxMana * 0.14) then
+      if UseLightofDawn and ct.CanCast(85222, nil, 0, MaxMana * 0.14) then
         -- Rule of Law
         if ct.UnitHasBuff(ct.player, 214202)
-        and getn(ct.GetUnitsInCone(ct.player, ct.ConeAngle, 22.5, "friendly", true, 70)) >= 2 then
+        and (getn(ct.GetUnitsInCone(ct.player, ct.ConeAngle, 22.5, "friendly", true, LightOfDawnHealthThreshold))
+        >= LightOfDawnUnitThreshold) then
           return ct.Cast(85222)
         -- Beacon of the Lightbringer
         elseif select(4, GetTalentInfo(7, 2, 1))
-        and getn(ct.GetUnitsInCone(ct.player, ct.ConeAngle, 19.5, "friendly", true, 70)) >= 2 then
+        and (getn(ct.GetUnitsInCone(ct.player, ct.ConeAngle, 19.5, "friendly", true, LightOfDawnHealthThreshold))
+        >= LightOfDawnUnitThreshold) then
           return ct.Cast(85222)
         -- Standard
-        elseif getn(ct.GetUnitsInCone(ct.player, ct.ConeAngle, 15, "friendly", true, 70)) >= 2 then
+        elseif (getn(ct.GetUnitsInCone(ct.player, ct.ConeAngle, 15, "friendly", true, LightOfDawnHealthThreshold))
+        >= LightOfDawnUnitThreshold) then
           return ct.Cast(85222)
         end
       end
 
       -- Holy Prism (Use on Enemys with at least 4 Players around them)
-      if ct.CanCast(114165, nil, 0, MaxMana * 0.17) then
+      if UseHolyPrism and ct.CanCast(114165, nil, 0, MaxMana * 0.17) then
         local ObjectCount = GetObjectCount()
         local Object = nil
         for i = 1, ObjectCount do
           Object = GetObjectWithIndex(i)
           if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit) and ct.IsInLOS(Object)
           and ct.CanCast(114165, Object) and ct.UnitIsHostile(Object)
-          and getn(ct.GetUnitsInRadius(Object, 15, "friendly", true)) >= 4 then
+          and (getn(ct.GetUnitsInRadius(Object, 15, "friendly", true))
+          >= HolyPrismUnitThreshold) then
             return ct.Cast(114165, Object)
           end
         end
       end
 
       -- Beacon of Virtue
-      if ct.CanCast(200025, HealTarget, 0, MaxMana * 0.1) and ct.IsInLOS(HealTarget)
+      if UseBeaconOfVirtue
+      and ct.CanCast(200025, HealTarget, 0, MaxMana * 0.1) and ct.IsInLOS(HealTarget)
       and getn(ct.GetUnitsBelowHealth(70, "friendly", true, MainTank, 30)) >= 3 then
         return ct.Cast(200025, HealTarget)
       end
 
 
       -- Holy Light (Flash of Light for greater damage)
-      if ct.PercentHealth(HealTarget) <= ct.FlashOfLightThreshold then
+      if ct.PercentHealth(HealTarget) <= FlashOfLightThreshold then
         if ct.CanCast(19750, HealTarget, 0, MaxMana * 0.18) and ct.IsInLOS(HealTarget) then
           return ct.Cast(19750, HealTarget)
         end
@@ -232,7 +239,7 @@ function ct.PaladinHoly()
   end
 end
 
--- TODO: Disspell Spells are handled here
+-- Dispell Spells are handled here
 function ct.PaladinHolyDispell(unit, dispelType)
   local MaxMana = UnitPowerMax(ct.player , 0)
 
@@ -243,17 +250,54 @@ end
 
 -- This sets up basic settings
 function ct.PaldinHolySetUp()
-  -- Infusion of Light Settings
-  ct.UseHolyLightOnInfusion           = true
-  ct.UseFlashOfLightOnInfusion        = false
+  -- load profile content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. "Paladin - Holy.JSON")
 
-  -- Health thresholds
-  ct.TankHealthThreshold              = 90
-  ct.OtherHealthThreshold             = 70
-  ct.ToppingHealthThreshold           = 90
+  if getn(json.decode(content)) == 0 then
+    return message("Error loading config file. Please Contact the Author.")
+  end
 
-  ct.FlashOfLightThreshold            = 50
-  ct.BestowFaithThreshold             = 80
+  -- Apply settings from config file
+  UseDispell                          = json.decode(content)[1].UseDispell
+  UseAvengingWrath                    = json.decode(content)[1].UseAvengingWrath
+  UseHolyAvenger                      = json.decode(content)[1].UseHolyAvenger
+  UseLayOnHands                       = json.decode(content)[1].UseLayOnHands
+  UseBlessingOfSacrifice              = json.decode(content)[1].UseBlessingOfSacrifice
+  UseTyrsDeliverance                  = json.decode(content)[1].UseTyrsDeliverance
+  UseRuleOfLaw                        = json.decode(content)[1].UseRuleOfLaw
+  UseBeaconOfLight                    = json.decode(content)[1].UseBeaconOfLight
+  UseBeaconOfFaith                    = json.decode(content)[1].UseBeaconOfFaith
+  UseHolyLightOnInfusion              = json.decode(content)[1].UseHolyLightOnInfusion
+  UseFlashOfLightOnInfusion           = json.decode(content)[1].UseFlashOfLightOnInfusion
+  UseJudgment                         = json.decode(content)[1].UseJudgment
+  UseLightsHammer                     = json.decode(content)[1].UseLightsHammer
+  UseLightofDawn                      = json.decode(content)[1].UseLightofDawn
+  UseHolyPrism                        = json.decode(content)[1].UseHolyPrism
+  UseBeaconOfVirtue                   = json.decode(content)[1].UseBeaconOfVirtue
+
+  AvengingWrathUnitThreshold          = json.decode(content)[1].AvengingWrathUnitThreshold
+  AvengingWrathHealthThreshold        = json.decode(content)[1].AvengingWrathHealthThreshold
+  HolyAvengerUnitThreshold            = json.decode(content)[1].HolyAvengerUnitThreshold
+  HolyAvengerHealthThreshold          = json.decode(content)[1].HolyAvengerHealthThreshold
+  LayOnHandsHealthThreshold           = json.decode(content)[1].LayOnHandsHealthThreshold
+  BlessingOfSacrificeHealthThreshold  = json.decode(content)[1].BlessingOfSacrificeHealthThreshold
+  TyrsDeliveranceUnitThreshold        = json.decode(content)[1].TyrsDeliveranceUnitThreshold
+  TyrsDeliveranceHealthThreshold      = json.decode(content)[1].TyrsDeliveranceHealthThreshold
+  LightsHammerUnitThreshold           = json.decode(content)[1].LightsHammerUnitThreshold
+  LightsHammerHealthThreshold         = json.decode(content)[1].LightsHammerHealthThreshold
+  LightOfDawnUnitThreshold            = json.decode(content)[1].LightOfDawnUnitThreshold
+  LightOfDawnHealthThreshold          = json.decode(content)[1].LightOfDawnHealthThreshold
+  HolyPrismUnitThreshold              = json.decode(content)[1].HolyPrismUnitThreshold
+  BeaconOfVirtueUnitThreshold         = json.decode(content)[1].BeaconOfVirtueUnitThreshold
+  BeaconOfVirtueHealthThreshold       = json.decode(content)[1].BeaconOfVirtueHealthThreshold
+
+  TankHealthThreshold                 = json.decode(content)[1].TankHealthThreshold
+  OtherHealthThreshold                = json.decode(content)[1].OtherHealthThreshold
+  ToppingHealthThreshold              = json.decode(content)[1].ToppingHealthThreshold
+  FlashOfLightThreshold               = json.decode(content)[1].FlashOfLightThreshold
+  BestowFaithThreshold                = json.decode(content)[1].BestowFaithThreshold
 
   -- Disspelling
   ct.Dispell = ct.PaladinHolyDispell
