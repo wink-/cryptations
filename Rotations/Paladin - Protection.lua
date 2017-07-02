@@ -68,8 +68,8 @@ function ct.PaladinProtection()
     -- when not actively tanking (or tanking trash)
     -- at least one charge of Shield of the Righteous
     -- in melee range of target
-    if (ct.player ~= MainTank or not ct.IsTankingBoss(ct.player))
-    and select(4, GetTalentInfo(7, 2, 1)) and ct.CanCast(152262)
+    if ct.CanCast(152262) and UseSepharim and select(4, GetTalentInfo(7, 2, 1))
+    and (ct.player ~= MainTank or not ct.IsTankingBoss(ct.player))
     and ct.IsInAttackRange(53600, ct.Target) and select(1, GetSpellCharges(53600)) >= 1 then
       return ct.Cast(152262)
     end
@@ -238,20 +238,22 @@ function ct.PaladinProtectionSetUp()
     return message("Error loading config file. Please contact the Author.")
   end
 
-  UseTauntEngine                          = json.decode(content).UseTauntEngine
-  UseInterruptEngine                      = json.decode(content).UseInterruptEngine
-  UseAvengingWrath                        = json.decode(content).UseAvengingWrath
-  UseGuardianOfTheAncientKings            = json.decode(content).UseGuardianOfTheAncientKings
-  UseArdentDefender                       = json.decode(content).UseArdentDefender
-  UseLayOnHandsSelf                       = json.decode(content).UseLayOnHandsSelf
-  UseLayOnHandsFriend                     = json.decode(content).UseLayOnHandsFriend
-  UseEyeOfTyr                             = json.decode(content).UseEyeOfTyr
-  UseSepharim                             = json.decode(content).UseSepharim
-  UseHandOfTheProtectorFriend             = json.decode(content).UseHandOfTheProtectorFriend
-  LayOnHandsHealthThreshold               = json.decode(content).LayOnHandsHealthThreshold
-  LightOfTheProtectorHealthThreshold      = json.decode(content).LightOfTheProtectorHealthThreshold
-  HandOfTheProtectorFriendHealthThreshold = json.decode(content).HandOfTheProtectorFriendHealthThreshold
-  FlashOfLightHealthThreshold             = json.decode(content).FlashOfLightHealthThreshold
+  local Settings = json.decode(content)
+
+  UseTauntEngine                          = Settings.UseTauntEngine
+  UseInterruptEngine                      = Settings.UseInterruptEngine
+  UseAvengingWrath                        = Settings.UseAvengingWrath
+  UseGuardianOfTheAncientKings            = Settings.UseGuardianOfTheAncientKings
+  UseArdentDefender                       = Settings.UseArdentDefender
+  UseLayOnHandsSelf                       = Settings.UseLayOnHandsSelf
+  UseLayOnHandsFriend                     = Settings.UseLayOnHandsFriend
+  UseEyeOfTyr                             = Settings.UseEyeOfTyr
+  UseSepharim                             = Settings.UseSepharim
+  UseHandOfTheProtectorFriend             = Settings.UseHandOfTheProtectorFriend
+  LayOnHandsHealthThreshold               = Settings.LayOnHandsHealthThreshold
+  LightOfTheProtectorHealthThreshold      = Settings.LightOfTheProtectorHealthThreshold
+  HandOfTheProtectorFriendHealthThreshold = Settings.HandOfTheProtectorFriendHealthThreshold
+  FlashOfLightHealthThreshold             = Settings.FlashOfLightHealthThreshold
 
   ct.Taunt      = ct.PaladinProtectionTaunt
   ct.Interrupt  = ct.PaladinProtectionInterrupt

@@ -259,45 +259,47 @@ function ct.PaldinHolySetUp()
     return message("Error loading config file. Please contact the Author.")
   end
 
+  local Settings = json.decode(content)
+
   -- Apply settings from config file
-  UseDispell                          = json.decode(content).UseDispell
-  UseAvengingWrath                    = json.decode(content).UseAvengingWrath
-  UseHolyAvenger                      = json.decode(content).UseHolyAvenger
-  UseLayOnHands                       = json.decode(content).UseLayOnHands
-  UseBlessingOfSacrifice              = json.decode(content).UseBlessingOfSacrifice
-  UseTyrsDeliverance                  = json.decode(content).UseTyrsDeliverance
-  UseRuleOfLaw                        = json.decode(content).UseRuleOfLaw
-  UseBeaconOfLight                    = json.decode(content).UseBeaconOfLight
-  UseBeaconOfFaith                    = json.decode(content).UseBeaconOfFaith
-  UseHolyLightOnInfusion              = json.decode(content).UseHolyLightOnInfusion
-  UseFlashOfLightOnInfusion           = json.decode(content).UseFlashOfLightOnInfusion
-  UseJudgment                         = json.decode(content).UseJudgment
-  UseLightsHammer                     = json.decode(content).UseLightsHammer
-  UseLightofDawn                      = json.decode(content).UseLightofDawn
-  UseHolyPrism                        = json.decode(content).UseHolyPrism
-  UseBeaconOfVirtue                   = json.decode(content).UseBeaconOfVirtue
+  UseDispell                          = Settings.UseDispell
+  UseAvengingWrath                    = Settings.UseAvengingWrath
+  UseHolyAvenger                      = Settings.UseHolyAvenger
+  UseLayOnHands                       = Settings.UseLayOnHands
+  UseBlessingOfSacrifice              = Settings.UseBlessingOfSacrifice
+  UseTyrsDeliverance                  = Settings.UseTyrsDeliverance
+  UseRuleOfLaw                        = Settings.UseRuleOfLaw
+  UseBeaconOfLight                    = Settings.UseBeaconOfLight
+  UseBeaconOfFaith                    = Settings.UseBeaconOfFaith
+  UseHolyLightOnInfusion              = Settings.UseHolyLightOnInfusion
+  UseFlashOfLightOnInfusion           = Settings.UseFlashOfLightOnInfusion
+  UseJudgment                         = Settings.UseJudgment
+  UseLightsHammer                     = Settings.UseLightsHammer
+  UseLightofDawn                      = Settings.UseLightofDawn
+  UseHolyPrism                        = Settings.UseHolyPrism
+  UseBeaconOfVirtue                   = Settings.UseBeaconOfVirtue
 
-  AvengingWrathUnitThreshold          = json.decode(content).AvengingWrathUnitThreshold
-  AvengingWrathHealthThreshold        = json.decode(content).AvengingWrathHealthThreshold
-  HolyAvengerUnitThreshold            = json.decode(content).HolyAvengerUnitThreshold
-  HolyAvengerHealthThreshold          = json.decode(content).HolyAvengerHealthThreshold
-  LayOnHandsHealthThreshold           = json.decode(content).LayOnHandsHealthThreshold
-  BlessingOfSacrificeHealthThreshold  = json.decode(content).BlessingOfSacrificeHealthThreshold
-  TyrsDeliveranceUnitThreshold        = json.decode(content).TyrsDeliveranceUnitThreshold
-  TyrsDeliveranceHealthThreshold      = json.decode(content).TyrsDeliveranceHealthThreshold
-  LightsHammerUnitThreshold           = json.decode(content).LightsHammerUnitThreshold
-  LightsHammerHealthThreshold         = json.decode(content).LightsHammerHealthThreshold
-  LightOfDawnUnitThreshold            = json.decode(content).LightOfDawnUnitThreshold
-  LightOfDawnHealthThreshold          = json.decode(content).LightOfDawnHealthThreshold
-  HolyPrismUnitThreshold              = json.decode(content).HolyPrismUnitThreshold
-  BeaconOfVirtueUnitThreshold         = json.decode(content).BeaconOfVirtueUnitThreshold
-  BeaconOfVirtueHealthThreshold       = json.decode(content).BeaconOfVirtueHealthThreshold
+  AvengingWrathUnitThreshold          = Settings.AvengingWrathUnitThreshold
+  AvengingWrathHealthThreshold        = Settings.AvengingWrathHealthThreshold
+  HolyAvengerUnitThreshold            = Settings.HolyAvengerUnitThreshold
+  HolyAvengerHealthThreshold          = Settings.HolyAvengerHealthThreshold
+  LayOnHandsHealthThreshold           = Settings.LayOnHandsHealthThreshold
+  BlessingOfSacrificeHealthThreshold  = Settings.BlessingOfSacrificeHealthThreshold
+  TyrsDeliveranceUnitThreshold        = Settings.TyrsDeliveranceUnitThreshold
+  TyrsDeliveranceHealthThreshold      = Settings.TyrsDeliveranceHealthThreshold
+  LightsHammerUnitThreshold           = Settings.LightsHammerUnitThreshold
+  LightsHammerHealthThreshold         = Settings.LightsHammerHealthThreshold
+  LightOfDawnUnitThreshold            = Settings.LightOfDawnUnitThreshold
+  LightOfDawnHealthThreshold          = Settings.LightOfDawnHealthThreshold
+  HolyPrismUnitThreshold              = Settings.HolyPrismUnitThreshold
+  BeaconOfVirtueUnitThreshold         = Settings.BeaconOfVirtueUnitThreshold
+  BeaconOfVirtueHealthThreshold       = Settings.BeaconOfVirtueHealthThreshold
 
-  TankHealthThreshold                 = json.decode(content).TankHealthThreshold
-  OtherHealthThreshold                = json.decode(content).OtherHealthThreshold
-  ToppingHealthThreshold              = json.decode(content).ToppingHealthThreshold
-  FlashOfLightThreshold               = json.decode(content).FlashOfLightThreshold
-  BestowFaithThreshold                = json.decode(content).BestowFaithThreshold
+  TankHealthThreshold                 = Settings.TankHealthThreshold
+  OtherHealthThreshold                = Settings.OtherHealthThreshold
+  ToppingHealthThreshold              = Settings.ToppingHealthThreshold
+  FlashOfLightThreshold               = Settings.FlashOfLightThreshold
+  BestowFaithThreshold                = Settings.BestowFaithThreshold
 
   -- Disspelling
   ct.Dispell = ct.PaladinHolyDispell
