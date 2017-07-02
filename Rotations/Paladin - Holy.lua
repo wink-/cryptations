@@ -255,8 +255,8 @@ function ct.PaldinHolySetUp()
   local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
   local content = ReadFile(profiledir .. "Paladin - Holy.JSON")
 
-  if getn(json.decode(content)) == 0 then
-    return message("Error loading config file. Please Contact the Author.")
+  if json.decode(content) == nil then
+    return message("Error loading config file. Please contact the Author.")
   end
 
   -- Apply settings from config file
