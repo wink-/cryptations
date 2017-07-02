@@ -1,4 +1,4 @@
-[{
+{
     "UseDispell": true,
     "UseAvengingWrath": true,
     "UseHolyAvenger": true,
@@ -35,4 +35,4 @@
     "ToppingHealthThreshold": 90,
     "FlashOfLightThreshold": 50,
     "BestowFaithThreshold": 80
-}]
+}

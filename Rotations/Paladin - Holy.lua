@@ -260,44 +260,44 @@ function ct.PaldinHolySetUp()
   end
 
   -- Apply settings from config file
-  UseDispell                          = json.decode(content)[1].UseDispell
-  UseAvengingWrath                    = json.decode(content)[1].UseAvengingWrath
-  UseHolyAvenger                      = json.decode(content)[1].UseHolyAvenger
-  UseLayOnHands                       = json.decode(content)[1].UseLayOnHands
-  UseBlessingOfSacrifice              = json.decode(content)[1].UseBlessingOfSacrifice
-  UseTyrsDeliverance                  = json.decode(content)[1].UseTyrsDeliverance
-  UseRuleOfLaw                        = json.decode(content)[1].UseRuleOfLaw
-  UseBeaconOfLight                    = json.decode(content)[1].UseBeaconOfLight
-  UseBeaconOfFaith                    = json.decode(content)[1].UseBeaconOfFaith
-  UseHolyLightOnInfusion              = json.decode(content)[1].UseHolyLightOnInfusion
-  UseFlashOfLightOnInfusion           = json.decode(content)[1].UseFlashOfLightOnInfusion
-  UseJudgment                         = json.decode(content)[1].UseJudgment
-  UseLightsHammer                     = json.decode(content)[1].UseLightsHammer
-  UseLightofDawn                      = json.decode(content)[1].UseLightofDawn
-  UseHolyPrism                        = json.decode(content)[1].UseHolyPrism
-  UseBeaconOfVirtue                   = json.decode(content)[1].UseBeaconOfVirtue
+  UseDispell                          = json.decode(content).UseDispell
+  UseAvengingWrath                    = json.decode(content).UseAvengingWrath
+  UseHolyAvenger                      = json.decode(content).UseHolyAvenger
+  UseLayOnHands                       = json.decode(content).UseLayOnHands
+  UseBlessingOfSacrifice              = json.decode(content).UseBlessingOfSacrifice
+  UseTyrsDeliverance                  = json.decode(content).UseTyrsDeliverance
+  UseRuleOfLaw                        = json.decode(content).UseRuleOfLaw
+  UseBeaconOfLight                    = json.decode(content).UseBeaconOfLight
+  UseBeaconOfFaith                    = json.decode(content).UseBeaconOfFaith
+  UseHolyLightOnInfusion              = json.decode(content).UseHolyLightOnInfusion
+  UseFlashOfLightOnInfusion           = json.decode(content).UseFlashOfLightOnInfusion
+  UseJudgment                         = json.decode(content).UseJudgment
+  UseLightsHammer                     = json.decode(content).UseLightsHammer
+  UseLightofDawn                      = json.decode(content).UseLightofDawn
+  UseHolyPrism                        = json.decode(content).UseHolyPrism
+  UseBeaconOfVirtue                   = json.decode(content).UseBeaconOfVirtue
 
-  AvengingWrathUnitThreshold          = json.decode(content)[1].AvengingWrathUnitThreshold
-  AvengingWrathHealthThreshold        = json.decode(content)[1].AvengingWrathHealthThreshold
-  HolyAvengerUnitThreshold            = json.decode(content)[1].HolyAvengerUnitThreshold
-  HolyAvengerHealthThreshold          = json.decode(content)[1].HolyAvengerHealthThreshold
-  LayOnHandsHealthThreshold           = json.decode(content)[1].LayOnHandsHealthThreshold
-  BlessingOfSacrificeHealthThreshold  = json.decode(content)[1].BlessingOfSacrificeHealthThreshold
-  TyrsDeliveranceUnitThreshold        = json.decode(content)[1].TyrsDeliveranceUnitThreshold
-  TyrsDeliveranceHealthThreshold      = json.decode(content)[1].TyrsDeliveranceHealthThreshold
-  LightsHammerUnitThreshold           = json.decode(content)[1].LightsHammerUnitThreshold
-  LightsHammerHealthThreshold         = json.decode(content)[1].LightsHammerHealthThreshold
-  LightOfDawnUnitThreshold            = json.decode(content)[1].LightOfDawnUnitThreshold
-  LightOfDawnHealthThreshold          = json.decode(content)[1].LightOfDawnHealthThreshold
-  HolyPrismUnitThreshold              = json.decode(content)[1].HolyPrismUnitThreshold
-  BeaconOfVirtueUnitThreshold         = json.decode(content)[1].BeaconOfVirtueUnitThreshold
-  BeaconOfVirtueHealthThreshold       = json.decode(content)[1].BeaconOfVirtueHealthThreshold
+  AvengingWrathUnitThreshold          = json.decode(content).AvengingWrathUnitThreshold
+  AvengingWrathHealthThreshold        = json.decode(content).AvengingWrathHealthThreshold
+  HolyAvengerUnitThreshold            = json.decode(content).HolyAvengerUnitThreshold
+  HolyAvengerHealthThreshold          = json.decode(content).HolyAvengerHealthThreshold
+  LayOnHandsHealthThreshold           = json.decode(content).LayOnHandsHealthThreshold
+  BlessingOfSacrificeHealthThreshold  = json.decode(content).BlessingOfSacrificeHealthThreshold
+  TyrsDeliveranceUnitThreshold        = json.decode(content).TyrsDeliveranceUnitThreshold
+  TyrsDeliveranceHealthThreshold      = json.decode(content).TyrsDeliveranceHealthThreshold
+  LightsHammerUnitThreshold           = json.decode(content).LightsHammerUnitThreshold
+  LightsHammerHealthThreshold         = json.decode(content).LightsHammerHealthThreshold
+  LightOfDawnUnitThreshold            = json.decode(content).LightOfDawnUnitThreshold
+  LightOfDawnHealthThreshold          = json.decode(content).LightOfDawnHealthThreshold
+  HolyPrismUnitThreshold              = json.decode(content).HolyPrismUnitThreshold
+  BeaconOfVirtueUnitThreshold         = json.decode(content).BeaconOfVirtueUnitThreshold
+  BeaconOfVirtueHealthThreshold       = json.decode(content).BeaconOfVirtueHealthThreshold
 
-  TankHealthThreshold                 = json.decode(content)[1].TankHealthThreshold
-  OtherHealthThreshold                = json.decode(content)[1].OtherHealthThreshold
-  ToppingHealthThreshold              = json.decode(content)[1].ToppingHealthThreshold
-  FlashOfLightThreshold               = json.decode(content)[1].FlashOfLightThreshold
-  BestowFaithThreshold                = json.decode(content)[1].BestowFaithThreshold
+  TankHealthThreshold                 = json.decode(content).TankHealthThreshold
+  OtherHealthThreshold                = json.decode(content).OtherHealthThreshold
+  ToppingHealthThreshold              = json.decode(content).ToppingHealthThreshold
+  FlashOfLightThreshold               = json.decode(content).FlashOfLightThreshold
+  BestowFaithThreshold                = json.decode(content).BestowFaithThreshold
 
   -- Disspelling
   ct.Dispell = ct.PaladinHolyDispell
