@@ -1,0 +1,19 @@
+{
+  "UseInterruptEngine": true,
+  "UseAvengingWrath": true,
+  "UseShieldOfVengeance": true,
+  "UseCrusade": true,
+  "UseHolyWrath": true,
+  "UseJusticarsVengeance": true,
+  "UseEyeForAnEye": true,
+  "UseWordOfGlory": true,
+  "ShieldOfVengeanceHealthThreshold": 70,
+  "ShieldOfVengeanceUnitThreshold": 3,
+  "HolyWrathHealthThreshold": 50,
+  "HolyWrathUnitThreshold": 4,
+  "JusticarsVengeanceHealthThreshold": 80,
+  "EyeForAnEyeHealthThreshold": 80,
+  "WordOfGloryHealthThreshold": 80,
+  "WordOfGloryUnitThreshold": 3,
+  "JudgmentTTD": 6
+}

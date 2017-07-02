@@ -14,7 +14,9 @@ function ct.PaladinRetribution()
     local ttd = ct.ComputeTTD(ct.Target)
 
     -- call interrupt engine
-    ct.InterruptEngine()
+    if UseInterruptEngine then
+      ct.InterruptEngine()
+    end
 
     -- OPENING SEQUENCE
 
@@ -60,6 +62,7 @@ function ct.PaladinRetribution()
 
     -- Don't overcap Holy Power
     -- Only cast during Judgment debuff when there is need to generate Holy Power
+    -- or when ttd of target < specified threshold
     if (HolyPower < 5 and not ct.UnitHasDebuff(ct.Target, 197277)) or HolyPower < 3 then
       -- Consecration (Use when at least 2 targets within 8 yards and not moving)
       if ct.CanCast(205228) and not ct.UnitIsMoving(ct.player)
@@ -125,20 +128,24 @@ function ct.PaladinRetribution()
     -- Holy Power Spending Phase --
 
     -- Judgment (Cast when Holy Power >= 4)
-    if HolyPower >= 4 and not ct.UnitHasDebuff(ct.Target, 197277) and ct.IsInAttackRange(85256, ct.Target)
+    if HolyPower >= 4 and ttd >= JudgmentTTD
+    and not ct.UnitHasDebuff(ct.Target, 197277) and ct.IsInAttackRange(85256, ct.Target)
     and ct.CanCast(20271, ct.Target) and ct.IsInLOS(ct.Target) then
       return ct.Cast(20271, ct.Target)
     end
 
     -- Execution Sentence (Talent, Cast during Judgment debuff)
-    if (ct.UnitHasDebuff(ct.Target, 197277) or ct.GetRemainingCooldown(20271) >= 1)
-    and ct.CanCast(213757, ct.Target, 9, 3) and ct.IsInLOS(ct.Target) then
-      return ct.Cast(213757, ct.Target)
+    if ct.CanCast(213757, ct.Target, 9, 3) then
+      if (ct.UnitHasDebuff(ct.Target, 197277) or ct.GetRemainingCooldown(20271) >= 1
+      or ttd < JudgmentTTD) and ct.IsInLOS(ct.Target) then
+        return ct.Cast(213757, ct.Target)
+      end
     end
 
     -- Templar's Verdict (Cast during Judgment debuff)
     -- or Divine Storm during AOE
-    if ct.UnitHasDebuff(ct.Target, 197277) or ct.GetRemainingCooldown(20271) >= 1 then
+    if ct.UnitHasDebuff(ct.Target, 197277) or ct.GetRemainingCooldown(20271) >= 1
+    or ttd < JudgmentTTD then
       if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3
       and ct.CanCast(53385, nil, 9, 3) then
         return ct.Cast(53385)
@@ -170,22 +177,51 @@ function ct.PaladinRetributionInterrupt(unit)
 end
 
 function ct.PaladinRetributionSetUp()
+  -- load profile content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. "Paladin - Retribution.JSON")
+
+  if json.decode(content) == nil then
+    return message("Error loading config file. Please contact the Author.")
+  end
+
+  local Settings = json.decode(content)
+
+  UseInterruptEngine                = Settings.UseInterruptEngine
+  UseAvengingWrath                  = Settings.UseAvengingWrath
+  UseShieldOfVengeance              = Settings.UseShieldOfVengeance
+  UseCrusade                        = Settings.UseCrusade
+  UseHolyWrath                      = Settings.UseHolyWrath
+  UseJusticarsVengeance             = Settings.UseJusticarsVengeance
+  UseEyeForAnEye                    = Settings.UseEyeForAnEye
+  UseWordOfGlory                    = Settings.UseWordOfGlory
+  ShieldOfVengeanceHealthThreshold  = Settings.ShieldOfVengeanceHealthThreshold
+  ShieldOfVengeanceUnitThreshold    = Settings.ShieldOfVengeanceUnitThreshold
+  HolyWrathHealthThreshold          = Settings.HolyWrathHealthThreshold
+  HolyWrathUnitThreshold            = Settings.HolyWrathUnitThreshold
+  JusticarsVengeanceHealthThreshold = Settings.JusticarsVengeanceHealthThreshold
+  EyeForAnEyeHealthThreshold        = Settings.EyeForAnEyeHealthThreshold
+  WordOfGloryHealthThreshold        = Settings.WordOfGloryHealthThreshold
+  WordOfGloryUnitThreshold          = Settings.WordOfGloryUnitThreshold
+  JudgmentTTD                       = Settings.JudgmentTTD
+
   -- Interrupt function
   ct.Interrupt = ct.PaladinRetributionInterrupt
 
   -- Use Blade or Hammer
-  ct.BladeOrHammer = nil
+  BladeOrHammer = nil
   if select(4, GetTalentInfo(4, 3, 1)) then
-    ct.BladeOrHammer = 198034 -- Hammer
+    BladeOrHammer = 198034 -- Hammer
   else
-    ct.BladeOrHammer = 184575 -- Blade
+    BladeOrHammer = 184575 -- Blade
   end
 
   -- Use Strike or Zeal
-  ct.StrikeOrZeal = nil
+  StrikeOrZeal = nil
   if select(4, GetTalentInfo(2, 2, 1)) then
-    ct.StrikeOrZeal = 217020 -- Zeal
+    StrikeOrZeal = 217020 -- Zeal
   else
-    ct.StrikeOrZeal = 35395 -- Strike
+    StrikeOrZeal = 35395 -- Strike
   end
 end
