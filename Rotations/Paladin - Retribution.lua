@@ -78,31 +78,31 @@ function ct.PaladinRetribution()
 
       -- Crusader Strike (or Zeal if Talented)
       -- At least one charge used and charging
-      elseif ((select(1, GetSpellCharges(ct.StrikeOrZeal)) ~= 0 and not ct.CanCast(ct.BladeOrHammer))
-      or (select(1, GetSpellCharges(ct.StrikeOrZeal)) > 1 and ct.CanCast(ct.BladeOrHammer)))
+      elseif ((select(1, GetSpellCharges(StrikeOrZeal)) ~= 0 and not ct.CanCast(BladeOrHammer))
+      or (select(1, GetSpellCharges(StrikeOrZeal)) > 1 and ct.CanCast(BladeOrHammer)))
       and HolyPower <= 4
-      and ct.CanCast(ct.StrikeOrZeal, ct.Target, nil, nil, false) then
-        return ct.Cast(ct.StrikeOrZeal)
+      and ct.CanCast(StrikeOrZeal, ct.Target, nil, nil, false) then
+        return ct.Cast(StrikeOrZeal)
 
       -- Blade of Justice (or Divine Hammer talent)
       -- Use together with Righteous Verdict if available
-      elseif ct.CanCast(ct.BladeOrHammer, ct.Target, nil, nil, false) then
+      elseif ct.CanCast(BladeOrHammer, ct.Target, nil, nil, false) then
         -- Use Spender before using Blade of Justice to benefit from Righteous Verdict
         if ct.PlayerHasArtifactTrait(238062) and HolyPower >= 3 then
           -- Use AOE Spender (Divine Storm)
           if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3
           and ct.CanCast(53385) then
-            local Sequence = {53385, ct.BladeOrHammer}
+            local Sequence = {53385, BladeOrHammer}
             return ct.AddSpellToQueue(Sequence)
           end
           -- Use ST Spender (Templar's Verdict)
           if ct.CanCast(85256, ct.Target) and ct.IsInLOS(ct.Target) then
-            local Sequence = {85256, ct.BladeOrHammer}
+            local Sequence = {85256, BladeOrHammer}
             return ct.AddSpellToQueue(Sequence)
           end
         elseif HolyPower <= 3 then
           -- Use without Spender
-          return ct.Cast(ct.BladeOrHammer)
+          return ct.Cast(BladeOrHammer)
         end
       end
     end
