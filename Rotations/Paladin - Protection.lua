@@ -8,7 +8,9 @@ function ct.PaladinProtection()
   local MainTank, OffTank = ct.FindTanks()
 
   -- Call Taunt engine
-  ct.TauntEngine()
+  if UseTauntEngine then
+    ct.TauntEngine()
+  end
 
   -- combat rotation
   if UnitAffectingCombat(ct.player)
@@ -20,38 +22,45 @@ function ct.PaladinProtection()
     ct.Target = GetObjectWithGUID(UnitGUID("target"))
 
     -- call interrupt engine
-    ct.InterruptEngine()
+    if UseInterruptEngine then
+      ct.InterruptEngine()
+    end
 
     -- COOLDOWNS
     -- Avenging Wrath (Use on Cooldown)
-    if ct.CanCast(31884) and ct.IsInRange(ct.player, ct.Target, 30) then
+    if ct.CanCast(31884) and UseAvengingWrath
+    and ct.IsInRange(ct.player, ct.Target, 30) then
       return ct.Cast(31884)
     end
 
     -- Bastion of Light (Talent)
 
     -- Guardian of the Ancient Kings (use when below 30%)
-    if ct.CanCast(86659) and UnitHealth(ct.player) <= MaxHealth * 0.3 then
+    if ct.CanCast(86659) and UseGuardianOfTheAncientKings
+    and UnitHealth(ct.player) <= MaxHealth * 0.3 then
       return ct.Cast(86659)
     end
 
     -- Ardent Defender (use when below 20%)
-    if ct.CanCast(31850) and UnitHealth(ct.player) <= MaxHealth * 0.2 then
+    if ct.CanCast(31850) and UseArdentDefender
+    and UnitHealth(ct.player) <= MaxHealth * 0.2 then
       return ct.Cast(31850)
     end
 
     -- Lay on Hands (use when player or lowest raid member is below 15%)
-    if ct.CanCast(633) and UnitHealth(ct.player) <= MaxHealth * 0.15 then
+    if ct.CanCast(633) and UseLayOnHandsSelf
+    and ct.PercentHealth(ct.player) <= LayOnHandsHealthThreshold then
       return ct.Cast(633)
     end
 
-    if ct.CanCast(633) and LowestFriend ~= nil
-    and UnitHealth(LowestFriend) <= UnitHealthMax(LowestFriend) * 0.15 then
+    if ct.CanCast(633) and UseLayOnHandsFriend and LowestFriend ~= nil
+    and ct.PercentHealth(LowestFriend) <= LayOnHandsHealthThreshold then
       return ct.Cast(633, LowestFriend)
     end
 
     -- Eye of Tyr (Use when 3 enemys are within 8 yards)
-    if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3 and ct.CanCast(209202) then
+    if ct.CanCast(209202) and UseEyeOfTyr
+    and getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3 then
       return ct.Cast(209202)
     end
 
@@ -88,8 +97,8 @@ function ct.PaladinProtection()
 
     -- Light of the Protector:
     -- if not talented Hand of the Protector
-    -- use when below 50% health
-    if ct.CanCast(184092) and ct.PercentHealth(ct.player) <= 50
+    -- use when below defined health
+    if ct.CanCast(184092) and ct.PercentHealth(ct.player) <= LightOfTheProtectorHealthThreshold
     and not select(4, GetTalentInfo(5, 1, 1))
     and (ct.GetPreviousSpell() ~= 184092 or ct.GetTimeSinceLastSpell() >= 500) then
       return ct.Cast(184092)
@@ -100,15 +109,15 @@ function ct.PaladinProtection()
     -- use when lowest friend below 30%
     if select(4, GetTalentInfo(5, 1, 1)) and ct.CanCast(213652, nil, nil, nil, false)
     and (ct.GetPreviousSpell() ~= 213652 or ct.GetTimeSinceLastSpell() >= 500) then
-      if ct.PercentHealth(ct.player) <= 50 then
+      if ct.PercentHealth(ct.player) <= LightOfTheProtectorHealthThreshold then
         return ct.Cast(213652)
-      elseif ct.PercentHealth(LowestFriend) <= 30 then
+      elseif ct.PercentHealth(LowestFriend) <= HandOfTheProtectorFriendHealthThreshold then
         return ct.Cast(213652, LowestFriend)
       end
     end
 
     -- Flash of Light (use when below 30% health)
-    if ct.CanCast(19750, ct.player) and UnitHealth(ct.player) <= MaxHealth * 0.3
+    if ct.CanCast(19750, ct.player) and ct.PercentHealth(ct.player) <= FlashOfLightHealthThreshold
     and not ct.UnitIsMoving(ct.player) then
       return ct.Cast(19750, ct.player)
     end
@@ -220,6 +229,30 @@ end
 
 -- This is called to setup important functions
 function ct.PaladinProtectionSetUp()
+  -- load profile content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. "Paladin - Protection.JSON")
+
+  if json.decode(content) == nil then
+    return message("Error loading config file. Please contact the Author.")
+  end
+
+  UseTauntEngine                          = json.decode(content).UseTauntEngine
+  UseInterruptEngine                      = json.decode(content).UseInterruptEngine
+  UseAvengingWrath                        = json.decode(content).UseAvengingWrath
+  UseGuardianOfTheAncientKings            = json.decode(content).UseGuardianOfTheAncientKings
+  UseArdentDefender                       = json.decode(content).UseArdentDefender
+  UseLayOnHandsSelf                       = json.decode(content).UseLayOnHandsSelf
+  UseLayOnHandsFriend                     = json.decode(content).UseLayOnHandsFriend
+  UseEyeOfTyr                             = json.decode(content).UseEyeOfTyr
+  UseSepharim                             = json.decode(content).UseSepharim
+  UseHandOfTheProtectorFriend             = json.decode(content).UseHandOfTheProtectorFriend
+  LayOnHandsHealthThreshold               = json.decode(content).LayOnHandsHealthThreshold
+  LightOfTheProtectorHealthThreshold      = json.decode(content).LightOfTheProtectorHealthThreshold
+  HandOfTheProtectorFriendHealthThreshold = json.decode(content).HandOfTheProtectorFriendHealthThreshold
+  FlashOfLightHealthThreshold             = json.decode(content).FlashOfLightHealthThreshold
+
   ct.Taunt      = ct.PaladinProtectionTaunt
   ct.Interrupt  = ct.PaladinProtectionInterrupt
 end

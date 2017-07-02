@@ -1,0 +1,16 @@
+{
+  "UseTauntEngine": true,
+  "UseInterruptEngine": true,
+  "UseAvengingWrath": true,
+  "UseGuardianOfTheAncientKings": true,
+  "UseArdentDefender": true,
+  "UseLayOnHandsSelf": true,
+  "UseLayOnHandsFriend": true,
+  "UseEyeOfTyr": true,
+  "UseSepharim": true,
+  "UseHandOfTheProtectorFriend": true,
+  "LayOnHandsHealthThreshold": 15,
+  "LightOfTheProtectorHealthThreshold": 50,
+  "HandOfTheProtectorFriendHealthThreshold": 30,
+  "FlashOfLightHealthThreshold": 30,
+}
