@@ -117,7 +117,8 @@ function ct.PaladinProtection()
     end
 
     -- Flash of Light (use when below 30% health)
-    if ct.CanCast(19750, ct.player) and ct.PercentHealth(ct.player) <= FlashOfLightHealthThreshold
+    if ct.CanCast(19750, ct.player) and UseFlashOfLight
+    and ct.PercentHealth(ct.player) <= FlashOfLightHealthThreshold
     and not ct.UnitIsMoving(ct.player) then
       return ct.Cast(19750, ct.player)
     end
@@ -250,6 +251,7 @@ function ct.PaladinProtectionSetUp()
   UseEyeOfTyr                               = Settings.UseEyeOfTyr
   UseSepharim                               = Settings.UseSepharim
   UseHandOfTheProtectorFriend               = Settings.UseHandOfTheProtectorFriend
+  UseFlashOfLight                           = Settings.UseFlashOfLight
   UnitsToSwitchToAOE                        = Settings.UnitsToSwitchToAOE
   ArdentDefenderHealthThreshold             = Settings.ArdentDefenderHealthThreshold
   GuardianOfTheAncientKingsHealthThreshold  = Settings.GuardianOfTheAncientKingsHealthThreshold

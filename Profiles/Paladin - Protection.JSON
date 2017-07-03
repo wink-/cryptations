@@ -9,6 +9,7 @@
   "UseEyeOfTyr": true,
   "UseSepharim": true,
   "UseHandOfTheProtectorFriend": true,
+  "UseFlashOfLight": true,
   "UnitsToSwitchToAOE": 3,
   "ArdentDefenderHealthThreshold": 20,
   "GuardianOfTheAncientKingsHealthThreshold": 30,
