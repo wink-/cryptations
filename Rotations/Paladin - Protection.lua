@@ -37,13 +37,13 @@ function ct.PaladinProtection()
 
     -- Guardian of the Ancient Kings (use when below 30%)
     if ct.CanCast(86659) and UseGuardianOfTheAncientKings
-    and UnitHealth(ct.player) <= MaxHealth * 0.3 then
+    and ct.PercentHealth(ct.player) <= GuardianOfTheAncientKingsHealthThreshold then
       return ct.Cast(86659)
     end
 
     -- Ardent Defender (use when below 20%)
     if ct.CanCast(31850) and UseArdentDefender
-    and UnitHealth(ct.player) <= MaxHealth * 0.2 then
+    and ct.PercentHealth(ct.player) <= ArdentDefenderHealthThreshold then
       return ct.Cast(31850)
     end
 
@@ -60,7 +60,7 @@ function ct.PaladinProtection()
 
     -- Eye of Tyr (Use when 3 enemys are within 8 yards)
     if ct.CanCast(209202) and UseEyeOfTyr
-    and getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3 then
+    and getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= EyeOfTyrUnitThreshold then
       return ct.Cast(209202)
     end
 
@@ -123,7 +123,7 @@ function ct.PaladinProtection()
     end
 
     -- AOE ROTATION
-    if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3 then
+    if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= UnitsToSwitchToAOE then
 
       -- Consecration (when not moving)
       if ct.UnitIsHostile(ct.Target) and not ct.UnitIsMoving(ct.player)
@@ -240,20 +240,24 @@ function ct.PaladinProtectionSetUp()
 
   local Settings = json.decode(content)
 
-  UseTauntEngine                          = Settings.UseTauntEngine
-  UseInterruptEngine                      = Settings.UseInterruptEngine
-  UseAvengingWrath                        = Settings.UseAvengingWrath
-  UseGuardianOfTheAncientKings            = Settings.UseGuardianOfTheAncientKings
-  UseArdentDefender                       = Settings.UseArdentDefender
-  UseLayOnHandsSelf                       = Settings.UseLayOnHandsSelf
-  UseLayOnHandsFriend                     = Settings.UseLayOnHandsFriend
-  UseEyeOfTyr                             = Settings.UseEyeOfTyr
-  UseSepharim                             = Settings.UseSepharim
-  UseHandOfTheProtectorFriend             = Settings.UseHandOfTheProtectorFriend
-  LayOnHandsHealthThreshold               = Settings.LayOnHandsHealthThreshold
-  LightOfTheProtectorHealthThreshold      = Settings.LightOfTheProtectorHealthThreshold
-  HandOfTheProtectorFriendHealthThreshold = Settings.HandOfTheProtectorFriendHealthThreshold
-  FlashOfLightHealthThreshold             = Settings.FlashOfLightHealthThreshold
+  UseTauntEngine                            = Settings.UseTauntEngine
+  UseInterruptEngine                        = Settings.UseInterruptEngine
+  UseAvengingWrath                          = Settings.UseAvengingWrath
+  UseGuardianOfTheAncientKings              = Settings.UseGuardianOfTheAncientKings
+  UseArdentDefender                         = Settings.UseArdentDefender
+  UseLayOnHandsSelf                         = Settings.UseLayOnHandsSelf
+  UseLayOnHandsFriend                       = Settings.UseLayOnHandsFriend
+  UseEyeOfTyr                               = Settings.UseEyeOfTyr
+  UseSepharim                               = Settings.UseSepharim
+  UseHandOfTheProtectorFriend               = Settings.UseHandOfTheProtectorFriend
+  UnitsToSwitchToAOE                        = Settings.UnitsToSwitchToAOE
+  ArdentDefenderHealthThreshold             = Settings.ArdentDefenderHealthThreshold
+  GuardianOfTheAncientKingsHealthThreshold  = Settings.GuardianOfTheAncientKingsHealthThreshold
+  EyeOfTyrUnitThreshold                     = Settings.EyeOfTyrUnitThreshold
+  LayOnHandsHealthThreshold                 = Settings.LayOnHandsHealthThreshold
+  LightOfTheProtectorHealthThreshold        = Settings.LightOfTheProtectorHealthThreshold
+  HandOfTheProtectorFriendHealthThreshold   = Settings.HandOfTheProtectorFriendHealthThreshold
+  FlashOfLightHealthThreshold               = Settings.FlashOfLightHealthThreshold
 
   ct.Taunt      = ct.PaladinProtectionTaunt
   ct.Interrupt  = ct.PaladinProtectionInterrupt

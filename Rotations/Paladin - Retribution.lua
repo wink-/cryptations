@@ -90,7 +90,7 @@ function ct.PaladinRetribution()
         -- Use Spender before using Blade of Justice to benefit from Righteous Verdict
         if ct.PlayerHasArtifactTrait(238062) and HolyPower >= 3 then
           -- Use AOE Spender (Divine Storm)
-          if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3
+          if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= HolyPowerAOESpenderUnitThrehsold
           and ct.CanCast(53385) then
             local Sequence = {53385, BladeOrHammer}
             return ct.AddSpellToQueue(Sequence)
@@ -146,7 +146,7 @@ function ct.PaladinRetribution()
     -- or Divine Storm during AOE
     if ct.UnitHasDebuff(ct.Target, 197277) or ct.GetRemainingCooldown(20271) >= 1
     or ttd < JudgmentTTD then
-      if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= 3
+      if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= HolyPowerAOESpenderUnitThrehsold
       and ct.CanCast(53385, nil, 9, 3) then
         return ct.Cast(53385)
       elseif ct.CanCast(85256, ct.Target, 9, 3) then
@@ -196,6 +196,7 @@ function ct.PaladinRetributionSetUp()
   UseJusticarsVengeance             = Settings.UseJusticarsVengeance
   UseEyeForAnEye                    = Settings.UseEyeForAnEye
   UseWordOfGlory                    = Settings.UseWordOfGlory
+  HolyPowerAOESpenderUnitThrehsold  = Settings.HolyPowerAOESpenderUnitThrehsold
   ShieldOfVengeanceHealthThreshold  = Settings.ShieldOfVengeanceHealthThreshold
   ShieldOfVengeanceUnitThreshold    = Settings.ShieldOfVengeanceUnitThreshold
   HolyWrathHealthThreshold          = Settings.HolyWrathHealthThreshold
