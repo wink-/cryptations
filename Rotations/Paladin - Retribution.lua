@@ -146,7 +146,7 @@ function ct.PaladinRetribution()
     -- or Divine Storm during AOE
     if ct.UnitHasDebuff(ct.Target, 197277) or ct.GetRemainingCooldown(20271) >= 1
     or ttd < JudgmentTTD then
-      if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= HolyPowerAOESpenderUnitThrehsold
+      if getn(ct.GetUnitsInRadius(ct.player, 8, "hostile", true)) >= HolyPowerAOESpenderUnitThreshold
       and ct.CanCast(53385, nil, 9, 3) then
         return ct.Cast(53385)
       elseif ct.CanCast(85256, ct.Target, 9, 3) then
@@ -200,7 +200,7 @@ function ct.PaladinRetributionSetUp()
   UseJusticarsVengeance             = Settings.UseJusticarsVengeance
   UseEyeForAnEye                    = Settings.UseEyeForAnEye
   UseWordOfGlory                    = Settings.UseWordOfGlory
-  HolyPowerAOESpenderUnitThrehsold  = Settings.HolyPowerAOESpenderUnitThrehsold
+  HolyPowerAOESpenderUnitThreshold  = Settings.HolyPowerAOESpenderUnitThreshold
   ShieldOfVengeanceHealthThreshold  = Settings.ShieldOfVengeanceHealthThreshold
   ShieldOfVengeanceUnitThreshold    = Settings.ShieldOfVengeanceUnitThreshold
   HolyWrathHealthThreshold          = Settings.HolyWrathHealthThreshold
