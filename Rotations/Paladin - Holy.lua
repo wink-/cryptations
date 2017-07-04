@@ -250,6 +250,10 @@ end
 
 -- This sets up basic settings
 function ct.PaldinHolySetUp()
+  if FireHack == nil then
+    return
+  end
+
   -- load profile content
   local wowdir = GetWoWDirectory()
   local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
