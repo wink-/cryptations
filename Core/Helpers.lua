@@ -654,3 +654,18 @@ function ct.IsDummy(unit)
   end
   return false
 end
+
+-- returns the sum of the damage that the player took over the given period of time (e.g. last 5 seconds)
+function ct.GetDamageOverPeriod(period)
+  if getn(ct.PlayerDamage) == 0 then
+    return nil
+  end
+
+  local Sum = 0
+  for i = 1, getn(ct.PlayerDamage) do
+    if GetTime() - ct.PlayerDamage[i].damageTakenTime < period then
+      Sum = Sum + ct.PlayerDamage[i].damage
+    end
+  end
+  return Sum
+end

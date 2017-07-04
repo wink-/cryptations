@@ -9,6 +9,7 @@ ct.CurrentUniqueIdentifier  = nil                                 -- This is the
 ct.CurrentSpell             = nil                                 -- This holds the id of the spell that is currently being casted (also for instant spells)
 ct.LAD                      = LibStub("LibArtifactData-1.0")      -- Library for getting Artifact info
 ct.TTD                      = {unit, start, duration, dps, ttd}   -- Holds the values required for calculating the ttd for
+ct.PlayerDamage             = {damage, damageTakenTime}      -- Holds the values required for calculating the damage that the player took over time
 
 -- GLOBAL SETTINGS
 
@@ -25,7 +26,6 @@ ct.ReTargetLowestUnit       = false
 ct.AllowOutOfCombatRoutine  = true
 
 -- Interrupt behavior
-ct.EnableInterrupt          = true
 ct.InterruptAnyUnit         = true
 ct.InterruptMinPercent      = 20
 ct.InterruptMaxPercent      = 80
@@ -43,6 +43,7 @@ function ct.StartUp()
   frame:RegisterEvent("PLAYER_REGEN_ENABLED")
   frame:RegisterEvent("UNIT_SPELLCAST_START")
   frame:RegisterEvent("PLAYER_TALENT_UPDATE")
+  frame:RegisterEvent("UNIT_COMBAT")
 
   -- This detects the completition of casted spells
   -- This is needed because of the way how the rotation chains up spells
@@ -75,6 +76,17 @@ function ct.StartUp()
     end
     if event == "PLAYER_TALENT_UPDATE" then
       ct.SetUpRotationEngine()
+    end
+    if event == "UNIT_COMBAT" and arg1 == "player" and arg2 == "WOUND"
+    and arg4 ~= nil then
+      -- the player damage table is limited to 100 entries
+      if getn(ct.PlayerDamage) > 100 then
+        table.remove(ct.PlayerDamage, 1)
+      end
+
+      -- add the event to the player damage table
+      local Entry = {damage = arg4, damageTakenTime = GetTime()}
+      table.insert(ct.PlayerDamage, Entry)
     end
   end
 
