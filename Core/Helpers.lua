@@ -481,18 +481,33 @@ function ct.IsTankingBoss(unit)
   end
 
   local Target = UnitTarget(unit)
+  if ct.IsBoss(Target) then
+    return true
+  end
+
+  return false
+end
+
+-- returns true if the given unit is a boss (depends on hardcoded list)
+function ct.IsBoss(unit)
+  if unit == nil or not ObjectExists(unit) then
+    return nil
+  end
+
   -- Dungeon Bosses
   for i = 1, getn(ct.DungeonBosses) do
-    if ct.GetCreatureID(Target) == ct.DungeonBosses[i] then
+    if ct.GetCreatureID(unit) == ct.DungeonBosses[i] then
       return true
     end
   end
+
   -- Raid Bosses
   for i = 1, getn(ct.RaidBosses) do
-    if ct.GetCreatureID(Target) == ct.RaidBosses[i] then
+    if ct.GetCreatureID(unit) == ct.RaidBosses[i] then
       return true
     end
   end
+
   return false
 end
 
@@ -624,6 +639,7 @@ function ct.PlayerHasArtifactTrait(spellID)
       return true
     end
   end
+  
   return false
 end
 
@@ -652,6 +668,7 @@ function ct.IsDummy(unit)
       return true
     end
   end
+
   return false
 end
 
@@ -667,5 +684,6 @@ function ct.GetDamageOverPeriod(period)
       Sum = Sum + ct.PlayerDamage[i].damage
     end
   end
+
   return Sum
 end

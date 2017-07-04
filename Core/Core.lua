@@ -9,7 +9,7 @@ ct.CurrentUniqueIdentifier  = nil                                 -- This is the
 ct.CurrentSpell             = nil                                 -- This holds the id of the spell that is currently being casted (also for instant spells)
 ct.LAD                      = LibStub("LibArtifactData-1.0")      -- Library for getting Artifact info
 ct.TTD                      = {unit, start, duration, dps, ttd}   -- Holds the values required for calculating the ttd for
-ct.PlayerDamage             = {damage, damageTakenTime}      -- Holds the values required for calculating the damage that the player took over time
+ct.PlayerDamage             = {damage, damageTakenTime}           -- Holds the values required for calculating the damage that the player took over time
 
 -- GLOBAL SETTINGS
 
