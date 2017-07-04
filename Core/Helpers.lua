@@ -639,7 +639,7 @@ function ct.PlayerHasArtifactTrait(spellID)
       return true
     end
   end
-  
+
   return false
 end
 
@@ -686,4 +686,26 @@ function ct.GetDamageOverPeriod(period)
   end
 
   return Sum
+end
+
+-- returns whether or not the unit has control (stunned, silenced, ...)
+-- this can only recognize if a unit was stunned, feared, etc. by a player
+function ct.HasControl(unit)
+  if unit == nil or not ObjectExists(unit) then
+    return nil
+  end
+
+  -- Use wowfunction for player
+  if unit == ct.player then
+    return HasFullControl()
+  end
+
+  -- Check if affected by crowdcontrol spell
+  for i = 1, getn(ct.LossOfControlAuras) do
+    if ct.UnitHasDebuff(unit, ct.LossOfControlAuras[i]) then
+      return false
+    end
+  end
+
+  return true
 end
