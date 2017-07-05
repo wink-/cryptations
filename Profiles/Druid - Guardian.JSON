@@ -1,4 +1,19 @@
 {
   "UseTaunt": true,
   "UseInterruptEngine": true,
+  "UseSurvivalInstincts": true,
+  "UseBarkskin": true,
+  "UseIronfur": true,
+  "UseFrenziedRegeneration": true,
+  "UseMoonfire": true,
+  "UseMaul": true,
+  "UseRotS": true,
+  "AutoSwitchForm": true,
+  "SurvivalInstincsHealth": 70,
+  "BarkskinHealth": 70,
+  "IronFurHealth": 85,
+  "FrenziedRegenerationHealth": 20,
+  "MaulHealth": 95,
+  "MaulRage": 95,
+  "RotSHealth": 80
 }
