@@ -16,6 +16,12 @@ Core\Helpers.lua
 Core\RotationEngine.lua
 Core\BossManager.lua
 
+# Functions
+Functions\Buff.lua
+Functions\Debuff.lua
+Functions\Spell.lua
+Functions\Unit.lua
+
 # Tables
 Tables\Auras.lua
 Tables\Spells.lua
@@ -25,5 +31,6 @@ Tables\Units.lua
 Rotations\Paladin - Protection.lua
 Rotations\Paladin - Holy.lua
 Rotations\Paladin - Retribution.lua
+Rotations\Druid - Guardian.lua
 
 frame.xml
