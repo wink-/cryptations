@@ -154,7 +154,7 @@ function ct.SetUpRotationEngine()
   elseif select(3, UnitClass("player")) == 11 then
     if     GetSpecialization() == 1 then           message("This class/spec is not yet supported.")
     elseif GetSpecialization() == 2 then           message("This class/spec is not yet supported.")
-    elseif GetSpecialization() == 3 then           message("This class/spec is not yet supported.")
+    elseif GetSpecialization() == 3 then           ct.Spec = ct.DruidGuardian; ct.DruidGuardianSetUp()
     end
   elseif select(3, UnitClass("player")) == 12 then
     if     GetSpecialization() == 1 then           message("This class/spec is not yet supported.")

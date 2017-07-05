@@ -23,7 +23,7 @@ function ct.PulseQueue()
     -- Cast Spell
     if (not ct.UnitIsMoving(ct.player) or ct.CanCastWhileMoving(SpellID))
     and not ct.IsCasting(ct.player) and UnitGUID(ct.SpellTarget) ~= nil then
-      CastSpellByID(SpellID, ct.SpellTarget)
+      ct.Cast(SpellID, ct.SpellTarget)
 
       -- instantly remove the spell and add it to the history if it is an instant cast
       if select(4, GetSpellInfo(SpellID)) == 0 then

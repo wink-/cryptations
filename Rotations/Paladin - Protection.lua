@@ -36,15 +36,21 @@ function ct.PaladinProtection()
     -- Bastion of Light (Talent)
 
     -- Guardian of the Ancient Kings (use when below 30%)
-    if ct.CanCast(86659) and UseGuardianOfTheAncientKings
-    and ct.PercentHealth(ct.player) <= GuardianOfTheAncientKingsHealthThreshold then
-      return ct.Cast(86659)
+    -- Or when the BossManager notices the need to use a def cooldown
+    if ct.CanCast(86659) and UseGuardianOfTheAncientKings then
+      if ct.PercentHealth(ct.player) <= GuardianOfTheAncientKingsHealthThreshold
+      or BossManager.IsDefCooldownNeeded() then
+        return ct.Cast(86659)
+      end
     end
 
     -- Ardent Defender (use when below 20%)
-    if ct.CanCast(31850) and UseArdentDefender
-    and ct.PercentHealth(ct.player) <= ArdentDefenderHealthThreshold then
-      return ct.Cast(31850)
+    -- Or when the BossManager notices the need to use a def cooldown
+    if ct.CanCast(31850) and UseArdentDefender then
+      if ct.PercentHealth(ct.player) <= ArdentDefenderHealthThreshold
+      or BossManager.IsDefCooldownNeeded() then
+        return ct.Cast(31850)
+      end
     end
 
     -- Lay on Hands (use when player or lowest raid member is below 15%)

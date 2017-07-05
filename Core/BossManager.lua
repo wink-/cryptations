@@ -20,8 +20,7 @@ function BossManager.IsDefCooldownNeeded()
   end
 
   -- Check if taken high damage
-  if ct.GetDamageOverPeriod(2) ~= nil
-  and ct.GetDamageOverPeriod(2) >= UnitHealthMax(ct.player) * 0.2 then
+  if ct.GetDamageOverPeriod(2) >= UnitHealthMax(ct.player) * 0.2 then
     return true
   end
 
