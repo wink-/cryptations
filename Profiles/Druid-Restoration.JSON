@@ -1,0 +1,12 @@
+{
+  "Dispell": true,
+  "Tranquility": true,
+  "Innervate": true,
+  "Ironbark": true,
+  "EoG": true,
+  "Flourish": true,
+  "TankHealth": 90,
+  "OtherHealth": 70,
+  "ToppingHealth": 95,
+  "MaxRejuv": 7,
+}

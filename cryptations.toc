@@ -27,10 +27,15 @@ Tables\Spells.lua
 Tables\Units.lua
 
 # Rotations
-Rotations\Paladin - Protection.lua
-Rotations\Paladin - Holy.lua
-Rotations\Paladin - Retribution.lua
-Rotations\Druid - Guardian.lua
+Rotations\Paladin\Paladin-Protection.lua
+Rotations\Paladin\Paladin-Holy.lua
+Rotations\Paladin\Paladin-Retribution.lua
+
+Rotations\Druid\Druid-Guardian.lua
+Rotations\Druid\Druid-Restoration.lua
+Rotations\Druid\Druid-Restoration-Abilities.lua
+Rotations\Druid\Druid-Balance.lua
+Rotations\Druid\Druid-Feral.lua
 
 # Pulse Engine
 Core\PulseEngine.lua
