@@ -136,7 +136,7 @@ function Pulse()
     elseif Unit.IsInRange(PlayerUnit, LowestFriend, 40) and Unit.IsInLOS(LowestFriend)
     and Unit.PercentHealth(LowestFriend) <= OtherHealthThreshold then
       HealTarget = LowestFriend
-    -- TOPPING LOGIC
+    -- TOPPING ROTATION
     elseif Unit.PercentHealth(LowestFriend) <= ToppingHealthThreshold then
       -- Infusion of Light Proc (Either Holy Light or Flash of Light)
       if Buff.Has(PlayerUnit, 53576) then
