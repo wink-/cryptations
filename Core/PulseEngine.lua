@@ -1,19 +1,15 @@
-function Pulse(self, elapsed)
+UpdateInterval = 0.1
+
+local Rotation = LibStub("Rotation")
+
+function PulseEngine(self, elapsed)
   self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed
 
-  while (self.TimeSinceLastUpdate > ct.UpdateInterval and ct.UpdateInterval ~= 0) do
+  while (self.TimeSinceLastUpdate > UpdateInterval and UpdateInterval ~= 0) do
 
     if FireHack == nil then
-      ct.UpdateInterval = 0
+      UpdateInterval = 0
       return message("No Unlocker Loaded. Attatch Unlocker and Reload")
-    elseif FireHack ~= nil and (ct.player == nil or not ObjectExists(ct.player)) then
-      -- define player object
-      ct.player = GetObjectWithGUID(UnitGUID("player"))
-    end
-
-    -- If the engie still could not find the right playerobject, Reload
-    if ct.player == nil or not ObjectExists(ct.player) then
-      ReloadUI()
     end
 
     -- TODO: pulse engine delays for:
@@ -22,10 +18,10 @@ function Pulse(self, elapsed)
 
     -- Pulse the Queue
     if UnitAffectingCombat("player") or IsInGroup()
-    or (ct.AllowOutOfCombatRoutine and UnitGUID("target") ~= nil) then
-      ct.PulseQueue()
+    or (AllowOutOfCombatRoutine and UnitGUID("target") ~= nil) then
+      Rotation.PulseQueue()
     end
 
-    self.TimeSinceLastUpdate = self.TimeSinceLastUpdate - ct.UpdateInterval
+    self.TimeSinceLastUpdate = self.TimeSinceLastUpdate - UpdateInterval
   end
 end

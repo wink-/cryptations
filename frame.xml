@@ -6,12 +6,12 @@
   <Frame name="UpdateFrame">
    <Scripts>
     <OnLoad>self.TimeSinceLastUpdate = 0</OnLoad>
-    <OnUpdate function="Pulse" />
+    <OnUpdate function="PulseEngine" />
    </Scripts>
   </Frame>
   <Frame name="LoadFrame">
     <Scripts>
-      <OnLoad> ct.StartUp() </OnLoad>
+      <OnLoad> Initialize() </OnLoad>
     </Scripts>
   </Frame>
 </Ui>

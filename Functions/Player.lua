@@ -1,5 +1,10 @@
+local Player  = LibStub:NewLibrary("Player", 1)
+local LAD     = LibStub("LibArtifactData-1.0")
+
+PLAYER_DAMAGE = {damage, damageTakenTime}        -- Holds the values required for calculating the damage that the player took over time
+
 -- returns table containing units that are within the player's group or raid
-function ct.GetGroupMembers()
+function Player.GetGroupMembers()
   local Units = {}
   local ObjectCount = GetObjectCount()
   local Object = nil
@@ -12,14 +17,9 @@ function ct.GetGroupMembers()
   return Units
 end
 
--- returns the distance between x1,y1,z1 and x2,y2,z2
--- TODO: implement
-function ct.GetDistanceBetweenPositions(x1, y1, z1, x2, y2, z2)
-end
-
 -- given the spellID of the artifact trait, produces true if currently equipped artifact has this trait unlocked
-function ct.PlayerHasArtifactTrait(spellID)
-  local traits = select(2, ct.LAD:GetArtifactTraits())
+function Player.HasArtifactTrait(spellID)
+  local traits = select(2, LAD:GetArtifactTraits())
 
   if traits == nil or getn(traits) == 0 then
     return nil
@@ -35,15 +35,15 @@ function ct.PlayerHasArtifactTrait(spellID)
 end
 
 -- returns the sum of the damage that the player took over the given period of time (e.g. last 5 seconds)
-function ct.GetDamageOverPeriod(period)
-  if getn(ct.PlayerDamage) == 0 then
+function Player.GetDamageOverPeriod(period)
+  if getn(PLAYER_DAMAGE) == 0 then
     return 0
   end
 
   local Sum = 0
-  for i = 1, getn(ct.PlayerDamage) do
-    if GetTime() - ct.PlayerDamage[i].damageTakenTime < period then
-      Sum = Sum + ct.PlayerDamage[i].damage
+  for i = 1, getn(PLAYER_DAMAGE) do
+    if GetTime() - PLAYER_DAMAGE[i].damageTakenTime < period then
+      Sum = Sum + PLAYER_DAMAGE[i].damage
     end
   end
 

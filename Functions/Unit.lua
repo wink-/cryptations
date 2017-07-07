@@ -1,12 +1,16 @@
 local Unit = LibStub:NewLibrary("Unit", 1)
 
+PlayerTarget = nil                                 -- The unit which the player is targeting
+Spelltarget  = nil                                 -- The unit on which a spell shall be casted
+TTD_TABLE    = {unit, start, duration, dps, ttd}   -- Holds the values required for calculating the ttd
+
 -- returns true if a given unit is hostile and therefore can be attacked
 function Unit.IsHostile(unit)
   if unit == nil then
     return nil
   end
 
-  if (UnitIsEnemy(ct.player, unit) or UnitCanAttack(ct.player, unit)) then
+  if (UnitIsEnemy(PlayerUnit, unit) or UnitCanAttack(PlayerUnit, unit)) then
     return true
   else
     return false
@@ -15,12 +19,12 @@ end
 
 -- produces true if the facing angle between player and unit is smaller or equal to given angle
 function Unit.IsFacing(unit, angle)
-  if unit == nil then
+  if unit == nil or angle == nil then
     return nil
   end
 
-  local MyAngle = ObjectFacing(ct.player)
-  local MyAngleToUnit = select(1, GetAnglesBetweenObjects(ct.player, unit))
+  local MyAngle = ObjectFacing(PlayerUnit)
+  local MyAngleToUnit = select(1, GetAnglesBetweenObjects(PlayerUnit, unit))
   local AnglesDifference = MyAngle > MyAngleToUnit and MyAngle - MyAngleToUnit or MyAngleToUnit - MyAngle
   local AnglesBetweenUnits = AnglesDifference < math.pi and AnglesDifference or math.pi * 2 - AnglesDifference
   local FinalAngle = AnglesBetweenUnits / math.pi * 360
@@ -38,7 +42,7 @@ function Unit.IsInLOS(unit)
     return nil
   end
 
-  local px, py, pz = ObjectPosition(ct.player)
+  local px, py, pz = ObjectPosition(PlayerUnit)
   local ux, uy, uz = ObjectPosition(unit)
 
   return TraceLine(px, py, pz + 2, ux, uy, uz + 2, 0x10) == nil
@@ -65,7 +69,7 @@ function Unit.IsInAttackRange(spell, unit)
     return true
   end
   -- for melee
-  if GetDistanceBetweenObjects(ct.player, unit) <= UnitCombatReach(ct.player) + UnitCombatReach(unit) + 4/3 then
+  if GetDistanceBetweenObjects(PlayerUnit, unit) <= UnitCombatReach(PlayerUnit) + UnitCombatReach(unit) + 4/3 then
     return true
   end
   return false
@@ -158,15 +162,15 @@ function Unit.IsBoss(unit)
   end
 
   -- Dungeon Bosses
-  for i = 1, getn(ct.DungeonBosses) do
-    if Unit.GetCreatureID(unit) == ct.DungeonBosses[i] then
+  for i = 1, getn(DungeonBosses) do
+    if Unit.GetCreatureID(unit) == DungeonBosses[i] then
       return true
     end
   end
 
   -- Raid Bosses
-  for i = 1, getn(ct.RaidBosses) do
-    if Unit.GetCreatureID(unit) == ct.RaidBosses[i] then
+  for i = 1, getn(RaidBosses) do
+    if Unit.GetCreatureID(unit) == RaidBosses[i] then
       return true
     end
   end
@@ -248,7 +252,7 @@ function Unit.FindNearest(otherUnit, mode, onlyCombat)
     Object = GetObjectWithIndex(i)
     if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
     and (Nearest == nil or GetDistanceBetweenObjects(otherUnit, Object) < GetDistanceBetweenObjects(otherUnit, Nearest))
-    and UnitHealth(Object) > 1 and Object ~= ct.player then
+    and UnitHealth(Object) > 1 and Object ~= PlayerUnit then
       if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
       or (UnitInParty(Object) or UnitInRaid(Object)))
       and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
@@ -361,20 +365,20 @@ function Unit.ComputeTTD(unit)
   end
 
   -- check if the unit is already known to the ttd table
-  for i = 1, getn(ct.TTD) do
-    if ct.TTD[i].unit == unit then
+  for i = 1, getn(TTD_TABLE) do
+    if TTD_TABLE[i].unit == unit then
       -- update values
-      ct.TTD[i].duration = GetTime() - ct.TTD[i].start
-      ct.TTD[i].dps = (UnitHealthMax(ct.TTD[i].unit) - UnitHealth(ct.TTD[i].unit)) / ct.TTD[i].duration
-      ct.TTD[i].ttd = UnitHealth(ct.TTD[i].unit) / ct.TTD[i].dps
+      TTD_TABLE[i].duration = GetTime() - TTD_TABLE[i].start
+      TTD_TABLE[i].dps = (UnitHealthMax(TTD_TABLE[i].unit) - UnitHealth(TTD_TABLE[i].unit)) / TTD_TABLE[i].duration
+      TTD_TABLE[i].ttd = UnitHealth(TTD_TABLE[i].unit) / TTD_TABLE[i].dps
 
-      return ct.TTD[i].ttd
+      return TTD_TABLE[i].ttd
     end
   end
 
   -- add the unit to the ttd table
   local Entry = {unit = unit, start = GetTime(), duration = 0, dps = 0, ttd = 0}
-  table.insert(ct.TTD, Entry)
+  table.insert(TTD_TABLE, Entry)
   return 9999
 end
 
@@ -418,9 +422,8 @@ function Unit.IsDummy(unit)
     return nil
   end
 
-  -- Dungeon Bosses
-  for i = 1, getn(ct.TrainingDummies) do
-    if ct.GetCreatureID(unit) == ct.TrainingDummies[i] then
+  for i = 1, getn(TrainingDummies) do
+    if ct.GetCreatureID(unit) == TrainingDummies[i] then
       return true
     end
   end
@@ -436,13 +439,13 @@ function Unit.HasControl(unit)
   end
 
   -- Use wowfunction for player
-  if unit == ct.player then
+  if unit == PlayerUnit then
     return HasFullControl()
   end
 
   -- Check if affected by crowdcontrol spell
-  for i = 1, getn(ct.LossOfControlAuras) do
-    if Debuff.Has(unit, ct.LossOfControlAuras[i]) then
+  for i = 1, getn(LossOfControlAuras) do
+    if Debuff.Has(unit, LossOfControlAuras[i]) then
       return false
     end
   end

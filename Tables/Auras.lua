@@ -1,10 +1,10 @@
-ct.CastWhileMovingAuras = {
+CastWhileMovingAuras = {
   108839,     -- Ice Floes
   79206       -- Spiritwalker's Grace
 }
 
 -- This was all I could find but I'm sure there are more
-ct.LossOfControlAuras = {
+LossOfControlAuras = {
   118,        -- Polymorph
   187650,     -- Freezing Trap
   19386,      -- Wyvern Sting

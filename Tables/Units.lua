@@ -1,4 +1,4 @@
-ct.DungeonBosses = {
+DungeonBosses = {
   98203,        -- Ivanyr, The Arcway
   98205,        -- Corstilax, The Arcway
   98206,        -- General Xakal, The Arcway
@@ -61,7 +61,7 @@ ct.DungeonBosses = {
   117194,       -- Thrashbite the Scornful, Cathedral of Eternal Night
 }
 
-ct.RaidBosses = {
+RaidBosses = {
   102263,       -- Skorpyron, The Nighthold
   101002,       -- Krosus, The Nighthold
   104415,       -- Chronomatic Anomaly, The Nighthold
@@ -96,7 +96,7 @@ ct.RaidBosses = {
   114344,       -- Guarm, Trial of Valor
 }
 
-ct.TrainingDummies = {
+TrainingDummies = {
   30527,
   24792,
   109595,
