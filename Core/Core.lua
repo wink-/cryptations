@@ -57,6 +57,7 @@ function Initialize()
     end
     if event == "GROUP_ROSTER_UPDATE" then
       Group.UpdateMembers()
+      Group.UpdateTanks()
     end
     if event == "ACTIVE_TALENT_GROUP_CHANGED" and IsInGroup() then
       Group.UpdateTanks()

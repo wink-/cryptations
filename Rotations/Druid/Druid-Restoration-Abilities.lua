@@ -40,11 +40,13 @@ function DREfflorescence()
 end
 
 function DRLifebloom()
-  if MainTank ~= nil and Spell.CanCast(33763, MainTank, 0, MaxMana * 0.12)
-  and Unit.IsInLOS(MainTank) then
-    if not Buff.Has(MainTank, 33763, true)
-    or select(3, Buff.Has(MainTank, 33763, true)) <= 4.5 then
-      return Spell.Cast(33763, MainTank)
+  local Target = Group.TankToHeal()
+  if Target ~= nil
+  and Spell.CanCast(33763, Target, 0, MaxMana * 0.12)
+  and Unit.IsInLOS(Target) then
+    if not Buff.Has(Target, 33763, true)
+    or select(3, Buff.Has(Target, 33763, true)) <= 4.5 then
+      return Spell.Cast(33763, Target)
     end
   end
 end
@@ -58,7 +60,8 @@ end
 
 function DRRegrowth()
   local Target = Group.UnitToHeal()
-  if Spell.CanCast(8936, Target, 0, MaxMana * 0.1863)
+  if Target ~= nil
+  and Spell.CanCast(8936, Target, 0, MaxMana * 0.1863)
   and Unit.PercentHealth(Target) <= RegrowthHealth
   and Unit.IsInLOS(Target) then
     return Spell.Cast(8936, Target)
@@ -90,7 +93,8 @@ end
 -- applies Rejuvenation until the maximum Rejuvenation count
 function DRRejuvenation()
   local Target = RejuvenationTarget()
-  if RejuvenationCount() < MaxRejuv
+  if Target ~= nil
+  and RejuvenationCount() < MaxRejuv
   and Spell.CanCast(774, Target, 0, MaxMana * 0.1)
   and Unit.IsInLOS(Target) then
     return Spell.Cast(774, Target)

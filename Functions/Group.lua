@@ -52,7 +52,7 @@ function Group.GetAverageHealth()
   return Health / Count
 end
 
--- updates the
+-- updates the heal priority list
 function Group.HealPriority()
   if NextGroupRefresh ~= nil and NextGroupRefresh > GetTime() then return end
 
@@ -62,7 +62,9 @@ function Group.HealPriority()
   end
 
   table.sort(GROUP_MEMBERS, compare)
+  table.sort(GROUP_TANKS, compare)
   Lowest = GROUP_MEMBERS[1]
+  LowestTank = GROUP_TANKS[1]
   NextGroupRefresh = GetTime() + RefreshRate
 end
 
@@ -73,4 +75,6 @@ function Group.UnitToHeal()
 end
 
 function Group.TankToHeal()
+  Group.HealPriority()
+  return LowestTank
 end
