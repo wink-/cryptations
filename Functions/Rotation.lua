@@ -127,10 +127,9 @@ end
 
 -- Handles Disspelling of group members
 function Rotation.Dispell()
-  local Units = Player.GetGroupMembers()
   local Unit = nil
-  for i = 1, getn(Units) do
-    Unit = Units[i]
+  for i = 1, getn(GROUP_MEMBERS) do
+    Unit = GROUP_MEMBERS[i]
     for j = 1, Debuff.GetCount(Unit) do
       if select(5, UnitDebuff(Unit, j)) ~= nil
       and Dispell ~= nil then

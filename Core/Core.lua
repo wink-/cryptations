@@ -1,6 +1,7 @@
 local Unit      = LibStub("Unit")
 local Rotation  = LibStub("Rotation")
 local Spell     = LibStub("Spell")
+local Group     = LibStub("Group")
 
 -- GLOBAL SETTINGS
 
@@ -31,6 +32,8 @@ function Initialize()
   frame:RegisterEvent("PLAYER_REGEN_ENABLED")
   frame:RegisterEvent("UNIT_SPELLCAST_START")
   frame:RegisterEvent("UNIT_COMBAT")
+  frame:RegisterEvent("GROUP_ROSTER_UPDATE")
+  frame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 
   local function eventHandler(self, event, arg1, arg2, arg3, arg4, arg5, arg6)
     if event == "UNIT_SPELLCAST_START" and arg1 == "player" and getn(SPELL_QUEUE) ~= 0 then
@@ -51,6 +54,12 @@ function Initialize()
       -- add the event to the player damage table
       local Entry = {damage = arg4, damageTakenTime = GetTime()}
       table.insert(PLAYER_DAMAGE, Entry)
+    end
+    if event == "GROUP_ROSTER_UPDATE" then
+      Group.UpdateMembers()
+    end
+    if event == "ACTIVE_TALENT_GROUP_CHANGED" and IsInGroup() then
+      Group.UpdateTanks()
     end
   end
 

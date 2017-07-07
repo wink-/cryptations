@@ -111,36 +111,6 @@ function Unit.GetUnitsBelowHealth(healthPercent, mode, onlyCombat, unit, range)
   return Units
 end
 
--- returns the unit objects of the tanks and specifies them as main and off tank, return nil if not found
-function Unit.FindTanks()
-  -- find tanks
-  local Tanks = {}
-  local ObjectCount = GetObjectCount()
-  local Object = nil
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
-    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
-    and (UnitInParty(Object) or UnitInRaid(Object))
-    and (UnitGroupRolesAssigned(Object) == "TANK" or ObjectID(Object) == 72218) then
-      table.insert(Tanks, Object)
-    end
-  end
-
-  -- specify main and off tank
-  local MainTank  = nil
-  local OffTank   = nil
-
-  for i = 1, getn(Tanks) do
-    if Unit.IsTankingBoss(Tanks[i]) or getn(Tanks) == 1 then
-      MainTank = Tanks[i]
-    else
-      OffTank = Tanks[i]
-    end
-  end
-
-  return MainTank, OffTank
-end
-
 -- returns true when the given unit is tanking a boss
 function Unit.IsTankingBoss(unit)
   if unit == nil then

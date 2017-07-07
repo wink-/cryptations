@@ -1,21 +1,11 @@
 local Player  = LibStub:NewLibrary("Player", 1)
 local LAD     = LibStub("LibArtifactData-1.0")
 
-PLAYER_DAMAGE = {damage, damageTakenTime}        -- Holds the values required for calculating the damage that the player took over time
-
--- returns table containing units that are within the player's group or raid
-function Player.GetGroupMembers()
-  local Units = {}
-  local ObjectCount = GetObjectCount()
-  local Object = nil
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
-    if ObjectExists(Object) and (UnitInRaid(Object) or UnitInParty(Object)) then
-      table.insert(Units, Object)
-    end
-  end
-  return Units
-end
+-- Holds the values required for calculating the damage that the player took over time
+PLAYER_DAMAGE = {
+  damage,
+  damageTakenTime
+}
 
 -- given the spellID of the artifact trait, produces true if currently equipped artifact has this trait unlocked
 function Player.HasArtifactTrait(spellID)

@@ -1,3 +1,11 @@
+local ClassID = select(3, UnitClass("player"))
+
+if ClassID ~= 11 then return end
+if FireHack == nil then return end
+
+local Spell = LibStub("Spell")
+local Unit  = LibStub("Unit")
+
 function DRejuvenation()
   if Spell.CanCast(774, HealTarget, 0, MaxMana * 0.1) and not Buff.Has(LowestFriend, 774, true)
   and Unit.IsInLOS(HealTarget) and RejuvenationCount < MaxRejuv then

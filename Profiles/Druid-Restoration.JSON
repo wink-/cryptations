@@ -9,4 +9,7 @@
   "OtherHealth": 70,
   "ToppingHealth": 95,
   "MaxRejuv": 7,
+  "RejuvHealth": 95,
+  "RegrowthHealth": 60,
+  "HTHealth": 80,
 }
