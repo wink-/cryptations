@@ -2,6 +2,8 @@ local Rotation  = LibStub:NewLibrary("Rotation", 1)
 local Unit      = LibStub("Unit")
 local Spell     = LibStub("Spell")
 local Player    = LibStub("Player")
+local Buff      = LibStub("Buff")
+local Debuff    = LibStub("Debuff")
 
 
 -- The spell queue shall only contain spells that are a 100% required to be casted (rest is done by the rotation itself)
@@ -24,7 +26,7 @@ function Rotation.PulseQueue()
     end
 
     -- Cast Spell
-    if (not Unit.IsMoving(PlayerUnit) or Unit.CanCastWhileMoving(SpellID))
+    if (not Unit.IsMoving(PlayerUnit) or Spell.CanCastWhileMoving(SpellID))
     and not Unit.IsCasting(PlayerUnit) and UnitGUID(SpellTarget) ~= nil then
       Spell.Cast(SpellID, SpellTarget)
 

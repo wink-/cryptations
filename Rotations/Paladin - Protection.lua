@@ -254,7 +254,7 @@ function Taunt(unit)
 
   -- Judgment
   if Unit.IsInLOS(unit)
-  and Spell.CanCast(20271, unit) and ct.IsFacing(unit, CastAngle) then
+  and Spell.CanCast(20271, unit) and Unit.IsFacing(unit, CastAngle) then
     return Spell.Cast(20271, unit)
   end
 end

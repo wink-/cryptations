@@ -95,7 +95,7 @@ function Pulse()
     if Spell.CanCast(184662) then
       if Unit.PercentHealth(PlayerUnit) <= 70 then
         return Spell.Cast(184662)
-      elseif getn(ct.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= 3 then
+      elseif getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= 3 then
         return Spell.Cast(184662)
       end
     end
@@ -127,7 +127,7 @@ function Pulse()
 
       -- Wake of Ashes (Use when having the Ashes to Ashes trait
       -- to generate Holy Power during Judgment debuff)
-      if HolyPower == 0 and PlayerUnitHasArtifactTrait(179546) and Spell.CanCast(205273)
+      if HolyPower == 0 and Player.HasArtifactTrait(179546) and Spell.CanCast(205273)
       and Unit.IsFacing(PlayerTarget, 90) then
         return Spell.Cast(205273)
 
@@ -143,7 +143,7 @@ function Pulse()
       -- Use together with Righteous Verdict if available
       elseif Spell.CanCast(BladeOrHammer, PlayerTarget, nil, nil, false) then
         -- Use Spender before using Blade of Justice to benefit from Righteous Verdict
-        if PlayerUnitHasArtifactTrait(238062) and HolyPower >= 3 then
+        if Player.HasArtifactTrait(238062) and HolyPower >= 3 then
           -- Use AOE Spender (Divine Storm)
           if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= HolyPowerAOESpenderUnitThrehsold
           and Spell.CanCast(53385) then
@@ -151,7 +151,7 @@ function Pulse()
             return Spell.AddToQueue(Sequence)
           end
           -- Use ST Spender (Templar's Verdict)
-          if Spell.CanCast(85256, PlayerTarget) and ct.IsInLOS(PlayerTarget) then
+          if Spell.CanCast(85256, PlayerTarget) and Unit.IsInLOS(PlayerTarget) then
             local Sequence = {85256, BladeOrHammer}
             return Spell.AddToQueue(Sequence)
           end
@@ -165,7 +165,7 @@ function Pulse()
     -- Phase Independent Spells --
 
     -- Justicar's Vengeance (Talent, use if 5 HolyPower and below 80% health)
-    if HolyPower == 5 and ct.PercentHealth(PlayerUnit) <= 80 and Spell.CanCast(215661) then
+    if HolyPower == 5 and Unit.PercentHealth(PlayerUnit) <= 80 and Spell.CanCast(215661) then
       return Spell.Cast(215661)
     end
 
@@ -192,7 +192,7 @@ function Pulse()
     -- Execution Sentence (Talent, Cast during Judgment debuff)
     if Spell.CanCast(213757, PlayerTarget, 9, 3) then
       if (Debuff.Has(PlayerTarget, 197277) or Spell.GetRemainingCooldown(20271) >= 1
-      or ttd < JudgmentTTD) and ct.IsInLOS(PlayerTarget) then
+      or ttd < JudgmentTTD) and Unit.IsInLOS(PlayerTarget) then
         return Spell.Cast(213757, PlayerTarget)
       end
     end

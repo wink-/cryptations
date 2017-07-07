@@ -19,7 +19,6 @@ Functions\Rotation.lua
 
 # Core
 Core\Core.lua
-Core\PulseEngine.lua
 Core\BossManager.lua
 
 # Tables
@@ -31,7 +30,9 @@ Tables\Units.lua
 Rotations\Paladin - Protection.lua
 Rotations\Paladin - Holy.lua
 Rotations\Paladin - Retribution.lua
-
 Rotations\Druid - Guardian.lua
+
+# Pulse Engine
+Core\PulseEngine.lua
 
 frame.xml

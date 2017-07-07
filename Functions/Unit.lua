@@ -423,7 +423,7 @@ function Unit.IsDummy(unit)
   end
 
   for i = 1, getn(TrainingDummies) do
-    if ct.GetCreatureID(unit) == TrainingDummies[i] then
+    if Unit.GetCreatureID(unit) == TrainingDummies[i] then
       return true
     end
   end

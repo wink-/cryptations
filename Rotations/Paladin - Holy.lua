@@ -63,7 +63,7 @@ local Player      = LibStub("Player")
 local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
-local Util        = LibStub("Util")
+local Utils       = LibStub("Utils")
 
 function Pulse()
   local MaxMana                 = UnitPowerMax(PlayerUnit , 0)
@@ -242,7 +242,7 @@ function Pulse()
         if BestUnit ~= nil then
           -- Place Hammer in center of suitable units (if in range)
           local Units = Unit.GetUnitsBelowHealth(LightsHammerHealthThreshold, "friendly", true, BestUnit, 10)
-          local x, y, z = Util.GetCenterBetweenUnits(Units)
+          local x, y, z = Unit.GetCenterBetweenUnits(Units)
           return Spell.CastGroundSpell(114158, x, y, z)
         end
       end
@@ -287,7 +287,6 @@ function Pulse()
       and getn(Unit.GetUnitsBelowHealth(70, "friendly", true, MainTank, 30)) >= 3 then
         return Spell.Cast(200025, HealTarget)
       end
-
 
       -- Holy Light (Flash of Light for greater damage)
       if Unit.PercentHealth(HealTarget) <= FlashOfLightThreshold then
