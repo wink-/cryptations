@@ -40,12 +40,23 @@ function Group.UpdateMembers()
 end
 
 -- returns the percentage of the average group health
-function Group.GetAverageHealth()
+function Group.AverageHealth()
   local Health = 0
   local Count  = 0
-  local Members = Group.GetMembers()
-  for i = 1, getn(Members) do
-    Health = Health + Unit.PercentHealth(Members[i])
+  for i = 1, getn(GROUP_MEMBERS) do
+    Health = Health + Unit.PercentHealth(GROUP_MEMBERS[i])
+    Count = Count + 1
+  end
+
+  return Health / Count
+end
+
+-- returns the percentage of the average health of the given units
+function Group.AverageHealthCustom(units)
+  local Health = 0
+  local Count   = 0
+  for i = 1, getn(units) do
+    Health = Health + Unit.PercentHealth(units[i])
     Count = Count + 1
   end
 

@@ -55,6 +55,7 @@ OtherHealthThreshold                = Settings.OtherHealthThreshold
 ToppingHealthThreshold              = Settings.ToppingHealthThreshold
 FlashOfLightThreshold               = Settings.FlashOfLightThreshold
 BestowFaithThreshold                = Settings.BestowFaithThreshold
+MaxMana                             = UnitPowerMax(PlayerUnit , 0)
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
@@ -66,7 +67,7 @@ local BossManager = LibStub("BossManager")
 local Utils       = LibStub("Utils")
 
 function Pulse()
-  local MaxMana                 = UnitPowerMax(PlayerUnit , 0)
+
   local MaxHealth               = UnitHealthMax(PlayerUnit)
 
   local LowestFriend            = Unit.FindLowest("friendly")
@@ -306,8 +307,6 @@ end
 
 -- Dispell Spells are handled here
 function Dispell(unit, dispelType)
-  local MaxMana = UnitPowerMax(PlayerUnit , 0)
-
   if Spell.CanCast(4987, unit, 0, MaxMana * 0.13) and dispelType ~= "Curse" then
     return Spell.Cast(4987, unit)
   end

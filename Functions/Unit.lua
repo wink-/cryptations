@@ -237,13 +237,26 @@ function Unit.FindNearest(otherUnit, mode, onlyCombat)
   return Nearest
 end
 
--- returns true if player is currently casting a spell
+-- returns true if unit is currently casting a spell
 function Unit.IsCasting(unit)
   if unit == nil then
     return nil
   end
   if select(6, UnitCastingInfo(unit)) == nil
   or GetTime() * 1000 >= select(6, UnitCastingInfo(unit)) - (PreCastTime * 1000) then
+    return false
+  else
+    return true
+  end
+end
+
+-- returns true if unit is currently channeling a spell
+function Unit.IsChanneling(unit)
+  if unit == nil or not ObjectExists(unit) then
+    return nil
+  end
+
+  if select(6, UnitChannelInfo(unit)) == nil then
     return false
   else
     return true

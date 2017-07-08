@@ -12,7 +12,9 @@ local Debuff    = LibStub("Debuff")
 function Rotation.PulseQueue()
 
   -- pulse rotation if spellQueue is empty
-  if getn(SPELL_QUEUE) == 0 and not Unit.IsCasting(PlayerUnit) then
+  if getn(SPELL_QUEUE) == 0
+  and not Unit.IsCasting(PlayerUnit)
+  and not Unit.IsChanneling(PlayerUnit) then
     Pulse()
   elseif getn(SPELL_QUEUE) ~= 0 then
     local SpellID = SPELL_QUEUE[1].spell
