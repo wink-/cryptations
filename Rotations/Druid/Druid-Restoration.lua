@@ -22,13 +22,29 @@ Innervate       = Settings.Innervate
 Ironbark        = Settings.Ironbark
 EoG             = Settings.EoG
 Flourish        = Settings.Flourish
+CenarionWard    = Settings.CenarionWard
+Rejuv           = Settings.Rejuv
+WildGrowth      = Settings.WildGrowth
+Swiftmend       = Settings.Swiftmend
+Efflorescence   = Settings.Efflorescence
+HealingTouch    = Settings.HealingTouch
 TankHealth      = Settings.TankHealth
 OtherHealth     = Settings.OtherHealth
 ToppingHealth   = Settings.ToppingHealth
 MaxRejuv        = Settings.MaxRejuv
+LBTime          = Settings.LBTime
 RejuvHealth     = Settings.RejuvHealth
 RegrowthHealth  = Settings.RegrowthHealth
 HTHealth        = Settings.HTHealth
+CWHealth        = Settings.CWHealth
+TQHealth        = Settings.TQHealth
+IBHealth        = Settings.IBHealth
+WGUnits         = Settings.WGUnits
+WGHealth        = Settings.WGHealth
+SMHealth        = Settings.SMHealth
+EFUnits         = Settings.EFUnits
+EFHealth        = Settings.EFHealth
+EoGHoTCount     = Settings.EoGHoTCount
 MaxMana         = UnitPowerMax("player", 0)
 
 local Unit        = LibStub("Unit")
@@ -52,58 +68,29 @@ function Pulse()
     Rotation.Target("hostile")
     PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
 
-    -- COOLDOWNLS
-
-    -- Tranquility:
-    -- Use on heavy group damage
     DRTranquility()
-    -- Innervate:
-    -- Use on cooldown
     DRInnervate()
-    -- Ironbark:
-    -- Use when Tank is in danger
     DRIronbark()
-    -- Essence of G'Hanir:
-    -- Use on heavy group damage
-    -- Is best used with Wild Growth
     DREoG()
-    -- Flourish:
-    -- Use on cooldown when having at least 3 hots active on the group
     DRFlourish()
-    -- Efflorescence:
-    -- Maintain under damaged group
     DREfflorescence()
-    -- Lifebloom:
-    -- Keep active on tank, refresh when remaining time < 4.5 seconds
     DRLifebloom()
-    -- Regrowth with Clearcasting:
-    -- Use on active tank
     DRRegrowthClearcast()
-    -- Cenarion Ward:
-    -- Use on cooldown
     DRCenarionWard()
-    -- Rejuvenation:
-    -- Use on damaged Players
-    -- Don't exceed the maximum Rejuvenation count
-    -- Don't use when the target already has a Rejuvenation from us
     DRRejuvenation()
-    -- Wild Growth:
-    -- Use on group damage (Raid 6; Dungeon 4) within 30 yards
-    -- Is best used with Innervate
     DRWildGrowth()
-    -- Swiftmend:
-    -- Use on players with low health
     DRSwiftmend()
-    -- Regrowth without Clearcasting:
-    -- Use as emergency
     DRRegrowth()
-    -- Healing Touch
-    DHealingTouch()
+    DRHealingTouch()
   -- Out Of Combat Rotation
   else
 
   end
 end
 
-function Dispell()
+function Dispell(unit, dispellType)
+  if Spell.CanCast(88423, unit, 0, MaxMana * 0.13)
+  and dispellType ~= "Disease" then
+    return Spell.Cast(88423, unit)
+  end
 end

@@ -12,18 +12,33 @@ local Buff    = LibStub("Buff")
 local Debuff  = LibStub("Debuff")
 
 function DRTranquility()
+  if Spell.CanCast(740, nil, 0, MaxMana * 0.184)
+  and Tranquility
+  and Group.AverageHealth() <= TQHealth then
+    return Spell.Cast(740)
+  end
 end
 
 function DRInnervate()
-  if Spell.CanCast(29166) then
+  if Spell.CanCast(29166)
+  and Innervate then
     return Spell.Cast(29166)
   end
 end
 
 function DRIronbark()
+  local Target = Group.UnitToHeal()
+  if Spell.CanCast(102342, Target)
+  and Unit.PercentHealth(Target) <= IBHealth then
+    return Spell.Cast(102342, Target)
+  end
 end
 
 function DREoG()
+  if EoG
+  and HoTCount() >= EoGHoTCount
+  and Spell.CanCast(208253) then
+    return Spell.Cast(208253)
 end
 
 function HoTCount()
@@ -36,7 +51,45 @@ function DRFlourish()
   end
 end
 
+function EfflorescenceTarget()
+  local BestTarget        = nil
+  local UnitCountBest     = 0
+  local UnitCountCurrent  = 0
+  local GroupHealth       = 100
+  local CurrentUnit       = nil
+  local Units             = nil
+  if Efflorescence then
+    for i = 1, getn(GROUP_MEMBERS) do
+      CurrentUnit = GROUP_MEMBERS[i]
+      Units = Unit.GetUnitsBelowHealth(EFHealth, "friendly", true, CurrentUnit, 10)
+      UnitCountCurrent = getn(Units)
+      if Unit.PercentHealth(CurrentUnit) <= EFHealth then
+        UnitCountCurrent = UnitCountCurrent + 1
+      end
+      if UnitCountCurrent >= EFUnits
+      and UnitCountCurrent > UnitCountBest
+      and Group.AverageHealthCustom(Units) < GroupHealth then
+        UnitCountBest = UnitCountCurrent
+        BestTarget = CurrentUnit
+        GroupHealth = Group.AverageHealthCustom(Units)
+      end
+    end
+  end
+
+  return BestTarget
+end
+
+function EfflorescenceReplace()
+  -- TODO: check if there are still players in the existing Efflorescence radius
+end
+
 function DREfflorescence()
+  local Target = EfflorescenceTarget()
+  if Target ~= nil
+  and GetTotemInfo(1) == false
+  and Spell.CanCast(145205, nil, 0, MaxMana * 0.216) then
+    return Spell.CastGroundSpell(145205, ObjectPosition(Target))
+  end
 end
 
 function DRLifebloom()
@@ -45,16 +98,20 @@ function DRLifebloom()
   and Spell.CanCast(33763, Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(Target) then
     if not Buff.Has(Target, 33763, true)
-    or select(3, Buff.Has(Target, 33763, true)) <= 4.5 then
+    or select(3, Buff.Has(Target, 33763, true)) <= LBTime then
       return Spell.Cast(33763, Target)
     end
   end
 end
 
 function DRRegrowthClearcast()
-  if MainTank ~= nil and Spell.CanCast(8936, MainTank)
-  and Buff.Has(PlayerUnit, 16870) and Unit.IsInLOS(MainTank) then
-    return Spell.Cast(8936, MainTank)
+  local Target = Group.TankToHeal()
+  if Target ~= nil
+  and (Spell.GetPreviousSpell() ~= 8936 or Spell.GetTimeSinceLastSpell() >= 500)
+  and Spell.CanCast(8936, Target)
+  and Buff.Has(PlayerUnit, 16870)
+  and Unit.IsInLOS(Target) then
+    return Spell.Cast(8936, Target)
   end
 end
 
@@ -69,9 +126,12 @@ function DRRegrowth()
 end
 
 function DRCenarionWard()
-  if Spell.CanCast(102351, HealTarget, 0, MaxMana * 0.092)
-  and Unit.IsInLOS(HealTarget) then
-    return Spell.Cast(102351, HealTarget)
+  local Target = Group.UnitToHeal()
+  if Spell.CanCast(102351, Target, 0, MaxMana * 0.092)
+  and CenarionWard
+  and Unit.IsInLOS(Target)
+  and Unit.PercentHealth(Target) <= CWHealth then
+    return Spell.Cast(102351, Target)
   end
 end
 
@@ -94,6 +154,7 @@ end
 function DRRejuvenation()
   local Target = RejuvenationTarget()
   if Target ~= nil
+  and Rejuv
   and RejuvenationCount() < MaxRejuv
   and Spell.CanCast(774, Target, 0, MaxMana * 0.1)
   and Unit.IsInLOS(Target) then
@@ -101,8 +162,63 @@ function DRRejuvenation()
   end
 end
 
+-- finds the best target for Wild Growth
+function WildGrowthTarget()
+  local BestTarget        = nil
+  local UnitCountBest     = 0
+  local UnitCountCurrent  = 0
+  local GroupHealth       = 100
+  local CurrentUnit       = nil
+  local Units             = nil
+  if WildGrowth then
+    for i = 1, getn(GROUP_MEMBERS) do
+      CurrentUnit = GROUP_MEMBERS[i]
+      Units = Unit.GetUnitsBelowHealth(WGHealth, "friendly", true, CurrentUnit, 30)
+      UnitCountCurrent = getn(Units)
+      if Unit.PercentHealth(CurrentUnit) <= WGHealth then
+        UnitCountCurrent = UnitCountCurrent + 1
+      end
+      if UnitCountCurrent >= WGUnits
+      and UnitCountCurrent > UnitCountBest
+      and Group.AverageHealthCustom(Units) < GroupHealth then
+        UnitCountBest = UnitCountCurrent
+        BestTarget = CurrentUnit
+        GroupHealth = Group.AverageHealthCustom(Units)
+      end
+    end
+  end
+
+  return BestTarget
+end
+
 function DRWildGrowth()
+  local Target = WildGrowthTarget()
+  if Target ~= nil
+  and WildGrowth
+  and Spell.CanCast(48438, Target, 0, MaxMana * 0.34)
+  and Unit.IsInLOS(Target) then
+    return Spell.Cast(48438, Target)
+  end
 end
 
 function DRSwiftmend()
+  local Target = Group.UnitToHeal()
+  if Target ~= nil
+  and Swiftmend
+  and Spell.CanCast(18562, Target, 0, MaxMana * 0.14)
+  and Unit.IsInLOS(Target)
+  and Unit.PercentHealth(Target) <= SMHealth then
+    return Spell.Cast(18562, Target)
+  end
+end
+
+function DRHealingTouch()
+  local Target = Group.UnitToHeal()
+  if Target ~= nil
+  and HealingTouch
+  and Spell.CanCast(5185, Target)
+  and Unit.IsInLOS(Target)
+  and Unit.PercentHealth(Target) <= HTHealth then
+    return Spell.Cast(5185, Target)
+  end
 end
