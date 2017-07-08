@@ -56,7 +56,6 @@ function Pulse()
   or (AllowOutOfCombatRoutine and UnitGUID("target") ~= nil
   and Unit.IsHostile("target")) and UnitHealth("target") ~= 0 then
 
-    -- Bear form usage
     SwitchToBearForm()
 
     -- pulse target engine and remember target
@@ -85,15 +84,9 @@ function Pulse()
 end
 
 function Taunt(unit)
-  -- Growl
-  if Spell.CanCast(6795, unit) and Unit.IsHostile(unit) and Unit.IsInLOS(unit) then
-    return Spell.Cast(6795, unit)
-  end
-
-  -- Moonfire
-  if Spell.CanCast(8921, unit) and Unit.IsHostile(unit) and Unit.IsInLOS(unit) then
-    return Spell.Cast(8921, unit)
-  end
+  PlayerTarget = unit
+  DGGrowl()
+  DGMoonfire()
 end
 
 function Interrupt()

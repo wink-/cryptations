@@ -119,3 +119,12 @@ function DGSwipe()
     return Spell.Cast(213764)
   end
 end
+
+function DGGrowl()
+  if PlayerTarget ~= nil
+  and Spell.CanCast(6795, PlayerTarget)
+  and Unit.IsHostile(PlayerTarget)
+  and Unit.IsInLOS(PlayerTarget) then
+    return Spell.Cast(6795, PlayerTarget)
+  end
+end

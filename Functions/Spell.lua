@@ -22,7 +22,7 @@ function Spell.Cast(SpellID, unit)
     CastSpellByName(SpellName)
   end
 
-  -- Add to spell history if it is a instant cast
+  -- Add to spell history if it is an instant cast
   if select(4, GetSpellInfo(SpellID)) == 0 then
     Spell.AddToHistory(SpellID)
   end
