@@ -68,41 +68,54 @@ function DGFrenziedRegeneration()
 end
 
 function DGMoonfire()
-  if Spell.CanCast(8921, PlayerTarget) and UseMoonfire and Unit.IsInLOS(PlayerTarget) then
-    if Buff.Has(PlayerUnit, 203964) or not Debuff.Has(PlayerTarget, 164812) then
+  if PlayerTarget ~= nil
+  and Spell.CanCast(8921, PlayerTarget)
+  and UseMoonfire
+  and Unit.IsInLOS(PlayerTarget) then
+    if Buff.Has(PlayerUnit, 203964)
+    or not Debuff.Has(PlayerTarget, 164812) then
       return Spell.Cast(8921, PlayerTarget)
     end
   end
 end
 
 function DGMangle()
-  if Spell.CanCast(33917, PlayerTarget) then
+  if PlayerTarget ~= nil
+  and Spell.CanCast(33917, PlayerTarget) then
     return Spell.Cast(33917, PlayerTarget)
   end
 end
 
 function DGThrash()
-  if Spell.CanCast(77758, nil, nil, nil, false) and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
+  if PlayerTarget ~= nil
+  and Spell.CanCast(77758, nil, nil, nil, false)
+  and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
     return Spell.Cast(77758)
   end
 end
 
 function DGPulverize()
-  if Spell.CanCast(80313, PlayerTarget) and select(2, Debuff.Has(PlayerTarget, 77758)) >= 2 then
+  if PlayerTarget ~= nil
+  and Spell.CanCast(80313, PlayerTarget)
+  and select(2, Debuff.Has(PlayerTarget, 77758)) >= 2 then
     return Spell.Cast(80313, PlayerTarget)
   end
 end
 
 function DGMaul()
-  if Spell.CanCast(6807, PlayerTarget, 1, 45) then
-    if Rage >= MaulRage and Unit.PercentHealth(PlayerUnit) >= MaulHealth then
+  if PlayerTarget ~= nil
+  and Spell.CanCast(6807, PlayerTarget, 1, 45) then
+    if Rage >= MaulRage
+    and Unit.PercentHealth(PlayerUnit) >= MaulHealth then
       return Spell.Cast(6807, PlayerTarget)
     end
   end
 end
 
 function DGSwipe()
-  if Spell.CanCast(213764) and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
+  if PlayerTarget ~= nil
+  and Spell.CanCast(213764)
+  and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
     return Spell.Cast(213764)
   end
 end

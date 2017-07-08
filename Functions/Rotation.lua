@@ -88,6 +88,7 @@ function Rotation.Taunt()
           if GROUP_TANKS[i] ~= PlayerUnit
           and select(1, UnitDetailedThreatSituation(GROUP_TANKS[i], Object)) == true then
             IsOtherTankTanking = true
+            print("othertankistanking")
           end
         end
       end

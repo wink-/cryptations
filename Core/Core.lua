@@ -60,8 +60,10 @@ function Initialize()
       table.insert(PLAYER_DAMAGE, Entry)
     end
     if event == "GROUP_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
-      Group.UpdateMembers()
-      Group.UpdateTanks()
+      if FireHack ~= nil then
+        Group.UpdateMembers()
+        Group.UpdateTanks()
+      end
     end
     if event == "ACTIVE_TALENT_GROUP_CHANGED" and IsInGroup() then
       Group.UpdateTanks()

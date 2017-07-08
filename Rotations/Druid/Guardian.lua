@@ -8,7 +8,7 @@ if FireHack == nil then return end
 -- load profile content
 local wowdir = GetWoWDirectory()
 local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-local content = ReadFile(profiledir .. "Druid - Guardian.JSON")
+local content = ReadFile(profiledir .. "Druid-Guardian.JSON")
 
 if json.decode(content) == nil then
   return message("Error loading config file. Please contact the Author.")
@@ -33,6 +33,9 @@ FrenziedRegenerationHealth  = Settings.FrenziedRegenerationHealth
 MaulHealth                  = Settings.MaulHealth
 MaulRage                    = Settings.MaulRage
 RotSHealth                  = Settings.RotSHealth
+MaxMana                     = UnitPowerMax("player" , 0)
+MaxHealth                   = UnitHealthMax("player")
+Rage                        = UnitPower("player", 1)
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
@@ -43,14 +46,6 @@ local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 
 function Pulse()
-  local MaxMana           = UnitPowerMax(PlayerUnit , 0)
-  local MaxHealth         = UnitHealthMax(PlayerUnit)
-  local Rage              = UnitPower(PlayerUnit, 1)
-
-  local LowestFriend      = Unit.FindLowest("friendly")
-
-  local MainTank, OffTank = Unit.FindTanks()
-
   -- Call Taunt engine
   if UseTauntEngine then
     Rotation.Taunt()
@@ -83,12 +78,14 @@ function Pulse()
     DGThrash()
     DGPulverize()
     DGMaul()
+    DGSwipe()
   else
     -- out of combat rotation
   end
 end
 
 function Taunt(unit)
+  print("taunt")
   -- Growl
   if Spell.CanCast(6795, unit) and Unit.IsHostile(unit) and Unit.IsInLOS(unit) then
     return Spell.Cast(6795, unit)
