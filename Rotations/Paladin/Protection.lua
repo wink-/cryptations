@@ -8,7 +8,7 @@ if FireHack == nil then return end
 -- load profile content
 local wowdir = GetWoWDirectory()
 local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-local content = ReadFile(profiledir .. "Paladin - Protection.JSON")
+local content = ReadFile(profiledir .. "Paladin-Protection.JSON")
 
 if json.decode(content) == nil then
   return message("Error loading config file. Please contact the Author.")
@@ -35,7 +35,7 @@ LayOnHandsHealthThreshold                 = Settings.LayOnHandsHealthThreshold
 LightOfTheProtectorHealthThreshold        = Settings.LightOfTheProtectorHealthThreshold
 HandOfTheProtectorFriendHealthThreshold   = Settings.HandOfTheProtectorFriendHealthThreshold
 FlashOfLightHealthThreshold               = Settings.FlashOfLightHealthThreshold
-MaxMana                                   = UnitPowerMax(PlayerUnit , 0)
+MaxMana                                   = UnitPowerMax("player" , 0)
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
@@ -96,7 +96,7 @@ end
 
 -- Taunt spells are handled here
 function Taunt(unit)
-  PlayerTarget = Unit
+  PlayerTarget = unit
   PPHoR()
   PPAvengersShield()
   PPJudgment()

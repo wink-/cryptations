@@ -12,6 +12,7 @@ local Player      = LibStub("Player")
 local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
+local Group       = LibStub("Group")
 
 function PRAvengingWrathJudgment()
   if Spell.CanCast(31884) and Debuff.Has(PlayerTarget, 197277)

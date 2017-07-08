@@ -4,6 +4,9 @@ local SpecID  = GetSpecialization()
 if ClassID ~= 2 then return end
 if FireHack == nil then return end
 
+local Spell = LibStub("Spell")
+local Unit  = LibStub("Unit")
+
 function PRebuke()
   if PlayerTarget ~= nil
   and Spell.CanCast(96231, PlayerTarget)

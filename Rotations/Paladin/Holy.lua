@@ -8,7 +8,7 @@ if FireHack == nil then return end
 -- load profile content
 local wowdir = GetWoWDirectory()
 local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-local content = ReadFile(profiledir .. "Paladin - Holy.JSON")
+local content = ReadFile(profiledir .. "Paladin-Holy.JSON")
 
 if json.decode(content) == nil then
   return message("Error loading config file. Please contact the Author.")

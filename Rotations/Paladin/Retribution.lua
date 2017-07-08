@@ -8,7 +8,7 @@ if FireHack == nil then return end
 -- load profile content
 local wowdir = GetWoWDirectory()
 local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-local content = ReadFile(profiledir .. "Paladin - Retribution.JSON")
+local content = ReadFile(profiledir .. "Paladin-Retribution.JSON")
 
 if json.decode(content) == nil then
   return message("Error loading config file. Please contact the Author.")
@@ -34,8 +34,8 @@ EyeForAnEyeHealthThreshold        = Settings.EyeForAnEyeHealthThreshold
 WordOfGloryHealthThreshold        = Settings.WordOfGloryHealthThreshold
 WordOfGloryUnitThreshold          = Settings.WordOfGloryUnitThreshold
 JudgmentTTD                       = Settings.JudgmentTTD
-MaxMana                           = UnitPowerMax(PlayerUnit , 0)
-HolyPower                         = UnitPower(PlayerUnit, 9)
+MaxMana                           = UnitPowerMax("player" , 0)
+HolyPower                         = UnitPower("player", 9)
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
@@ -98,7 +98,7 @@ function Pulse()
     PRWordOfGlory()
     PRJudgment()
     PRExecutionSentence()
-    if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true) >= UnitsToSwitchToAOE then
+    if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= UnitsToSwitchToAOE then
       PRDivineStorm()
     end
     PRTemplarsVerdict()

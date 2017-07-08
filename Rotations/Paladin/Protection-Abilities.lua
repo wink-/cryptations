@@ -12,6 +12,7 @@ local Player      = LibStub("Player")
 local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
+local Group       = LibStub("Group")
 
 function PPAvengingWrath()
   if PlayerTarget ~= nil
@@ -81,7 +82,7 @@ function PPSotR()
     elseif select(1, GetSpellCharges(53600)) > 1
     and not select(4, GetTalentInfo(7, 2, 1)) then
       return Spell.Cast(53600)
-    elseif UnitHealth(PlayerUnit) <= MaxHealth * 0.4 then
+    elseif UnitHealth(PlayerUnit) <= UnitHealthMax(PlayerUnit) * 0.4 then
       return Spell.Cast(53600)
     end
   end
