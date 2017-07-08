@@ -85,7 +85,28 @@ function Group.UnitToHeal()
   return Lowest
 end
 
+-- Calls the update function and then returns the lowest tank
 function Group.TankToHeal()
   Group.HealPriority()
   return LowestTank
+end
+
+-- returns table with group that is the best to heal for an aoe heal spell
+function Group.FindBestToHeal(radius, minUnits, health)
+  local CurrentUnits      = {}
+  local BestUnits         = {}
+  local LowestHealthAvg   = 100
+  local CurrentHealthAvg  = 100
+  for i = 1, getn(GROUP_MEMBERS) do
+    CurrentUnits = Unit.GetUnitsBelowHealth(health, "friendly", true, GROUP_MEMBERS[i], radius)
+    CurrentHealthAvg = Group.AverageHealthCustom(CurrentUnits)
+    if getn(CurrentUnits) >= minUnits
+    and getn(CurrentUnits) > getn(BestUnits)
+    and CurrentHealthAvg < LowestHealthAvg then
+      LowestHealthAvg = CurrentHealthAvg
+      BestUnits = CurrentUnits
+    end
+  end
+
+  return BestUnits
 end

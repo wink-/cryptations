@@ -39,6 +39,7 @@ function DREoG()
   and HoTCount() >= EoGHoTCount
   and Spell.CanCast(208253) then
     return Spell.Cast(208253)
+  end
 end
 
 function HoTCount()
@@ -51,44 +52,21 @@ function DRFlourish()
   end
 end
 
-function EfflorescenceTarget()
-  local BestTarget        = nil
-  local UnitCountBest     = 0
-  local UnitCountCurrent  = 0
-  local GroupHealth       = 100
-  local CurrentUnit       = nil
-  local Units             = nil
-  if Efflorescence then
-    for i = 1, getn(GROUP_MEMBERS) do
-      CurrentUnit = GROUP_MEMBERS[i]
-      Units = Unit.GetUnitsBelowHealth(EFHealth, "friendly", true, CurrentUnit, 10)
-      UnitCountCurrent = getn(Units)
-      if Unit.PercentHealth(CurrentUnit) <= EFHealth then
-        UnitCountCurrent = UnitCountCurrent + 1
-      end
-      if UnitCountCurrent >= EFUnits
-      and UnitCountCurrent > UnitCountBest
-      and Group.AverageHealthCustom(Units) < GroupHealth then
-        UnitCountBest = UnitCountCurrent
-        BestTarget = CurrentUnit
-        GroupHealth = Group.AverageHealthCustom(Units)
-      end
-    end
-  end
-
-  return BestTarget
+function EfflorescencePos()
+  return Unit.GetCenterBetweenUnits(Group.FindBestToHeal(10, EFUnits, EFHealth))
 end
 
 function EfflorescenceReplace()
   -- TODO: check if there are still players in the existing Efflorescence radius
+  --        or if there is a group that is better to heal
 end
 
 function DREfflorescence()
-  local Target = EfflorescenceTarget()
-  if Target ~= nil
+  local x, y, z = EfflorescencePos()
+  if x ~= nil and y ~= nil and z ~= nil
   and GetTotemInfo(1) == false
   and Spell.CanCast(145205, nil, 0, MaxMana * 0.216) then
-    return Spell.CastGroundSpell(145205, ObjectPosition(Target))
+    return Spell.CastGroundSpell(145205, x, y, z)
   end
 end
 
