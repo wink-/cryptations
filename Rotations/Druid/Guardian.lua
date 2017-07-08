@@ -62,13 +62,7 @@ function Pulse()
   and Unit.IsHostile("target")) and UnitHealth("target") ~= 0 then
 
     -- Bear form usage
-    if not Buff.Has(PlayerUnit, 5487) then
-      if AutoSwitchForm then
-        return Spell.Cast(5487)
-      else
-        return
-      end
-    end
+    SwitchToBearForm()
 
     -- pulse target engine and remember target
     Rotation.Target("hostile")
@@ -79,105 +73,30 @@ function Pulse()
       Rotation.Interrupt()
     end
 
-    -- COOLDOWNS
-    -- Survival Instincts:
-    -- Use when below 70% health
-    -- Or when the BossManager notices the need to use a def cooldown
-    if Spell.CanCast(61336) and UseSurvivalInstincts then
-      if Unit.PercentHealth(PlayerUnit) <= SurvivalInstincsHealth
-      or BossManager.IsDefCooldownNeeded() then
-        return Spell.Cast(61336)
-      end
-    end
-
-    -- Barkskin:
-    -- same as Survival Instincts but when stunned
-    if Spell.CanCast(22812) and UseBarkskin then
-      if Unit.PercentHealth(PlayerUnit) <= BarkskinHealth
-      or BossManager.IsDefCooldownNeeded() then
-        return Spell.Cast(22812)
-      end
-    end
-
-    -- Rage of the Sleeper:
-    -- same as other def cooldowns
-    if Spell.CanCast(200851) and UseRotS then
-      if Unit.PercentHealth(PlayerUnit) <= RotSHealth
-      or BossManager.IsDefCooldownNeeded() then
-        return Spell.Cast(200851)
-      end
-    end
-
-    -- MITIGATION
-    -- Ironfur:
-    -- Use if below 85% health
-    -- Or when the BossManager notices the need to use a def cooldown
-    if Spell.CanCast(192081) and UseIronfur then
-      if Unit.PercentHealth(PlayerUnit) <= IronFurHealth
-      or BossManager.IsDefCooldownNeeded() then
-        return Spell.Cast(192081)
-      end
-    end
-
-    -- Frenzied Regeneration:
-    -- Use when taken 20% of maxhealth as damage in the last 5 seconds
-    if Spell.CanCast(22842) and UseFrenziedRegeneration then
-      if Player.GetDamageOverPeriod(5) >= UnitHealthMax(PlayerUnit) * (FrenziedRegenerationHealth / 100) then
-        return Spell.Cast(22842)
-      end
-    end
-
-    -- BASE ROTATION
-
-    -- Moonfire:
-    -- Use with Galactic Guardian proc
-    -- Or when the target does not have the debuff (this is experimental here)
-    if Spell.CanCast(8921, PlayerTarget) and UseMoonfire and Unit.IsInLOS(PlayerTarget) then
-      if Buff.Has(PlayerUnit, 203964) or not Debuff.Has(PlayerTarget, 164812) then
-        return Spell.Cast(8921, PlayerTarget)
-      end
-    end
-
-    -- Mangle: Use on cooldown
-    if Spell.CanCast(33917, PlayerTarget) then
-      return Spell.Cast(33917, PlayerTarget)
-    end
-
-    -- Thrash: Use on cooldown
-    if Spell.CanCast(77758, nil, nil, nil, false) and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
-      return Spell.Cast(77758)
-    end
-
-    -- Pulverize: (Talent) Use when target has 2+ Stacks of Thrash
-    if Spell.CanCast(80313, PlayerTarget) and select(2, Debuff.Has(PlayerTarget, 77758)) >= 2 then
-      return Spell.Cast(80313, PlayerTarget)
-    end
-
-    -- Maul: Use only when we don't need rage for mitigation (95% health) and when rage is >= 95
-    if Spell.CanCast(6807, PlayerTarget, 1, 45) then
-      if Rage >= MaulRage and Unit.PercentHealth(PlayerUnit) >= MaulHealth then
-        return Spell.Cast(6807, PlayerTarget)
-      end
-    end
-
-    -- Swipe
-    if Spell.CanCast(213764) and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
-      return Spell.Cast(213764)
-    end
+    DGSurvivalInstincts()
+    DGBarkskin()
+    DGRotS()
+    DGIronfur()
+    DGFrenziedRegeneration()
+    DGMoonfire()
+    DGMangle()
+    DGThrash()
+    DGPulverize()
+    DGMaul()
   else
     -- out of combat rotation
   end
 end
 
-function Taunt()
+function Taunt(unit)
   -- Growl
-  if Spell.CanCast(6795, PlayerTarget) and Unit.IsHostile(PlayerTarget) and Unit.IsInLOS(PlayerTarget) then
-    return Spell.Cast(6795, PlayerTarget)
+  if Spell.CanCast(6795, unit) and Unit.IsHostile(unit) and Unit.IsInLOS(unit) then
+    return Spell.Cast(6795, unit)
   end
 
   -- Moonfire
-  if Spell.CanCast(8921, PlayerTarget) and Unit.IsHostile(PlayerTarget) and Unit.IsInLOS(PlayerTarget) then
-    return Spell.Cast(8921, PlayerTarget)
+  if Spell.CanCast(8921, unit) and Unit.IsHostile(unit) and Unit.IsInLOS(unit) then
+    return Spell.Cast(8921, unit)
   end
 end
 
