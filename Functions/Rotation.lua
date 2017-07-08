@@ -72,26 +72,31 @@ end
 -- Handles Taunting
 -- This does not handle taunting logic for encounters
 function Rotation.Taunt()
-  local MainTank, OffTank = Unit.FindTanks()
-  local IsOtherTankTanking = nil
+  local IsOtherTankTanking = false
 
   local ObjectCount = GetObjectCount()
   local Object = nil
 
   for i = 1, ObjectCount do
     Object = GetObjectWithIndex(i)
-    local IsTanking = select(1, UnitDetailedThreatSituation(PlayerUnit, Object))
+    if ObjectIsType(Object, ObjectTypes.Unit) and Unit.IsHostile(Object) then
+      local IsTanking = select(1, UnitDetailedThreatSituation(PlayerUnit, Object))
 
-    if MainTank ~= nil then
-      IsOtherTankTanking = select(1, UnitDetailedThreatSituation(MainTank, Object)) ~= nil
-    elseif OffTank ~= nil then
-      IsOtherTankTanking = select(1, UnitDetailedThreatSituation(OffTank, Object)) ~= nil
-    end
+      -- check if other tank is tanking the object
+      if getn(GROUP_TANKS) > 1 then
+        for j = 1, getn(GROUP_TANKS) do
+          if GROUP_TANKS[i] ~= PlayerUnit
+          and select(1, UnitDetailedThreatSituation(GROUP_TANKS[i], Object)) == true then
+            IsOtherTankTanking = true
+          else
+        end
+      end
 
-    if Unit.IsHostile(Object) and GetNumGroupMembers() >= 1
-    and ObjectIsType(Object, ObjectTypes.Unit) and UnitAffectingCombat(Object) and not IsTanking
-    and Unit.IsInRange(PlayerUnit, Object, 30) and Taunt ~= nil and not IsOtherTankTanking then
-      return Taunt(Object)
+      if GetNumGroupMembers() >= 1
+      and UnitAffectingCombat(Object) and not IsTanking
+      and Unit.IsInRange(PlayerUnit, Object, 30) and Taunt ~= nil and not IsOtherTankTanking then
+        return Taunt(Object)
+      end
     end
   end
 end
