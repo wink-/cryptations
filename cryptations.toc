@@ -28,16 +28,58 @@ Tables\Spells.lua
 Tables\Units.lua
 
 # Rotations
+Rotations\DeathKnight\Blood.lua
+Rotations\DeathKnight\Frost.lua
+Rotations\DeathKnight\Unholy.lua
+
+Rotations\DemonHunter\Havoc.lua
+Rotations\DemonHunter\Vengeance.lua
+
+Rotations\Druid\Balance-Abilities.lua
+Rotations\Druid\Balance.lua
+Rotations\Druid\Feal-Abilities.lua
+Rotations\Druid\Feral.lua
+Rotations\Druid\General-Abilities.lua
+Rotations\Druid\Guardian-Abilities.lua
+Rotations\Druid\Guardian.lua
+Rotations\Druid\Restoration-Abilities.lua
+Rotations\Druid\Restoration.lua
+
+Rotations\Hunter\BeastMastery.lua
+Rotations\Hunter\Marksmanship.lua
+Rotations\Hunter\Survival.lua
+
+Rotations\Mage\Arcane.lua
+Rotations\Mage\Fire.lua
+Rotations\Mage\Frost.lua
+
+Rotations\Monk\Brewmaster.lua
+Rotations\Monk\Mistweaver.lua
+Rotations\Monk\Windwalker.lua
+
 Rotations\Paladin\Protection.lua
 Rotations\Paladin\Holy.lua
 Rotations\Paladin\Retribution.lua
 
-Rotations\Druid\General-Abilities.lua
-Rotations\Druid\Guardian.lua
-Rotations\Druid\Restoration.lua
-Rotations\Druid\Restoration-Abilities.lua
-Rotations\Druid\Balance.lua
-Rotations\Druid\Feral.lua
+Rotations\Priest\Discipline.lua
+Rotations\Priest\Holy.lua
+Rotations\Priest\Shadow.lua
+
+Rotations\Rogue\Assasination.lua
+Rotations\Rogue\Outlaw.lua
+Rotations\Rogue\Subtlety.lua
+
+Rotations\Shaman\Elemental.lua
+Rotations\Shaman\Enhancement.lua
+Rotations\Shaman\Restoration.lua
+
+Rotations\Warlock\Affliction.lua
+Rotations\Warlock\Demonology.lua
+Rotations\Warlock\Destruction.lua
+
+Rotations\Warrior\Arms.lua
+Rotations\Warrior\Fury.lua
+Rotations\Warrior\Protection.lua
 
 # Pulse Engine
 Core\PulseEngine.lua
