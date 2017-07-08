@@ -11,6 +11,9 @@ local Group   = LibStub("Group")
 local Buff    = LibStub("Buff")
 local Debuff  = LibStub("Debuff")
 
+-- Efflorescence position
+EFx, EFy, EFz = nil
+
 function DRTranquility()
   if Spell.CanCast(740, nil, 0, MaxMana * 0.184)
   and Tranquility
@@ -20,15 +23,16 @@ function DRTranquility()
 end
 
 function DRInnervate()
-  if Spell.CanCast(29166)
+  if Spell.CanCast(29166, PlayerUnit)
   and Innervate then
-    return Spell.Cast(29166)
+    return Spell.Cast(29166, PlayerUnit)
   end
 end
 
 function DRIronbark()
   local Target = Group.UnitToHeal()
-  if Spell.CanCast(102342, Target)
+  if Target ~= nil
+  and Spell.CanCast(102342, Target)
   and Unit.PercentHealth(Target) <= IBHealth then
     return Spell.Cast(102342, Target)
   end
@@ -66,6 +70,9 @@ function DREfflorescence()
   if x ~= nil and y ~= nil and z ~= nil
   and GetTotemInfo(1) == false
   and Spell.CanCast(145205, nil, 0, MaxMana * 0.216) then
+    EFx = x
+    EFy = y
+    EFz = z
     return Spell.CastGroundSpell(145205, x, y, z)
   end
 end
