@@ -39,7 +39,7 @@ Rotations\Druid\Balance-Abilities.lua
 Rotations\Druid\Balance.lua
 Rotations\Druid\Feal-Abilities.lua
 Rotations\Druid\Feral.lua
-Rotations\Druid\General-Abilities.lua
+Rotations\Druid\Common-Abilities.lua
 Rotations\Druid\Guardian-Abilities.lua
 Rotations\Druid\Guardian.lua
 Rotations\Druid\Restoration-Abilities.lua
@@ -57,8 +57,10 @@ Rotations\Monk\Brewmaster.lua
 Rotations\Monk\Mistweaver.lua
 Rotations\Monk\Windwalker.lua
 
-Rotations\Paladin\Protection.lua
+Rotations\Paladin\Common-Abilities.lua
 Rotations\Paladin\Holy.lua
+Rotations\Paladin\Protection.lua
+Rotations\Paladin\Protection-Abilities.lua
 Rotations\Paladin\Retribution.lua
 
 Rotations\Priest\Discipline.lua
