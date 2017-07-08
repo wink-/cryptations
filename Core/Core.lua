@@ -6,8 +6,8 @@ local Group     = LibStub("Group")
 -- GLOBAL SETTINGS
 
 -- Targeting behavior : Only one can be true
-ReTargetNearestUnit      = true
-ReTargetHighestUnit      = false
+ReTargetNearestUnit      = false
+ReTargetHighestUnit      = true
 ReTargetLowestUnit       = false
 
 -- Combat behavior
@@ -34,6 +34,8 @@ function Initialize()
   frame:RegisterEvent("UNIT_COMBAT")
   frame:RegisterEvent("GROUP_ROSTER_UPDATE")
   frame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
+  frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+  frame:RegisterEvent("PLAYER_REGEN_DISABLED")
 
   local function eventHandler(self, event, arg1, arg2, arg3, arg4, arg5, arg6)
     if event == "UNIT_SPELLCAST_START" and arg1 == "player" and getn(SPELL_QUEUE) ~= 0 then
@@ -41,8 +43,10 @@ function Initialize()
       CurrentSpell = Spell.GetID(arg2)
     end
     if event == "PLAYER_REGEN_ENABLED" then
-      -- player left any combat action so the queue will be cleaned up
       Rotation.CleanUpQueue()
+    end
+    if event == "PLAYER_REGEN_DISABLED" then
+      print("regen disabled, maybe the group joined combat")
     end
     if event == "UNIT_COMBAT" and arg1 == "player" and arg2 == "WOUND"
     and arg4 ~= nil then
@@ -55,7 +59,7 @@ function Initialize()
       local Entry = {damage = arg4, damageTakenTime = GetTime()}
       table.insert(PLAYER_DAMAGE, Entry)
     end
-    if event == "GROUP_ROSTER_UPDATE" then
+    if event == "GROUP_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
       Group.UpdateMembers()
       Group.UpdateTanks()
     end
