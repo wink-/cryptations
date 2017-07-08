@@ -47,7 +47,7 @@ local BossManager = LibStub("BossManager")
 
 function Pulse()
   -- Call Taunt engine
-  if UseTauntEngine then
+  if UseTaunt then
     Rotation.Taunt()
   end
 
@@ -85,7 +85,6 @@ function Pulse()
 end
 
 function Taunt(unit)
-  print("taunt")
   -- Growl
   if Spell.CanCast(6795, unit) and Unit.IsHostile(unit) and Unit.IsInLOS(unit) then
     return Spell.Cast(6795, unit)
