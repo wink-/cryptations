@@ -1,4 +1,4 @@
-local Debuff = LibStub:NewLibrary("Debuff", 1)
+local Debuff = LibStub("Debuff")
 
 -- given an unit and debuffID, produces true if unit has debuff
 -- second return argument is the debuff count as a value (e.g. 2 stacks would give 2)

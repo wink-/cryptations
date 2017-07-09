@@ -1,4 +1,4 @@
-local Utils = LibStub:NewLibrary("Utils", 1)
+local Utils = LibStub("Utils")
 
 -- returns the distance between x1,y1,z1 and x2,y2,z2
 function Utils.GetDistanceBetweenPositions(x1, y1, z1, x2, y2, z2)

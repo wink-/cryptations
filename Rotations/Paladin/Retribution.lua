@@ -64,7 +64,7 @@ function Pulse()
     Rotation.Target("hostile")
     PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
     TTD = Unit.ComputeTTD(PlayerTarget)
-    
+
     HolyPower = UnitPower("player", 9)
 
     -- call interrupt engine

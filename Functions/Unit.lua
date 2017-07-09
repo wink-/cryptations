@@ -1,4 +1,5 @@
-local Unit = LibStub:NewLibrary("Unit", 1)
+local Unit = LibStub("Unit")
+local Group = LibStub("Group")
 
 PlayerTarget = nil                                 -- The unit which the player is targeting
 Spelltarget  = nil                                 -- The unit on which a spell shall be casted

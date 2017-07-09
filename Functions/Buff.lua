@@ -1,4 +1,4 @@
-local Buff = LibStub:NewLibrary("Buff", 1)
+local Buff = LibStub("Buff")
 
 -- given an unit and a buffID, produces true if unit has Buff
 -- second return argument is the buff count as a value (e.g. 2 stacks would give 2)

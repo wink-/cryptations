@@ -1,4 +1,4 @@
-local Rotation  = LibStub:NewLibrary("Rotation", 1)
+local Rotation  = LibStub("Rotation")
 local Unit      = LibStub("Unit")
 local Spell     = LibStub("Spell")
 local Player    = LibStub("Player")

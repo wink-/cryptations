@@ -1,4 +1,4 @@
-local Group = LibStub:NewLibrary("Group", 1)
+local Group = LibStub("Group")
 local Spell = LibStub("Spell")
 local Unit  = LibStub("Unit")
 

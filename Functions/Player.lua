@@ -1,4 +1,4 @@
-local Player  = LibStub:NewLibrary("Player", 1)
+local Player  = LibStub("Player")
 local LAD     = LibStub("LibArtifactData-1.0")
 
 -- Holds the values required for calculating the damage that the player took over time

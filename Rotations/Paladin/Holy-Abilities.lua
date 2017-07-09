@@ -16,19 +16,19 @@ local Utils       = LibStub("Utils")
 local Group       = LibStub("Group")
 
 function PHAvengingWrath()
-  if UseAvengingWrath
+  if AvengingWrath
   and Spell.CanCast(31842)
   and GetNumGroupMembers() ~= 1
-  and Group.AverageHealth() <= AvengingWrathHealthThreshold then
+  and Group.AverageHealth() <= AWHealth then
     return Spell.Cast(31842)
   end
 end
 
 function PHHolyAvenger()
-  if UseHolyAvenger
+  if HolyAvenger
   and Spell.CanCast(105809)
   and GetNumGroupMembers() ~= 1
-  and Group.AverageHealth() <= HolyAvengerHealthThreshold then
+  and Group.AverageHealth() <= HAHealth then
     return Spell.Cast(105809)
   end
 end
@@ -36,9 +36,9 @@ end
 function PHLayOnHands()
   local Target = Group.UnitToHeal()
   if Target ~= nil
-  and UseLayOnHands
+  and LayOnHands
   and Spell.CanCast(633, Target)
-  and Unit.PercentHealth(Target) <= LayOnHandsHealthThreshold then
+  and Unit.PercentHealth(Target) <= LoHHealth then
     return Spell.Cast(633, Target)
   end
 end
@@ -46,22 +46,22 @@ end
 function PHBoS()
   local Target = Group.UnitToHeal()
   if Target ~= nil
-  and UseBlessingOfSacrifice
+  and BoS
   and Spell.CanCast(6940, Target)
   and Spell.CanCast(498)
   and not Buff.Has(Target, 6940)
-  and Unit.PercentHealth(Target) <= BlessingOfSacrificeHealthThreshold then
+  and Unit.PercentHealth(Target) <= BoSHealth then
     local Sequence = {498, 6940}
     return Spell.AddToQueue(Sequence, Target)
   end
 end
 
 function PHTyrsDeliverance()
-  if UseTyrsDeliverance
+  if TyrsDeliverance
   and Spell.CanCast(200652) then
     if GetNumGroupMembers() ~= 1
     and Spell.GetPreviousSpell() ~= 200652
-    and Group.AverageHealth() <= TyrsDeliveranceHealthThreshold then
+    and Group.AverageHealth() <= TyrsDeliveranceHealth then
       return Spell.Cast(200652)
     end
   end
@@ -70,6 +70,7 @@ end
 function PHHolyShock()
   local Target = Group.UnitToHeal()
   if Target ~= nil
+  and Unit.PercentHealth(Target) <= HSHealth
   and Spell.CanCast(20473, Target, 0, MaxMana * 0.1)
   and Unit.IsInLOS(Target) then
     return Spell.Cast(20473, Target)
@@ -79,6 +80,7 @@ end
 function PHHolyLight()
   local Target = Group.UnitToHeal()
   if Target ~= nil
+  and Unit.PercentHealth(Target) <= HLHealth
   and Spell.CanCast(82326, Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(Target) then
     return Spell.Cast(82326, Target)
@@ -97,7 +99,7 @@ function PHLotM()
 end
 
 function PHRuleOfLaw()
-  if UseRuleOfLaw
+  if RuleOfLaw
   and Spell.CanCast(214202) then
     return Spell.Cast(214202)
   end
@@ -106,7 +108,7 @@ end
 function PHBoL()
   local Target = Group.TankToHeal()
   if Target ~= nil
-  and UseBeaconOfLight
+  and BoL
   and not select(4, GetTalentInfo(7, 3, 1))
   and Spell.CanCast(53563, Target, 0, MaxMana * 0.025)
   and Unit.IsInLOS(Target)
@@ -118,7 +120,7 @@ end
 function PHBoF()
   local Target = Group.UnitToHeal()
   if Target ~= nil
-  and UseBeaconOfFaith
+  and BoF
   and Spell.CanCast(156910, Target, 0, MaxMana * 0.03125)
   and not Buff.Has(Target, 156910)
   and Unit.IsInLOS(Target)
@@ -133,23 +135,23 @@ function PHBestowFaith()
   and Spell.CanCast(223306, Target, 0, MaxMana * 0.06)
   and Unit.IsInLOS(Target)
   and not Buff.Has(Target, 223306)
-  and Unit.PercentHealth(Target) <= BestowFaithThreshold then
+  and Unit.PercentHealth(Target) <= BestowFaithHealth then
     return Spell.Cast(223306, Target)
   end
 end
 
 function PHInfusionProc()
   if Buff.Has(PlayerUnit, 53576) then
-    if UseHolyLightOnInfusion then
+    if InfusionHL then
       PHHolyLight()
-    elseif UseFlashOfLightOnInfusion then
+    elseif InfusionFoL then
       PHFlashOfLight()
     end
   end
 end
 
 function PHJudgment()
-  if UseJudgment
+  if Judgment
   and PlayerTarget ~= nil
   and IsSpellKnown(183778)
   and Spell.CanCast(20271, PlayerTarget, 0, MaxMana * 0.03)
@@ -158,48 +160,33 @@ function PHJudgment()
   end
 end
 
-function PHLightsHammerTarget()
-  -- Find best fitting unit
-  local GroupMembers = Player.GetGroupMembers()
-  local BestUnit = nil
-  local BestUnitTargetCount = 0
-  for i = 1, getn(GroupMembers) do
-    if (BestUnitTargetCount == 0
-    and getn(Unit.GetUnitsBelowHealth(LightsHammerHealthThreshold, "friendly", true, GroupMembers[i], 10)) >= LightsHammerUnitThreshold)
-    or (BestUnitTargetCount ~= 0
-    and getn(Unit.GetUnitsBelowHealth(LightsHammerHealthThreshold, "friendly", true, GroupMembers[i], 10)) >= BestUnitTargetCount) then
-      BestUnit = GroupMembers[i]
-      BestUnitTargetCount = getn(Unit.GetUnitsBelowHealth(LightsHammerHealthThreshold, "friendly", true, GroupMembers[i], 10))
-    end
-  end
+function PHLightsHammerPos()
+  return Unit.GetCenterBetweenUnits(Group.FindBestToHeal(10, LHUnits, LHHealth))
 end
 
 function PHLightsHammer()
-  if UseLightsHammer and Spell.CanCast(114158, nil, 0, MaxMana * 0.28)
-  and BestUnit ~= nil then
-    -- Place Hammer in center of suitable units (if in range)
-    local Units = Unit.GetUnitsBelowHealth(LightsHammerHealthThreshold, "friendly", true, BestUnit, 10)
-    local x, y, z = Unit.GetCenterBetweenUnits(Units)
+  local x, y, z = PHLightsHammerPos()
+  if x ~= nil and y ~= nil and z ~= nil
+  and GetTotemInfo(1) == false
+  and LightsHammer
+  and Spell.CanCast(114158, nil, 0, MaxMana * 0.28) then
     return Spell.CastGroundSpell(114158, x, y, z)
   end
 end
 
 function PHLoD()
-  if UseLightofDawn
+  if LightofDawn
   and Spell.CanCast(85222, nil, 0, MaxMana * 0.14) then
     -- Rule of Law
     if Buff.Has(PlayerUnit, 214202)
-    and (getn(Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 22.5, "friendly", true, LightOfDawnHealthThreshold))
-    >= LightOfDawnUnitThreshold) then
+    and (getn(Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 22.5, "friendly", true, LoDHealth)) >= LoDUnits) then
       return Spell.Cast(85222)
     -- Beacon of the Lightbringer
     elseif select(4, GetTalentInfo(7, 2, 1))
-    and (getn(Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 19.5, "friendly", true, LightOfDawnHealthThreshold))
-    >= LightOfDawnUnitThreshold) then
+    and (getn(Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 19.5, "friendly", true, LoDHealth)) >= LoDUnits) then
       return Spell.Cast(85222)
     -- Standard
-  elseif (getn(Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 15, "friendly", true, LightOfDawnHealthThreshold))
-    >= LightOfDawnUnitThreshold) then
+  elseif (getn(Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 15, "friendly", true, LoDHealth)) >= LoDUnits) then
       return Spell.Cast(85222)
     end
   end
@@ -220,7 +207,7 @@ function PHHolyPrismTarget()
     and Unit.IsHostile(CurrentObject) then
       Units = Unit.GetUnitsInRadius(CurrentObject, 15, "friendly", true)
       UnitCountCurrent = getn(Units)
-      if UnitCountCurrent >= HolyPrismUnitThreshold
+      if UnitCountCurrent >= HolyPrismUnits
       and UnitCountCurrent > UnitCountBest then
         UnitCountBest = UnitCountCurrent
         BestTarget = CurrentObject
@@ -241,9 +228,9 @@ function PHHolyPrism()
 end
 
 function PHBoV()
-  local Target = Unit.FindBestToHeal(30, BeaconOfVirtueUnitThreshold, BeaconOfVirtueHealthThreshold)
+  local Target = Unit.FindBestToHeal(30, BoVUnits, BoVHealth)
   if Target ~= nil
-  and UseBeaconOfVirtue
+  and BeaconOfVirtue
   and Spell.CanCast(200025, Target, 0, MaxMana * 0.1)
   and Unit.IsInLOS(Target) then
     return Spell.Cast(200025, Target)
@@ -253,7 +240,7 @@ end
 function PHFlashOfLight()
   local Target = Group.UnitToHeal()
   if Target ~= nil
-  and Unit.PercentHealth(Target) <= FlashOfLightThreshold
+  and Unit.PercentHealth(Target) <= FoLHealth
   and Spell.CanCast(82326, Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(Target) then
     return Spell.Cast(82326, Target)

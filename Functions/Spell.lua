@@ -1,4 +1,4 @@
-local Spell = LibStub:NewLibrary("Spell", 1)
+local Spell = LibStub("Spell")
 local Unit  = LibStub("Unit")
 
 SPELL_QUEUE = {}
