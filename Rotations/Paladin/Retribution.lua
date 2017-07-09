@@ -44,15 +44,12 @@ local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 
--- Use Blade or Hammer
-BladeOrHammer = nil
-if select(4, GetTalentInfo(4, 3, 1)) then BladeOrHammer = 198034
-else BladeOrHammer = 184575 end
-
--- Use Strike or Zeal
-StrikeOrZeal = nil
-if select(4, GetTalentInfo(2, 2, 1)) then StrikeOrZeal = 217020
-else StrikeOrZeal = 35395 end
+function SingleTargetSpenders()
+  PRExecutionSentence()
+  -- Justicars Vengeance
+  PRDivineStorm_ST()
+  PRTemplarsVerdict()
+end
 
 function Pulse()
   -- combat rotation
@@ -82,27 +79,26 @@ function Pulse()
     -- Arcane Torrent + Templar's Verdict (If Blood elf and Liadrin's Fury) or Crusader Strike
     -- Templar's Verdict
 
+    PRHolyWrath()
+    PRJudgment_Debuff()
+    PRCrusade()
     PRAvengingWrathJudgment()
     PRShieldOfVengeance()
-    PRCrusade()
-    PRHolyWrath()
-    -- Holy Power Generators  --
-    if (HolyPower < 5 and not Debuff.Has(PlayerTarget, 197277, true)) or HolyPower < 3 then
-      PRConsecration()
-      PRWakeOfAshes()
-      PRCrusaderStrikeOrZeal()
-      PRBoJOrDH()
+
+    if Debuff.Has(197277, PlayerTarget, true)
+    and Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3 then
+      PRDivineStorm_AOE()
+    else
+      SingleTargetSpenders()
     end
-    -- Holy Power Spenders --
-    PRJusticarsVengeance()
-    PREyeForAnEye()
-    PRWordOfGlory()
-    PRJudgment()
-    PRExecutionSentence()
-    if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= 3 then
-      PRDivineStorm()
-    end
-    PRTemplarsVerdict()
+
+    PRWakeOfAshes()
+    PRBladeOfJustice()
+    PRDivineHammer()
+    PRConsecration()
+    PRZeal()
+    PRCrusaderStrike()
+    -- Judgment Filler
   else
     -- out of combat
   end

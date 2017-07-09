@@ -32,7 +32,8 @@ function PRShieldOfVengeance()
 end
 
 function PRCrusade()
-  if Spell.CanCast(231895) then
+  if Spell.CanCast(231895)
+  and HolyPower == 5 then
     return Spell.Cast(231895)
   end
 end
@@ -52,55 +53,57 @@ function PRConsecration()
 end
 
 function PRWakeOfAshes()
-  if HolyPower == 0 and Player.HasArtifactTrait(179546) and Spell.CanCast(205273)
+  if HolyPower <= 1
+  and Player.HasArtifactTrait(179546)
+  and Spell.CanCast(205273)
   and Unit.IsFacing(PlayerTarget, 90) then
     return Spell.Cast(205273)
   end
 end
 
-function PRCrusaderStrikeOrZeal()
-  if StrikeOrZeal == nil or BladeOrHammer == nil then return end
-  if HolyPower <= 4 and Spell.CanCast(StrikeOrZeal, PlayerTarget, nil, nil, false) then
-    if select(1, GetSpellCharges(StrikeOrZeal) ~= 0
-    and not Spell.CanCast(BladeOrHammer, PlayerTarget, nil, nil, false))
-    or (select(1, GetSpellCharges(StrikeOrZeal) > 1
-    and Spell.CanCast(BladeOrHammer, PlayerTarget, nil, nil, false))) then
-      return Spell.Cast(StrikeOrZeal)
-    end
+function PRBladeOfJustice()
+  if PlayerTarget ~= nil
+  and not select(4, GetTalentInfo(4, 3, 1))
+  and Spell.CanCast(184575, PlayerTarget) then
+    Spell.Cast(184575, PlayerTarget)
   end
 end
 
-function PRBoJOrDH()
-  if BladeOrHammer == nil then return end
-  if Spell.CanCast(BladeOrHammer, PlayerTarget, nil, nil, false) then
-    -- Use Spender before using Blade of Justice to benefit from Righteous Verdict
-    if Player.HasArtifactTrait(238062) and HolyPower >= 3 then
-      -- Use AOE Spender (Divine Storm)
-      if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= HolyPowerAOESpenderUnitThrehsold
-      and Spell.CanCast(53385) then
-        local Sequence = {53385, BladeOrHammer}
-        return Spell.AddToQueue(Sequence)
-      end
-      -- Use ST Spender (Templar's Verdict)
-      if Spell.CanCast(85256, PlayerTarget) and Unit.IsInLOS(PlayerTarget) then
-        local Sequence = {85256, BladeOrHammer}
-        return Spell.AddToQueue(Sequence)
-      end
-    elseif HolyPower <= 3 then
-      -- Use without Spender
-      return Spell.Cast(BladeOrHammer)
-    end
+function PRDivineHammer()
+  if PlayerTarget ~= nil
+  and select(4, GetTalentInfo(4, 3, 1))
+  and Spell.CanCast(198034, PlayerTarget) then
+    Spell.Cast(198034, PlayerTarget)
+  end
+end
+
+function PRZeal()
+  if PlayerTarget ~= nil
+  and select(4, GetTalentInfo(2, 2, 1))
+  and Spell.CanCast(217020, PlayerTarget) then
+    Spell.Cast(217020, PlayerTarget)
+  end
+end
+
+function PRCrusaderStrike()
+  if PlayerTarget ~= nil
+  and not select(4, GetTalentInfo(2, 2, 1))
+  and Spell.CanCast(35395, PlayerTarget) then
+    Spell.Cast(35395, PlayerTarget)
   end
 end
 
 function PRJusticarsVengeance()
-  if HolyPower == 5 and Unit.PercentHealth(PlayerUnit) <= 80 and Spell.CanCast(215661) then
+  if HolyPower == 5
+  and Unit.PercentHealth(PlayerUnit) <= 80
+  and Spell.CanCast(215661) then
     return Spell.Cast(215661)
   end
 end
 
 function PREyeForAnEye()
-  if Unit.PercentHealth(PlayerUnit) <= 80 and Spell.CanCast(205191) then
+  if Unit.PercentHealth(PlayerUnit) <= 80
+  and Spell.CanCast(205191) then
     Spell.Cast(205191)
   end
 end
@@ -112,10 +115,10 @@ function PRWordOfGlory()
   end
 end
 
-function PRJudgment()
-  if HolyPower >= 4
+function PRJudgment_Debuff()
+  if HolyPower >= 3 or (HolyPower >= 2
+  and select(4, GetTalentInfo(2, 1, 1)))
   and TTD >= JudgmentTTD
-  and not Debuff.Has(PlayerTarget, 197277, true)
   and Unit.IsInAttackRange(85256, PlayerTarget)
   and Spell.CanCast(20271, PlayerTarget) and Unit.IsInLOS(PlayerTarget) then
     return Spell.Cast(20271, PlayerTarget)
@@ -123,20 +126,35 @@ function PRJudgment()
 end
 
 function PRExecutionSentence()
-  if Spell.CanCast(213757, PlayerTarget, 9, 3) then
-    if (Debuff.Has(PlayerTarget, 197277) or Spell.GetRemainingCooldown(20271) >= 1
-    or TTD < JudgmentTTD) and Unit.IsInLOS(PlayerTarget) then
+  if PlayerTarget ~= nil
+  and select(4, GetTalentInfo(1, 2, 1))
+  and Spell.CanCast(213757, PlayerTarget, 9, 3) then
       return Spell.Cast(213757, PlayerTarget)
+  end
+end
+
+function PRDivineStorm_AOE()
+  if PlayerTarget~= nil
+  -- and Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3
+  and Spell.CanCast(53385, nil, 9, 3) then
+    if Debuff.Has(PlayerTarget, 197277)
+    -- or Spell.GetRemainingCooldown(20271) >= 1
+    -- or TTD < JudgmentTTD
+    then
+      return Spell.Cast(53385)
     end
   end
 end
 
-function PRDivineStorm()
+function PRDivineStorm_ST()
   if PlayerTarget~= nil
   and Spell.CanCast(53385, nil, 9, 3) then
-    if Debuff.Has(PlayerTarget, 197277)
-    or Spell.GetRemainingCooldown(20271) >= 1
-    or TTD < JudgmentTTD then
+    local HasBuff, Stacks, RemainingTime = Buff.Has(PlayerTarget, 151813)
+    if HasBuff ~= nil
+    and HasBuf == true
+    and Stacks >= 25 then
+    -- or Spell.GetRemainingCooldown(20271) >= 1
+    -- or TTD < JudgmentTTD
       return Spell.Cast(53385)
     end
   end
@@ -145,8 +163,10 @@ end
 function PRTemplarsVerdict()
   if PlayerTarget ~= nil
   and Spell.CanCast(85256, PlayerTarget, 9, 3) then
-    if Debuff.Has(PlayerTarget, 197277, true) or Spell.GetRemainingCooldown(20271) >= 1
-    or TTD < JudgmentTTD then
+    if Debuff.Has(PlayerTarget, 197277, true)
+    -- or Spell.GetRemainingCooldown(20271) >= 1
+    -- or TTD < JudgmentTTD
+    then
       return Spell.Cast(85256, PlayerTarget)
     end
   end
