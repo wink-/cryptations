@@ -110,3 +110,22 @@ function Group.FindBestToHeal(radius, minUnits, health)
 
   return BestUnits
 end
+
+function Group.FindBestToAOE(radius, minUnits)
+  local CurrentUnits      = {}
+  local BestUnits         = {}
+  local ObjectCount       = GetObjectCount()
+  local CurrentObject     = nil
+  for i = 1, ObjectCount do
+    CurrentObject = GetObjectWithIndex(i)
+    if ObjectIsType(CurrentObject, ObjectTypes.Unit)
+    and ObjectExists(CurrentObject)
+    and Unit.IsInLOS(CurrentObject) then
+      CurrentUnits = Unit.GetUnitsInRadius(CurrentObject, radius, "hostile", true)
+      if getn(CurrentUnits) >= minUnits
+      and getn(CurrentUnits) > getn(BestUnits) then
+        BestUnits = CurrentUnits
+      end
+    end
+  end
+end

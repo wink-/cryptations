@@ -455,3 +455,56 @@ function Unit.GetDebuffs(unit)
   end
   return Debuffs
 end
+
+-- returns the unit that is best to heal for the given parameters
+function Unit.FindBestToHeal(range, minUnits, health)
+  local BestTarget        = nil
+  local UnitCountBest     = 0
+  local UnitCountCurrent  = 0
+  local GroupHealth       = 100
+  local CurrentUnit       = nil
+  local Units             = nil
+  for i = 1, getn(GROUP_MEMBERS) do
+    CurrentUnit = GROUP_MEMBERS[i]
+    Units = Unit.GetUnitsBelowHealth(health, "friendly", true, CurrentUnit, range)
+    UnitCountCurrent = getn(Units)
+    if Unit.PercentHealth(CurrentUnit) <= health then
+      UnitCountCurrent = UnitCountCurrent + 1
+    end
+    if UnitCountCurrent >= minUnits
+    and UnitCountCurrent > UnitCountBest
+    and Group.AverageHealthCustom(Units) < GroupHealth then
+      UnitCountBest = UnitCountCurrent
+      BestTarget = CurrentUnit
+      GroupHealth = Group.AverageHealthCustom(Units)
+    end
+  end
+
+  return BestTarget
+end
+
+-- returns the unit that is bast to cast aoe on for the given parameters
+function Unit.FindBestToAOE(range, minUnits)
+  local BestTarget        = nil
+  local UnitCountBest     = 0
+  local UnitCountCurrent  = 0
+  local CurrentObject     = nil
+  local Units             = nil
+  local ObjectCount       = GetObjectCount()
+  for i = 1, ObjectCount do
+    CurrentObject = GetObjectWithIndex(i)
+    if ObjectIsType(CurrentObject, ObjectTypes.Unit)
+    and ObjectExists(CurrentObject)
+    and Unit.IsInLOS(CurrentObject) then
+      Units = Unit.GetUnitsInRadius(CurrentObject, range, "hostile", true)
+      UnitCountCurrent = getn(Units)
+      if UnitCountCurrent >= minUnits
+      and UnitCountCurrent > UnitCountBest then
+        UnitCountBest = UnitCountCurrent
+        BestTarget = CurrentObject
+      end
+    end
+  end
+
+  return BestTarget
+end

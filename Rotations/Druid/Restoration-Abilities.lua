@@ -147,37 +147,8 @@ function DRRejuvenation()
   end
 end
 
--- finds the best target for Wild Growth
-function WildGrowthTarget()
-  local BestTarget        = nil
-  local UnitCountBest     = 0
-  local UnitCountCurrent  = 0
-  local GroupHealth       = 100
-  local CurrentUnit       = nil
-  local Units             = nil
-  if WildGrowth then
-    for i = 1, getn(GROUP_MEMBERS) do
-      CurrentUnit = GROUP_MEMBERS[i]
-      Units = Unit.GetUnitsBelowHealth(WGHealth, "friendly", true, CurrentUnit, 30)
-      UnitCountCurrent = getn(Units)
-      if Unit.PercentHealth(CurrentUnit) <= WGHealth then
-        UnitCountCurrent = UnitCountCurrent + 1
-      end
-      if UnitCountCurrent >= WGUnits
-      and UnitCountCurrent > UnitCountBest
-      and Group.AverageHealthCustom(Units) < GroupHealth then
-        UnitCountBest = UnitCountCurrent
-        BestTarget = CurrentUnit
-        GroupHealth = Group.AverageHealthCustom(Units)
-      end
-    end
-  end
-
-  return BestTarget
-end
-
 function DRWildGrowth()
-  local Target = WildGrowthTarget()
+  local Target = Unit.FindBestToHeal(30, WGUnits, WGHealth)
   if Target ~= nil
   and WildGrowth
   and Spell.CanCast(48438, Target, 0, MaxMana * 0.34)
