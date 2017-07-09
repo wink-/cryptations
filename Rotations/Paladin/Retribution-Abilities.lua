@@ -22,12 +22,9 @@ function PRAvengingWrathJudgment()
 end
 
 function PRShieldOfVengeance()
-  if Spell.CanCast(184662) then
-    if Unit.PercentHealth(PlayerUnit) <= 70 then
-      return Spell.Cast(184662)
-    elseif getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= 3 then
-      return Spell.Cast(184662)
-    end
+  if Spell.CanCast(184662)
+  and Unit.PercentHealth(PlayerUnit) ~= 100 then
+    return Spell.Cast(184662)
   end
 end
 
@@ -61,6 +58,7 @@ function PRWakeOfAshes()
   end
 end
 
+-- TODO: add Righteous Verdict support if useful
 function PRBladeOfJustice()
   if PlayerTarget ~= nil
   and not select(4, GetTalentInfo(4, 3, 1))
@@ -69,6 +67,7 @@ function PRBladeOfJustice()
   end
 end
 
+-- TODO: add Righteous Verdict support if useful
 function PRDivineHammer()
   if PlayerTarget ~= nil
   and select(4, GetTalentInfo(4, 3, 1))
