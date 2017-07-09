@@ -46,7 +46,7 @@ function Initialize()
       Rotation.CleanUpQueue()
     end
     if event == "PLAYER_REGEN_DISABLED" then
-      print("regen disabled, maybe the group joined combat")
+      -- TODO: manually place player in combat
     end
     if event == "UNIT_COMBAT" and arg1 == "player" and arg2 == "WOUND"
     and arg4 ~= nil then

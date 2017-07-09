@@ -1,6 +1,5 @@
 local Buff = LibStub:NewLibrary("Buff", 1)
 
--- TODO: test if this returns false if the unit doesnt have the buff
 -- given an unit and a buffID, produces true if unit has Buff
 -- second return argument is the buff count as a value (e.g. 2 stacks would give 2)
 -- third return argument is the remaining buff time

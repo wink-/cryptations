@@ -22,6 +22,7 @@ function PPAvengingWrath()
   end
 end
 
+-- TODO: add check so that def cooldowns do not stack if they shouldn't
 function PPGotaK()
   if Spell.CanCast(86659) and UseGuardianOfTheAncientKings then
     if Unit.PercentHealth(PlayerUnit) <= GuardianOfTheAncientKingsHealthThreshold

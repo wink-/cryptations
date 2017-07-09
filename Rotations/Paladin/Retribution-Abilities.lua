@@ -60,11 +60,13 @@ end
 
 function PRCrusaderStrikeOrZeal()
   if StrikeOrZeal == nil or BladeOrHammer == nil then return end
-  if ((select(1, GetSpellCharges(StrikeOrZeal) ~= 0 and not Spell.CanCast(BladeOrHammer))
-  or (select(1, GetSpellCharges(StrikeOrZeal) > 1 and Spell.CanCast(BladeOrHammer)))
-  and HolyPower <= 4
-  and Spell.CanCast(StrikeOrZeal, PlayerTarget, nil, nil, false) then
-    return Spell.Cast(StrikeOrZeal)
+  if HolyPower <= 4 and Spell.CanCast(StrikeOrZeal, PlayerTarget, nil, nil, false) then
+    if select(1, GetSpellCharges(StrikeOrZeal) ~= 0
+    and not Spell.CanCast(BladeOrHammer, PlayerTarget, nil, nil, false))
+    or (select(1, GetSpellCharges(StrikeOrZeal) > 1
+    and Spell.CanCast(BladeOrHammer, PlayerTarget, nil, nil, false))) then
+      return Spell.Cast(StrikeOrZeal)
+    end
   end
 end
 
@@ -111,8 +113,10 @@ function PRWordOfGlory()
 end
 
 function PRJudgment()
-  if HolyPower >= 4 and ttd >= JudgmentTTD
-  and not Debuff.Has(PlayerTarget, 197277) and Unit.IsInAttackRange(85256, PlayerTarget)
+  if HolyPower >= 4
+  and TTD >= JudgmentTTD
+  and not Debuff.Has(PlayerTarget, 197277, true)
+  and Unit.IsInAttackRange(85256, PlayerTarget)
   and Spell.CanCast(20271, PlayerTarget) and Unit.IsInLOS(PlayerTarget) then
     return Spell.Cast(20271, PlayerTarget)
   end
@@ -121,7 +125,7 @@ end
 function PRExecutionSentence()
   if Spell.CanCast(213757, PlayerTarget, 9, 3) then
     if (Debuff.Has(PlayerTarget, 197277) or Spell.GetRemainingCooldown(20271) >= 1
-    or ttd < JudgmentTTD) and Unit.IsInLOS(PlayerTarget) then
+    or TTD < JudgmentTTD) and Unit.IsInLOS(PlayerTarget) then
       return Spell.Cast(213757, PlayerTarget)
     end
   end
@@ -132,7 +136,7 @@ function PRDivineStorm()
   and Spell.CanCast(53385, nil, 9, 3) then
     if Debuff.Has(PlayerTarget, 197277)
     or Spell.GetRemainingCooldown(20271) >= 1
-    or ttd < JudgmentTTD then
+    or TTD < JudgmentTTD then
       return Spell.Cast(53385)
     end
   end
@@ -141,8 +145,8 @@ end
 function PRTemplarsVerdict()
   if PlayerTarget ~= nil
   and Spell.CanCast(85256, PlayerTarget, 9, 3) then
-    if Debuff.Has(PlayerTarget, 197277) or Spell.GetRemainingCooldown(20271) >= 1
-    or ttd < JudgmentTTD then
+    if Debuff.Has(PlayerTarget, 197277, true) or Spell.GetRemainingCooldown(20271) >= 1
+    or TTD < JudgmentTTD then
       return Spell.Cast(85256, PlayerTarget)
     end
   end

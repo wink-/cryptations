@@ -35,7 +35,6 @@ WordOfGloryHealthThreshold        = Settings.WordOfGloryHealthThreshold
 WordOfGloryUnitThreshold          = Settings.WordOfGloryUnitThreshold
 JudgmentTTD                       = Settings.JudgmentTTD
 MaxMana                           = UnitPowerMax("player" , 0)
-HolyPower                         = UnitPower("player", 9)
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
@@ -64,7 +63,9 @@ function Pulse()
     -- pulse target engine and remember target
     Rotation.Target("hostile")
     PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
-    local ttd = Unit.ComputeTTD(PlayerTarget)
+    TTD = Unit.ComputeTTD(PlayerTarget)
+    
+    HolyPower = UnitPower("player", 9)
 
     -- call interrupt engine
     if UseInterruptEngine then
@@ -86,7 +87,7 @@ function Pulse()
     PRCrusade()
     PRHolyWrath()
     -- Holy Power Generators  --
-    if (HolyPower < 5 and not Debuff.Has(PlayerTarget, 197277)) or HolyPower < 3 then
+    if (HolyPower < 5 and not Debuff.Has(PlayerTarget, 197277, true)) or HolyPower < 3 then
       PRConsecration()
       PRWakeOfAshes()
       PRCrusaderStrikeOrZeal()
@@ -98,7 +99,7 @@ function Pulse()
     PRWordOfGlory()
     PRJudgment()
     PRExecutionSentence()
-    if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= UnitsToSwitchToAOE then
+    if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= 3 then
       PRDivineStorm()
     end
     PRTemplarsVerdict()

@@ -10,11 +10,11 @@ Libs\LibArtifactData-1.0\LibArtifactData-1.0.lua
 
 # Functions
 Functions\Unit.lua
+Functions\Spell.lua
 Functions\Utils.lua
 Functions\Buff.lua
 Functions\Debuff.lua
 Functions\Player.lua
-Functions\Spell.lua
 Functions\Rotation.lua
 Functions\Group.lua
 
@@ -58,9 +58,11 @@ Rotations\Monk\Mistweaver.lua
 Rotations\Monk\Windwalker.lua
 
 Rotations\Paladin\Common-Abilities.lua
+Rotations\Paladin\Holy-Abilities.lua
 Rotations\Paladin\Holy.lua
-Rotations\Paladin\Protection.lua
 Rotations\Paladin\Protection-Abilities.lua
+Rotations\Paladin\Protection.lua
+Rotations\Paladin\Retribution-Abilities.lua
 Rotations\Paladin\Retribution.lua
 
 Rotations\Priest\Discipline.lua
