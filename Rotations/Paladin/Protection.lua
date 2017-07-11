@@ -16,24 +16,24 @@ end
 
 local Settings = json.decode(content)
 
-Taunt             = Settings.UseTauntEngine
-Interrupt         = Settings.UseInterruptEngine
-AvengingWrath     = Settings.UseAvengingWrath
-GotaK             = Settings.UseGuardianOfTheAncientKings
-ArdentDefender    = Settings.UseArdentDefender
-LayOnHands        = Settings.UseLayOnHandsSelf
-LayOnHandsFriend  = Settings.UseLayOnHandsFriend
-EyeOfTyr          = Settings.UseEyeOfTyr
-Sepharim          = Settings.UseSepharim
-HotPFriend        = Settings.UseHandOfTheProtectorFriend
-FoL               = Settings.UseFlashOfLight
-ADHealth          = Settings.ArdentDefenderHealthThreshold
-GotaKHealth       = Settings.GuardianOfTheAncientKingsHealthThreshold
-EoTUnits          = Settings.EyeOfTyrUnitThreshold
-LoHHealth         = Settings.LayOnHandsHealthThreshold
-LotPHealth        = Settings.LightOfTheProtectorHealthThreshold
-HotPHealth        = Settings.HandOfTheProtectorFriendHealthThreshold
-FoLHealth         = Settings.FlashOfLightHealthThreshold
+Taunt             = Settings.Taunt
+Interrupt         = Settings.Interrupt
+AvengingWrath     = Settings.AvengingWrath
+GotaK             = Settings.GotaK
+ArdentDefender    = Settings.ArdentDefender
+LayOnHands        = Settings.LayOnHands
+LayOnHandsFriend  = Settings.LayOnHandsFriend
+EyeOfTyr          = Settings.EyeOfTyr
+Sepharim          = Settings.Sepharim
+HotPFriend        = Settings.HotPFriend
+FoL               = Settings.FoL
+ADHealth          = Settings.ADHealth
+GotaKHealth       = Settings.GotaKHealth
+EoTUnits          = Settings.EoTUnits
+LoHHealth         = Settings.LoHHealth
+LotPHealth        = Settings.LotPHealth
+HotPHealth        = Settings.HotPHealth
+FoLHealth         = Settings.FoLHealth
 MaxMana           = UnitPowerMax("player" , 0)
 
 local Unit        = LibStub("Unit")

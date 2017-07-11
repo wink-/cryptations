@@ -175,7 +175,7 @@ function PHLightsHammer()
 end
 
 function PHLoD()
-  if LightofDawn
+  if LightOfDawn
   and Spell.CanCast(85222, nil, 0, MaxMana * 0.14) then
     -- Rule of Law
     if Buff.Has(PlayerUnit, 214202)
