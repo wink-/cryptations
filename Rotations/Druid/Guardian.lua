@@ -16,38 +16,33 @@ end
 
 local Settings = json.decode(content)
 
-UseTaunt                    = Settings.UseTaunt
-UseInterruptEngine          = Settings.UseInterruptEngine
-UseSurvivalInstincts        = Settings.UseSurvivalInstincts
-UseBarkskin                 = Settings.UseBarkskin
-UseIronfur                  = Settings.UseIronfur
-UseFrenziedRegeneration     = Settings.UseFrenziedRegeneration
-UseMoonfire                 = Settings.UseMoonfire
-UseMaul                     = Settings.UseMaul
-UseRotS                     = Settings.UseRotS
-AutoSwitchForm              = Settings.AutoSwitchForm
-SurvivalInstincsHealth      = Settings.SurvivalInstincsHealth
-BarkskinHealth              = Settings.BarkskinHealth
-IronFurHealth               = Settings.IronFurHealth
-FrenziedRegenerationHealth  = Settings.FrenziedRegenerationHealth
-MaulHealth                  = Settings.MaulHealth
-MaulRage                    = Settings.MaulRage
-RotSHealth                  = Settings.RotSHealth
-MaxMana                     = UnitPowerMax("player" , 0)
-MaxHealth                   = UnitHealthMax("player")
-Rage                        = UnitPower("player", 1)
+Taunt           = Settings.UseTaunt
+Interrupt       = Settings.UseInterruptEngine
+SurvInstincts   = Settings.UseSurvivalInstincts
+Barkskin        = Settings.UseBarkskin
+Ironfur         = Settings.UseIronfur
+FRegen          = Settings.UseFrenziedRegeneration
+Moonfire        = Settings.UseMoonfire
+Maul            = Settings.UseMaul
+RotS            = Settings.UseRotS
+AutoSwitchForm  = Settings.AutoSwitchForm
+SIHealth        = Settings.SurvivalInstincsHealth
+BSHealth        = Settings.BarkskinHealth
+IFHealth        = Settings.IronFurHealth
+FRHealth        = Settings.FrenziedRegenerationHealth
+MaulHealth      = Settings.MaulHealth
+MaulRage        = Settings.MaulRage
+RotSHealth      = Settings.RotSHealth
+MaxMana         = UnitPowerMax("player" , 0)
+MaxHealth       = UnitHealthMax("player")
+Rage            = UnitPower("player", 1)
 
 local Unit        = LibStub("Unit")
-local Spell       = LibStub("Spell")
 local Rotation    = LibStub("Rotation")
-local Player      = LibStub("Player")
-local Buff        = LibStub("Buff")
-local Debuff      = LibStub("Debuff")
-local BossManager = LibStub("BossManager")
 
 function Pulse()
   -- Call Taunt engine
-  if UseTaunt then
+  if Taunt then
     Rotation.Taunt()
   end
 
@@ -63,7 +58,7 @@ function Pulse()
     PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
 
     -- call interrupt engine
-    if UseInterruptEngine then
+    if Interrupt then
       Rotation.Interrupt()
     end
 

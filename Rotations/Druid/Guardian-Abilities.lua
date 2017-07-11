@@ -24,8 +24,9 @@ function SwitchToBearForm()
 end
 
 function DGSurvivalInstincts()
-  if Spell.CanCast(61336) and UseSurvivalInstincts then
-    if Unit.PercentHealth(PlayerUnit) <= SurvivalInstincsHealth
+  if Spell.CanCast(61336)
+  and SurvInstincts then
+    if Unit.PercentHealth(PlayerUnit) <= SIHealth
     or BossManager.IsDefCooldownNeeded() then
       return Spell.Cast(61336)
     end
@@ -33,8 +34,9 @@ function DGSurvivalInstincts()
 end
 
 function DGBarkskin()
-  if Spell.CanCast(22812) and UseBarkskin then
-    if Unit.PercentHealth(PlayerUnit) <= BarkskinHealth
+  if Spell.CanCast(22812)
+  and Barkskin then
+    if Unit.PercentHealth(PlayerUnit) <= BSHealth
     or BossManager.IsDefCooldownNeeded() then
       return Spell.Cast(22812)
     end
@@ -51,8 +53,8 @@ function DGRotS()
 end
 
 function DGIronfur()
-  if Spell.CanCast(192081) and UseIronfur then
-    if Unit.PercentHealth(PlayerUnit) <= IronFurHealth
+  if Spell.CanCast(192081) and Ironfur then
+    if Unit.PercentHealth(PlayerUnit) <= IFHealth
     or BossManager.IsDefCooldownNeeded() then
       return Spell.Cast(192081)
     end
@@ -60,8 +62,8 @@ function DGIronfur()
 end
 
 function DGFrenziedRegeneration()
-  if Spell.CanCast(22842) and UseFrenziedRegeneration then
-    if Player.GetDamageOverPeriod(5) >= UnitHealthMax(PlayerUnit) * (FrenziedRegenerationHealth / 100) then
+  if Spell.CanCast(22842) and FRegen then
+    if Player.GetDamageOverPeriod(5) >= UnitHealthMax(PlayerUnit) * (FRHealth / 100) then
       return Spell.Cast(22842)
     end
   end
@@ -70,7 +72,7 @@ end
 function DGMoonfire()
   if PlayerTarget ~= nil
   and Spell.CanCast(8921, PlayerTarget)
-  and UseMoonfire
+  and Moonfire
   and Unit.IsInLOS(PlayerTarget) then
     if Buff.Has(PlayerUnit, 203964)
     or not Debuff.Has(PlayerTarget, 164812) then
