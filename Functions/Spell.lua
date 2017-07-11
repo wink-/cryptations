@@ -131,13 +131,13 @@ function Spell.AddToQueue(spell, unit)
   if type(spell) == "table" then
     for i = 1, getn(spell) do
       SpellUniqueIdentifier = SpellUniqueIdentifier + 1
-      QueueEntry = {spell = spell[i], unit = unit, key = SpellUniqueIdentifier}
+      local QueueEntry = {spell = spell[i], unit = unit, key = SpellUniqueIdentifier}
       table.insert(SPELL_QUEUE, QueueEntry)
     end
   -- Add Single Spell
   else
     SpellUniqueIdentifier = SpellUniqueIdentifier + 1
-    QueueEntry = {spell = spell, unit = unit, key = SpellUniqueIdentifier}
+    local QueueEntry = {spell = spell, unit = unit, key = SpellUniqueIdentifier}
     table.insert(SPELL_QUEUE, QueueEntry)
   end
 end
