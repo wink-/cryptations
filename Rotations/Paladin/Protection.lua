@@ -16,34 +16,28 @@ end
 
 local Settings = json.decode(content)
 
-UseTauntEngine                            = Settings.UseTauntEngine
-UseInterruptEngine                        = Settings.UseInterruptEngine
-UseAvengingWrath                          = Settings.UseAvengingWrath
-UseGuardianOfTheAncientKings              = Settings.UseGuardianOfTheAncientKings
-UseArdentDefender                         = Settings.UseArdentDefender
-UseLayOnHandsSelf                         = Settings.UseLayOnHandsSelf
-UseLayOnHandsFriend                       = Settings.UseLayOnHandsFriend
-UseEyeOfTyr                               = Settings.UseEyeOfTyr
-UseSepharim                               = Settings.UseSepharim
-UseHandOfTheProtectorFriend               = Settings.UseHandOfTheProtectorFriend
-UseFlashOfLight                           = Settings.UseFlashOfLight
-UnitsToSwitchToAOE                        = Settings.UnitsToSwitchToAOE
-ArdentDefenderHealthThreshold             = Settings.ArdentDefenderHealthThreshold
-GuardianOfTheAncientKingsHealthThreshold  = Settings.GuardianOfTheAncientKingsHealthThreshold
-EyeOfTyrUnitThreshold                     = Settings.EyeOfTyrUnitThreshold
-LayOnHandsHealthThreshold                 = Settings.LayOnHandsHealthThreshold
-LightOfTheProtectorHealthThreshold        = Settings.LightOfTheProtectorHealthThreshold
-HandOfTheProtectorFriendHealthThreshold   = Settings.HandOfTheProtectorFriendHealthThreshold
-FlashOfLightHealthThreshold               = Settings.FlashOfLightHealthThreshold
-MaxMana                                   = UnitPowerMax("player" , 0)
+Taunt             = Settings.UseTauntEngine
+Interrupt         = Settings.UseInterruptEngine
+AvengingWrath     = Settings.UseAvengingWrath
+GotaK             = Settings.UseGuardianOfTheAncientKings
+ArdentDefender    = Settings.UseArdentDefender
+LayOnHands        = Settings.UseLayOnHandsSelf
+LayOnHandsFriend  = Settings.UseLayOnHandsFriend
+EyeOfTyr          = Settings.UseEyeOfTyr
+Sepharim          = Settings.UseSepharim
+HotPFriend        = Settings.UseHandOfTheProtectorFriend
+FoL               = Settings.UseFlashOfLight
+ADHealth          = Settings.ArdentDefenderHealthThreshold
+GotaKHealth       = Settings.GuardianOfTheAncientKingsHealthThreshold
+EoTUnits          = Settings.EyeOfTyrUnitThreshold
+LoHHealth         = Settings.LayOnHandsHealthThreshold
+LotPHealth        = Settings.LightOfTheProtectorHealthThreshold
+HotPHealth        = Settings.HandOfTheProtectorFriendHealthThreshold
+FoLHealth         = Settings.FlashOfLightHealthThreshold
+MaxMana           = UnitPowerMax("player" , 0)
 
 local Unit        = LibStub("Unit")
-local Spell       = LibStub("Spell")
 local Rotation    = LibStub("Rotation")
-local Player      = LibStub("Player")
-local Buff        = LibStub("Buff")
-local Debuff      = LibStub("Debuff")
-local BossManager = LibStub("BossManager")
 
 function Pulse()
   -- Call Taunt engine
@@ -61,7 +55,7 @@ function Pulse()
     PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
 
     -- call interrupt engine
-    if UseInterruptEngine then
+    if Interrupt then
       Rotation.Interrupt()
     end
 
@@ -78,7 +72,7 @@ function Pulse()
     PPFlashOfLight()
 
     -- AOE ROTATION
-    if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= UnitsToSwitchToAOE then
+    if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= 3 then
       PPConsecration()
       PPAvengersShield()
       PPJudgment()

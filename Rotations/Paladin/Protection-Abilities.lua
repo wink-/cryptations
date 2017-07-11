@@ -7,16 +7,13 @@ if FireHack == nil then return end
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
-local Rotation    = LibStub("Rotation")
-local Player      = LibStub("Player")
 local Buff        = LibStub("Buff")
-local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 local Group       = LibStub("Group")
 
 function PPAvengingWrath()
   if PlayerTarget ~= nil
-  and Spell.CanCast(31884) and UseAvengingWrath
+  and Spell.CanCast(31884) and AvengingWrath
   and Unit.IsInRange(PlayerUnit, PlayerTarget, 30) then
     return Spell.Cast(31884)
   end
@@ -24,8 +21,8 @@ end
 
 -- TODO: add check so that def cooldowns do not stack if they shouldn't
 function PPGotaK()
-  if Spell.CanCast(86659) and UseGuardianOfTheAncientKings then
-    if Unit.PercentHealth(PlayerUnit) <= GuardianOfTheAncientKingsHealthThreshold
+  if Spell.CanCast(86659) and GotaK then
+    if Unit.PercentHealth(PlayerUnit) <= GotaKHealth
     or BossManager.IsDefCooldownNeeded() then
       return Spell.Cast(86659)
     end
@@ -33,8 +30,8 @@ function PPGotaK()
 end
 
 function PPArdentDefender()
-  if Spell.CanCast(31850) and UseArdentDefender then
-    if Unit.PercentHealth(PlayerUnit) <= ArdentDefenderHealthThreshold
+  if Spell.CanCast(31850) and ArdentDefender then
+    if Unit.PercentHealth(PlayerUnit) <= ADHealth
     or BossManager.IsDefCooldownNeeded() then
       return Spell.Cast(31850)
     end
@@ -45,15 +42,15 @@ function PPLayOnHandsTarget()
 end
 
 function PPLayOnHands()
-  if Spell.CanCast(633) and UseLayOnHandsSelf
-  and Unit.PercentHealth(PlayerUnit) <= LayOnHandsHealthThreshold then
+  if Spell.CanCast(633) and LayOnHands
+  and Unit.PercentHealth(PlayerUnit) <= LoHHealth then
     return Spell.Cast(633)
   end
 end
 
 function PPEyeOfTyr()
-  if Spell.CanCast(209202) and UseEyeOfTyr
-  and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= EyeOfTyrUnitThreshold then
+  if Spell.CanCast(209202) and EyeOfTyr
+  and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= EoTUnits then
     return Spell.Cast(209202)
   end
 end
@@ -61,7 +58,7 @@ end
 function PPSepharim()
   if PlayerTarget ~= nil
   and Spell.CanCast(152262)
-  and UseSepharim
+  and Sepharim
   and select(4, GetTalentInfo(7, 2, 1))
   and (PlayerUnit ~= MainTank or not Unit.IsTankingBoss(PlayerUnit))
   and Unit.IsInAttackRange(53600, PlayerTarget)
@@ -90,7 +87,8 @@ function PPSotR()
 end
 
 function PPLotP()
-  if Spell.CanCast(184092) and Unit.PercentHealth(PlayerUnit) <= LightOfTheProtectorHealthThreshold
+  if Spell.CanCast(184092)
+  and Unit.PercentHealth(PlayerUnit) <= LoHHealth
   and not select(4, GetTalentInfo(5, 1, 1))
   and (Spell.GetPreviousSpell() ~= 184092 or Spell.GetTimeSinceLastSpell() >= 500) then
     return Spell.Cast(184092)
@@ -99,9 +97,9 @@ end
 
 function PPHotPTarget()
   local Lowest = Group.UnitToHeal()
-  if Unit.PercentHealth(PlayerUnit) <= LightOfTheProtectorHealthThreshold then
+  if Unit.PercentHealth(PlayerUnit) <= LotPHealth then
     return PlayerUnit
-  elseif Unit.PercentHealth(Lowest) <= HandOfTheProtectorFriendHealthThreshold then
+  elseif Unit.PercentHealth(Lowest) <= HotPHealth then
     return Lowest
   end
 end
@@ -109,7 +107,8 @@ end
 function PPHotP()
   local Target = PPHotPTarget()
   if Target ~= nil
-  and select(4, GetTalentInfo(5, 1, 1)) and Spell.CanCast(213652, Target, nil, nil, false)
+  and select(4, GetTalentInfo(5, 1, 1))
+  and Spell.CanCast(213652, Target, nil, nil, false)
   and (Spell.GetPreviousSpell() ~= 213652 or Spell.GetTimeSinceLastSpell() >= 500) then
     return Spell.Cast(213652, Target)
   end
@@ -117,8 +116,8 @@ end
 
 function PPFlashOfLight()
   if Spell.CanCast(19750, PlayerUnit)
-  and UseFlashOfLight
-  and Unit.PercentHealth(PlayerUnit) <= FlashOfLightHealthThreshold
+  and FoL
+  and Unit.PercentHealth(PlayerUnit) <= FoLHealth
   and not Unit.IsMoving(PlayerUnit) then
     return Spell.Cast(19750, PlayerUnit)
   end

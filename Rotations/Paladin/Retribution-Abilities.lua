@@ -7,12 +7,9 @@ if FireHack == nil then return end
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
-local Rotation    = LibStub("Rotation")
 local Player      = LibStub("Player")
 local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
-local BossManager = LibStub("BossManager")
-local Group       = LibStub("Group")
 
 function PRAvengingWrathJudgment()
   if Spell.CanCast(31884) and Debuff.Has(PlayerTarget, 197277)
@@ -150,7 +147,7 @@ function PRDivineStorm_ST()
   and Spell.CanCast(53385, nil, 9, 3) then
     local HasBuff, Stacks, RemainingTime = Buff.Has(PlayerTarget, 151813)
     if HasBuff ~= nil
-    and HasBuf == true
+    and HasBuff == true
     and Stacks >= 25 then
     -- or Spell.GetRemainingCooldown(20271) >= 1
     -- or TTD < JudgmentTTD

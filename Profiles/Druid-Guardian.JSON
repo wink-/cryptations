@@ -1,6 +1,6 @@
 {
   "UseTaunt": true,
-  "UseInterruptEngine": true,
+  "InterruptEngine": true,
   "UseSurvivalInstincts": true,
   "UseBarkskin": true,
   "UseIronfur": true,

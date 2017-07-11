@@ -16,33 +16,28 @@ end
 
 local Settings = json.decode(content)
 
-UseInterruptEngine                = Settings.UseInterruptEngine
-UseAvengingWrath                  = Settings.UseAvengingWrath
-UseShieldOfVengeance              = Settings.UseShieldOfVengeance
-UseCrusade                        = Settings.UseCrusade
-UseHolyWrath                      = Settings.UseHolyWrath
-UseJusticarsVengeance             = Settings.UseJusticarsVengeance
-UseEyeForAnEye                    = Settings.UseEyeForAnEye
-UseWordOfGlory                    = Settings.UseWordOfGlory
-HolyPowerAOESpenderUnitThreshold  = Settings.HolyPowerAOESpenderUnitThreshold
-ShieldOfVengeanceHealthThreshold  = Settings.ShieldOfVengeanceHealthThreshold
-ShieldOfVengeanceUnitThreshold    = Settings.ShieldOfVengeanceUnitThreshold
-HolyWrathHealthThreshold          = Settings.HolyWrathHealthThreshold
-HolyWrathUnitThreshold            = Settings.HolyWrathUnitThreshold
-JusticarsVengeanceHealthThreshold = Settings.JusticarsVengeanceHealthThreshold
-EyeForAnEyeHealthThreshold        = Settings.EyeForAnEyeHealthThreshold
-WordOfGloryHealthThreshold        = Settings.WordOfGloryHealthThreshold
-WordOfGloryUnitThreshold          = Settings.WordOfGloryUnitThreshold
-JudgmentTTD                       = Settings.JudgmentTTD
-MaxMana                           = UnitPowerMax("player" , 0)
+Interrupt     = Settings.Interrupt
+AvengingWrath = Settings.AvengingWrath
+SoV           = Settings.SoV
+Crusade       = Settings.Crusade
+HolyWrath     = Settings.HolyWrath
+JusticarsVeng = Settings.JusticarsVeng
+EfaE          = Settings.EfaE
+WoG           = Settings.WoG
+SoVHealth     = Settings.SoVHealth
+SoVUnits      = Settings.SoVUnits
+HWHealth      = Settings.HWHealth
+HWUnits       = Settings.HWUnits
+JVHealth      = Settings.JVHealth
+EfaEHealth    = Settings.EfaEHealth
+WoGHealth     = Settings.WoGHealth
+WoGUnits      = Settings.WoGUnits
+JudgmentTTD   = Settings.JudgmentTTD
+MaxMana       = UnitPowerMax("player" , 0)
 
 local Unit        = LibStub("Unit")
-local Spell       = LibStub("Spell")
 local Rotation    = LibStub("Rotation")
-local Player      = LibStub("Player")
-local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
-local BossManager = LibStub("BossManager")
 
 function SingleTargetSpenders()
   PRExecutionSentence()
@@ -65,7 +60,7 @@ function Pulse()
     HolyPower = UnitPower("player", 9)
 
     -- call interrupt engine
-    if UseInterruptEngine then
+    if Interrupt then
       Rotation.Interrupt()
     end
 
