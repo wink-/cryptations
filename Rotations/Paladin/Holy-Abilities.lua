@@ -57,11 +57,13 @@ function PHBoS()
 end
 
 function PHTyrsDeliverance()
+  local TargetUnits = Unit.GetUnitsInRadius(PlayerUnit, 15, "friendly")
   if TyrsDeliverance
   and Spell.CanCast(200652) then
     if GetNumGroupMembers() ~= 1
+    and getn(TargetUnits) >= TDUnits
     and Spell.GetPreviousSpell() ~= 200652
-    and Group.AverageHealth() <= TyrsDeliveranceHealth then
+    and Group.AverageHealthCustom(TargetUnits) <= TDHealth then
       return Spell.Cast(200652)
     end
   end
@@ -90,6 +92,7 @@ end
 function PHLotM()
   local Target = Group.UnitToHeal()
   if Target ~= nil
+  and LotM
   and Unit.IsMoving(PlayerUnit)
   and not Spell.CanCast(20473, Target, 0, MaxMana * 0.1)
   and Spell.CanCast(183998, Target, 0, MaxMana * 0.075)

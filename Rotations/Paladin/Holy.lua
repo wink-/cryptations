@@ -33,6 +33,7 @@ LightsHammer            = Settings.Judgment
 LightOfDawn             = Settings.LightOfDawn
 HolyPrism               = Settings.HolyPrism
 BoV                     = Settings.BoV
+LotM                    = Settings.LotM
 
 AWHealth                = Settings.AWHealth
 HAHealth                = Settings.HAHealth

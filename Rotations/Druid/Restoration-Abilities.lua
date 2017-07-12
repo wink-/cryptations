@@ -139,7 +139,6 @@ end
 function DRRejuvenation()
   local Target = RejuvenationTarget()
   if Target ~= nil
-  and Rejuv
   and RejuvenationCount() < MaxRejuv
   and Spell.CanCast(774, Target, 0, MaxMana * 0.1)
   and Unit.IsInLOS(Target) then
@@ -150,7 +149,6 @@ end
 function DRWildGrowth()
   local Target = Unit.FindBestToHeal(30, WGUnits, WGHealth)
   if Target ~= nil
-  and WildGrowth
   and Spell.CanCast(48438, Target, 0, MaxMana * 0.34)
   and Unit.IsInLOS(Target) then
     return Spell.Cast(48438, Target)
@@ -160,7 +158,6 @@ end
 function DRSwiftmend()
   local Target = Group.UnitToHeal()
   if Target ~= nil
-  and Swiftmend
   and Spell.CanCast(18562, Target, 0, MaxMana * 0.14)
   and Unit.IsInLOS(Target)
   and Unit.PercentHealth(Target) <= SMHealth then
@@ -171,7 +168,6 @@ end
 function DRHealingTouch()
   local Target = Group.UnitToHeal()
   if Target ~= nil
-  and HealingTouch
   and Spell.CanCast(5185, Target)
   and Unit.IsInLOS(Target)
   and Unit.PercentHealth(Target) <= HTHealth then
