@@ -12,7 +12,9 @@ local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 
 function PRAvengingWrathJudgment()
-  if Spell.CanCast(31884) and Debuff.Has(PlayerTarget, 197277)
+  if Spell.CanCast(31884)
+  and AvengingWrath
+  and Debuff.Has(PlayerTarget, 197277)
   and Unit.IsInAttackRange(85256, PlayerTarget) then
     return Spell.Cast(31884)
   end
@@ -20,27 +22,32 @@ end
 
 function PRShieldOfVengeance()
   if Spell.CanCast(184662)
+  and SoV
   and Unit.PercentHealth(PlayerUnit) ~= 100 then
     return Spell.Cast(184662)
   end
 end
 
 function PRCrusade()
-  if Spell.CanCast(231895)
+  if Crusade
+  and Spell.CanCast(231895)
   and HolyPower == 5 then
     return Spell.Cast(231895)
   end
 end
 
 function PRHolyWrath()
-  if Spell.CanCast(210220) and Unit.PercentHealth(PlayerUnit) <= 50
-  and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= 4 then
+  if HolyWrath
+  and Spell.CanCast(210220)
+  and Unit.PercentHealth(PlayerUnit) <= HWHealth
+  and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= HWUnits then
     return Spell.Cast(210220)
   end
 end
 
 function PRConsecration()
-  if Spell.CanCast(205228) and not Unit.IsMoving(PlayerUnit)
+  if Spell.CanCast(205228)
+  and not Unit.IsMoving(PlayerUnit)
   and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= 2 then
     return Spell.Cast(205228)
   end
@@ -91,21 +98,23 @@ end
 
 function PRJusticarsVengeance()
   if HolyPower == 5
-  and Unit.PercentHealth(PlayerUnit) <= 80
+  and Unit.PercentHealth(PlayerUnit) <= JVHealth
   and Spell.CanCast(215661) then
     return Spell.Cast(215661)
   end
 end
 
 function PREyeForAnEye()
-  if Unit.PercentHealth(PlayerUnit) <= 80
+  if EfaE
+  and Unit.PercentHealth(PlayerUnit) <= EfaEHealth
   and Spell.CanCast(205191) then
     Spell.Cast(205191)
   end
 end
 
 function PRWordOfGlory()
-  if getn(Unit.GetUnitsBelowHealth(80, "friendly", true, PlayerUnit, 15)) >= 3
+  if WoG
+  and getn(Unit.GetUnitsBelowHealth(WoGHealth, "friendly", true, PlayerUnit, 15)) >= WoGUnits
   and Spell.CanCast(210191) then
     Spell.Cast(210191)
   end
