@@ -85,9 +85,9 @@ function Pulse()
     DFBerserk()
     -- Cooldowns
     DFElunesGuidance()
-    -- Ferocious Bite
-    -- Regrowth
-    -- Regrowth 2
+    DFFerociousBiteV1()
+    DFRegrowthV1()
+    DFRegrowthV2()
     Finishers()
     -- Ashamane's Frenzy
     AoE()

@@ -64,3 +64,32 @@ function DFElunesGuidance()
     return Spell.Cast(202060)
   end
 end
+
+function DFFerociousBiteV1()
+  local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 1079)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(22568, PlayerTarget)
+  and HasDebuff
+  and RemainingTime < 1
+  and TTD > 3
+  and (Unit.PercentHealth(PlayerTarget) < 25 or Player.HasTalent(6, 1)) then
+    return Spell.Cast(22568, PlayerTarget)
+  end
+end
+
+function DFRegrowthV1()
+  local HasBuff, Stacks, RemainingTime = Buff.Has(PlayerUnit, 69369)
+  local GCD = Player.GetGCDDuration()
+  if Spell.CanCast(8936, PlayerUnit)
+  and Player.HasTalent(7, 2)
+  and Buff.Has(PlayerUnit, 69369)
+  and not Buff.Has(PlayerUnit, 155672)
+  and (ComboPoints >= 5 or RemainingTime <= GCD
+  or (ComboPoints == 2 and Spell.GetRemainingCooldown(210722) <= GCD)) then
+    return Spell.Cast(8936, PlayerUnit)
+  end
+end
+
+function DFRegrowthV2()
+  -- TODO
+end
