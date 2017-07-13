@@ -68,7 +68,7 @@ end
 function DFFerociousBiteV1()
   local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 1079)
   if PlayerTarget ~= nil
-  and Spell.CanCast(22568, PlayerTarget)
+  and Spell.CanCast(22568, PlayerTarget, 3, 25)
   and HasDebuff
   and RemainingTime < 1
   and TTD > 3
@@ -82,7 +82,7 @@ function DFRegrowthV1()
   local GCD = Player.GetGCDDuration()
   if Spell.CanCast(8936, PlayerUnit)
   and Player.HasTalent(7, 2)
-  and Buff.Has(PlayerUnit, 69369)
+  and HasBuff
   and not Buff.Has(PlayerUnit, 155672)
   and (ComboPoints >= 5 or RemainingTime <= GCD
   or (ComboPoints == 2 and Spell.GetRemainingCooldown(210722) <= GCD)) then
@@ -91,5 +91,84 @@ function DFRegrowthV1()
 end
 
 function DFRegrowthV2()
-  -- TODO
+  local HasBuff, Stacks, RemainingTime = Buff.Has(PlayerUnit, 69369)
+  if Spell.CanCast(8936, PlayerUnit)
+  and IsEquippedItem(137024)
+  and Player.HasTalent(7, 2)
+  and not Buff.Has(PlayerUnit, 155672)
+  and Stacks > 1 then
+    return Spell.Cast(8936, PlayerUnit)
+  end
+end
+
+function DFArtifact()
+  if PlayerTarget ~= nil
+  and Spell.CanCast(210722, PlayerTarget)
+  and MaxComboPoints - ComboPoints >= 3
+  and not Buff.Has(PlayerTarget, 202060) -- Elune's Guidance
+  and (Buff.Has(PlayerUnit, 155672) or not Player.HasTalent(7, 2))
+  and (Buff.Has(PlayerUnit, 52610) or not Player.HasTalent(5, 3)) then
+    return Spell.Cast(210722, PlayerTarget)
+  end
+end
+
+function DFRipV1()
+  -- TODO: maybe remove the check to cast rip if the target does not already have rip
+  local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 1079)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(1079, PlayerTarget, 3, 30)
+  and (RipCPSpent == 0 or ComboPoints > RipCPSpent or HasDebuff ~= true)
+  and (Buff.Has(PlayerUnit, 52610) or not Player.HasTalent(5, 3)) then
+    RipCPSpent = ComboPoints
+    return Spell.Cast(1079, PlayerTarget)
+  end
+end
+
+function DFFerociousBiteV2()
+  if PlayerTarget ~= nil
+  and Spell.CanCast(22568, PlayerTarget, 3, 25)
+  and Debuff.Has(1079, PlayerTarget)
+  and (Player.HasTalent(7, 2) or Unit.PercentHealth(PlayerTarget) < 25)
+  and (Buff.Has(PlayerUnit, 52610) or not Player.HasTalent(5, 3)) then
+    return Spell.Cast(22568, PlayerTarget)
+  end
+end
+
+function DFRipV2()
+  local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 1079)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(1079, PlayerTarget, 3, 30)
+  and (HasDebuff ~= true or RemainingTime < 7)
+  and (Buff.Has(PlayerUnit, 52610) or not Player.HasTalent(5, 3))
+  and not Player.HasTalent(6, 1) then
+    return Spell.Cast(1079, PlayerTarget)
+  end
+end
+
+function DFSavageRoar()
+  local HasBuff, Stacks, RemainingTime = Buff.Has(PlayerUnit, 52610)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(52610, PlayerTarget, 3, 40)
+  and (HasBuff ~= false or RemainingTime <= 12) then
+    return Spell.Cast(52610, PlayerTarget)
+  end
+end
+
+function DFMaim()
+  if PlayerTarget ~= nil
+  and Spell.CanCast(22570, PlayerTarget, 3, 35)
+  and Buff.Has(PlayerUnit, 144354) then -- TODO: make sure this is the right buff id
+    return Spell.Cast(22570, PlayerTarget)
+  end
+end
+
+function DFFerociousBiteV3()
+  local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 1079)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(22568, PlayerTarget, 3, 25)
+  and Energy >= DFFerociousBiteMaxEnergy()
+  and RemainingTime ~= nil
+  and (RemainingTime >= 8 or not Player.HasTalent(5, 3)) then
+    return Spell.Cast(22568, PlayerTarget)
+  end
 end

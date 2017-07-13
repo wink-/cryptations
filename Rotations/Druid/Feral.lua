@@ -25,15 +25,16 @@ local Player      = LibStub("Player")
 local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
+RipCPSpent        = 0 -- This saves how many cp were spent on the last rip (usefull to check if we can apply a stronger rip)
 
 function Finishers()
-  -- Rip
-  -- Ferocious Bite
-  -- Rip 2
-  -- Savage Roar
-  -- Maim
-  -- Ferocious Bite 2
-  -- Rip 3
+  DFRipV1()
+  DFFerociousBiteV2()
+  DFRipV2()
+  DFSavageRoar()
+  DFMaim()
+  DFFerociousBiteV3()
+  -- DFRipV3
 end
 
 function AoE()
@@ -88,10 +89,18 @@ function Pulse()
     DFFerociousBiteV1()
     DFRegrowthV1()
     DFRegrowthV2()
-    Finishers()
-    -- Ashamane's Frenzy
-    AoE()
-    Generators()
+    if ComboPoints >= 5 then
+      Finishers()
+    end
+    DFArtifact()
+    if Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 5
+    and ComboPoints <= 4 then
+      AoE()
+    end
+    if ComboPoints <= 4
+    and Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") < 5 then
+      Generators()
+    end
 end
 
 function Interrupt()
