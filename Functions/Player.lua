@@ -47,6 +47,6 @@ end
 
 -- returns the current gcd duration in seconds
 function Player.GetGCDDuration()
-  -- TODO: 1.5 / haste% + 1 (e.g. 1.5/0.46 + 1 = 1.027...)
-  return 1.5
+  local HastePercent = GetHaste() / 100 + 1
+  return 1.5 / Haste
 end
