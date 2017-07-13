@@ -7,24 +7,6 @@ PLAYER_DAMAGE = {
   damageTakenTime
 }
 
--- Holds information about a player's equipped items
-PLAYER_ITEMS = {
-  head,
-  neck,
-  shoulders,
-  chest,
-  back,
-  hands,
-  wrist,
-  waist,
-  legs,
-  feet,
-  ring1,
-  ring2,
-  trinket1,
-  trinket2
-}
-
 -- given the spellID of the artifact trait, produces true if currently equipped artifact has this trait unlocked
 function Player.HasArtifactTrait(spellID)
   local traits = select(2, LAD:GetArtifactTraits())
@@ -61,18 +43,6 @@ end
 -- returns true if the player has selected the given talent
 function Player.HasTalent(tier, column)
   return select(4, GetTalentInfo(tier, column))
-end
-
--- This function updates the item table for the player
--- It is called upon the PLAYER_EQUIPMENT_CHANGED event
-function Player.UpdateItems()
-
-end
-
--- Compares the itemID with player's equipped items
--- Returns true if the player currently wears the given Item
-function Player.HasItem(itemID)
-
 end
 
 -- returns the current gcd duration in seconds
