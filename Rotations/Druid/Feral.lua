@@ -2,7 +2,7 @@ local ClassID = select(3, UnitClass("player"))
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
-if SpecID ~= 3 then return end
+if SpecID ~= 2 then return end
 if FireHack == nil then return end
 
 -- load profile content
@@ -93,14 +93,17 @@ function Pulse()
       Finishers()
     end
     DFArtifact()
-    if Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 5
+    if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile")) >= 5
     and ComboPoints <= 4 then
       AoE()
     end
     if ComboPoints <= 4
-    and Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") < 5 then
+    and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile")) < 5 then
       Generators()
     end
+  else
+    -- out of combat
+  end
 end
 
 function Interrupt()

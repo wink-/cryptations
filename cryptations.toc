@@ -38,7 +38,7 @@ Rotations\DemonHunter\Vengeance.lua
 
 Rotations\Druid\Balance-Abilities.lua
 Rotations\Druid\Balance.lua
-Rotations\Druid\Feal-Abilities.lua
+Rotations\Druid\Feral-Abilities.lua
 Rotations\Druid\Feral.lua
 Rotations\Druid\Common-Abilities.lua
 Rotations\Druid\Guardian-Abilities.lua

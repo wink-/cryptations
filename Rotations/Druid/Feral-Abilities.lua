@@ -24,11 +24,11 @@ function DFRakeV1()
 end
 
 function DFTigersFury()
-  if Spell.CanCast(5217) then
-    if not Buff.Has(PlayerUnit, 16870)
-    and MaxEnergy - Energy >= 60
-    or MaxEnergy - Energy >= 80 then
-      return Spell.Cast(5217)
+  if Spell.CanCast(5217)
+  and Buff.Has(PlayerUnit, 16870)
+  and MaxEnergy - Energy >= 60
+  or MaxEnergy - Energy >= 80 then
+    return Spell.Cast(5217)
   end
 end
 
@@ -80,7 +80,7 @@ end
 function DFRegrowthV1()
   local HasBuff, Stacks, RemainingTime = Buff.Has(PlayerUnit, 69369)
   local GCD = Player.GetGCDDuration()
-  if Spell.CanCast(8936, PlayerUnit)
+  if Spell.CanCast(8936)
   and Player.HasTalent(7, 2)
   and HasBuff
   and not Buff.Has(PlayerUnit, 155672)
@@ -149,7 +149,7 @@ function DFSavageRoar()
   local HasBuff, Stacks, RemainingTime = Buff.Has(PlayerUnit, 52610)
   if PlayerTarget ~= nil
   and Spell.CanCast(52610, PlayerTarget, 3, 40)
-  and (HasBuff ~= false or RemainingTime <= 12) then
+  and (HasBuff ~= true or RemainingTime <= 12) then
     return Spell.Cast(52610, PlayerTarget)
   end
 end

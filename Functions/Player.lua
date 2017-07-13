@@ -42,11 +42,11 @@ end
 
 -- returns true if the player has selected the given talent
 function Player.HasTalent(tier, column)
-  return select(4, GetTalentInfo(tier, column))
+  return select(4, GetTalentInfo(tier, column, 1)) == true
 end
 
 -- returns the current gcd duration in seconds
 function Player.GetGCDDuration()
   local HastePercent = GetHaste() / 100 + 1
-  return 1.5 / Haste
+  return 1.5 / HastePercent
 end
