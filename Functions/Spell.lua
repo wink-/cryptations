@@ -8,6 +8,7 @@ SpellUniqueIdentifier     = 0            -- Every spell will have this value (li
 CurrentUniqueIdentifier   = nil          -- This is the primary key of the spell that is currently being casted
 CurrentSpell              = nil          -- SpellID of the spell currently being casted
 CastAngle                 =  90           -- Facing angle for casted spells
+MeleeAngle                = 180           -- Facing angle for melee spells
 ConeAngle                 =  45           -- Facing angle for cone logic
 PreCastTime               = 0.2
 

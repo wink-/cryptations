@@ -12,6 +12,7 @@ local Player      = LibStub("Player")
 local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
+local Group       = LibStub("Group")
 
 function DFRakeDebuffDuration()
   if Player.HasTalent(6, 2) then
@@ -36,10 +37,10 @@ function IsRakeEnhanced()
   if Buff.Has(PlayerUnit, 102543)
   or Buff.Has(PlayerUnit, 5215)
   or Buff.Has(PlayerUnit, 58984) then
-    return RakeEnhanced = true
+    RakeEnhanced = true
+  else
+    RakeEnhanced = false
   end
-
-  return RakeEnhanced = false
 end
 
 function DFRakeV1()
@@ -102,7 +103,7 @@ function DFRegrowthV1()
   if Spell.CanCast(8936)
   and Player.HasTalent(7, 2)
   and HasBuff
-  and not Buff.Has(PlayerUnit, 155672)
+  and not Buff.Has(PlayerUnit, 145152)
   and (ComboPoints >= 5 or RemainingTime <= GCD
   or (ComboPoints == 2 and Spell.GetRemainingCooldown(210722) <= GCD)) then
     return Spell.Cast(8936, PlayerUnit)
@@ -114,7 +115,7 @@ function DFRegrowthV2()
   if Spell.CanCast(8936, PlayerUnit)
   and IsEquippedItem(137024)
   and Player.HasTalent(7, 2)
-  and not Buff.Has(PlayerUnit, 155672)
+  and not Buff.Has(PlayerUnit, 145152)
   and Stacks > 1 then
     return Spell.Cast(8936, PlayerUnit)
   end
@@ -125,7 +126,7 @@ function DFArtifact()
   and Spell.CanCast(210722, PlayerTarget)
   and MaxComboPoints - ComboPoints >= 3
   and not Buff.Has(PlayerTarget, 202060) -- Elune's Guidance
-  and (Buff.Has(PlayerUnit, 155672) or not Player.HasTalent(7, 2))
+  and (Buff.Has(PlayerUnit, 145152) or not Player.HasTalent(7, 2))
   and (Buff.Has(PlayerUnit, 52610) or not Player.HasTalent(5, 3)) then
     return Spell.Cast(210722, PlayerTarget)
   end
@@ -197,7 +198,7 @@ function DFShadowmeld()
   and Spell.CanCast(58984)
   and Buff.Has(PlayerUnit, 5217)
   and (Buff.Has(PlayerUnit, 52610) or not Player.HasTalent(5, 3))
-  and (Buff.Has(PlayerUnit, 155672) or not Player.HasTalent(7, 2))
+  and (Buff.Has(PlayerUnit, 145152) or not Player.HasTalent(7, 2))
   and Spell.CanCast(1822, PlayerTarget) then
     return Spell.Cast(58984)
   end
@@ -218,6 +219,7 @@ function DFRakeV3()
   local HasDebuff, Stacks, RemainingTime = Debuff.Has(Target, 155722)
   if Target ~= nil
   and Spell.CanCast(1822, Target, 3, 35)
+  and Unit.IsFacing(Target, MeleeAngle)
   and not Player.HasTalent(7, 2)
   and (HasDebuff ~= true or RemainingTime < 5) then
     IsRakeEnhanced()
@@ -230,12 +232,13 @@ function DFRakeV4()
   if PlayerTarget ~= nil
   and Spell.CanCast(1822, PlayerTarget, 3, 35)
   and Player.HasTalent(7, 2)
-  and Buff.Has(PlayerUnit, 155672)
+  and Buff.Has(PlayerUnit, 145152)
   and RemainingTime <= 5
   and TTD > (DFRakeDebuffDuration() / 2)
   and (not RakeEnhanced or (RakeEnhanced and Buff.Has(PlayerUnit, 102543))) then
     IsRakeEnhanced()
     return Spell.Cast(1822, PlayerTarget)
+  end
 end
 
 function DFRakeV5()
@@ -243,10 +246,11 @@ function DFRakeV5()
   local HasDebuff, Stacks, RemainingTime = Debuff.Has(Target, 155722)
   if Target ~= nil
   and Spell.CanCast(1822, Target, 3, 35)
+  and Unit.IsFacing(Target, MeleeAngle)
   and Player.HasTalent(7, 2)
-  and Buff.Has(PlayerUnit, 155672)
-  and RemainingTime <= 5
-  and Units.GetUnitsInRadius(PlayerUnit, 8, "hostile") > 1
+  and Buff.Has(PlayerUnit, 145152)
+  and (HasDebuff ~= true or RemainingTime <= 5)
+  and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile")) >= 0
   and (not RakeEnhanced or (RakeEnhanced and Buff.Has(PlayerUnit, 102543))) then
     IsRakeEnhanced()
     return Spell.Cast(1822, Target)
