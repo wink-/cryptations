@@ -1,6 +1,7 @@
-local Group = LibStub("Group")
-local Spell = LibStub("Spell")
-local Unit  = LibStub("Unit")
+local Group   = LibStub("Group")
+local Spell   = LibStub("Spell")
+local Unit    = LibStub("Unit")
+local Debuff  = LibStub("Debuff")
 
 GROUP_MEMBERS = {}
 GROUP_TANKS   = {}
@@ -111,6 +112,7 @@ function Group.FindBestToHeal(radius, minUnits, health)
   return BestUnits
 end
 
+-- returns table with group that is the best to cast an aoe spell on
 function Group.FindBestToAOE(radius, minUnits)
   local CurrentUnits      = {}
   local BestUnits         = {}
@@ -128,4 +130,37 @@ function Group.FindBestToAOE(radius, minUnits)
       end
     end
   end
+end
+
+
+-- this returns the first unit to DoT according to the given parameters
+-- spellID is used to check if the unit is in attack range
+-- count: units to keep the buff up on
+function Group.FindDoTTarget(spellID, debuffID, count)
+  -- first check if the player's current target is suitable for a dot
+  if PlayerTarget ~= nil
+  and getn(Debuff.FindUnitsWith(debuffID, true)) <= count
+  and Unit.IsHostile(PlayerTarget)
+  and Unit.IsInAttackRange(spellID, PlayerTarget)
+  and not Debuff.Has(PlayerTarget, debuffID) then
+    return PlayerTarget
+  end
+
+  -- check if any other unit is suitable for a dot
+  local ObjectCount = GetObjectCount()
+  local CurrentObject = nil
+  for i = 1, ObjectCount do
+    CurrentObject = GetObjectWithIndex(i)
+    if ObjectIsType(CurrentObject, ObjectTypes.Unit)
+    and ObjectExists(CurrentObject)
+    and Unit.IsHostile(CurrentObject)
+    and Unit.IsInLOS(CurrentObject)
+    and Unit.IsInAttackRange(spellID, CurrentObject)
+    and getn(Debuff.FindUnitsWith(debuffID, true)) <= count
+    and not Debuff.Has(CurrentObject, debuffID) then
+      return CurrentObject
+    end
+  end
+
+  return nil
 end
