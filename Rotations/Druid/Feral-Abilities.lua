@@ -13,11 +13,41 @@ local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 
+function DFRakeDebuffDuration()
+  if Player.HasTalent(6, 2) then
+    return 10
+  end
+
+  return 15
+end
+
+function DFFerociousBiteMaxEnergy()
+  local EnergyNeeded = 25
+  if Buff.Has(PlayerUnit, 106951) then
+    EnergyNeeded = EnergyNeeded / 2
+  elseif Buff.Has(PlayerUnit, 102543) then
+    EnergyNeeded = EnergyNeeded * 0.4
+  end
+
+  return EnergyNeeded * 2
+end
+
+function IsRakeEnhanced()
+  if Buff.Has(PlayerUnit, 102543)
+  or Buff.Has(PlayerUnit, 5215)
+  or Buff.Has(PlayerUnit, 58984) then
+    return RakeEnhanced = true
+  end
+
+  return RakeEnhanced = false
+end
+
 function DFRakeV1()
   if PlayerTarget ~= nil
   and Spell.CanCast(1822, PlayerTarget, 3, 35) then
     if Buff.Has(PlayerUnit, 5215)
     or Buff.Has(PlayerUnit, 58984) then
+      IsRakeEnhanced()
       return Spell.Cast(1822, PlayerTarget)
     end
   end
@@ -44,17 +74,6 @@ function DFBerserk()
   and Buff.Has(PlayerUnit, 5217) then
     return Spell.Cast(106951)
   end
-end
-
-function DFFerociousBiteMaxEnergy()
-  local EnergyNeeded = 25
-  if Buff.Has(PlayerUnit, 106951) then
-    EnergyNeeded = EnergyNeeded / 2
-  elseif Buff.Has(PlayerUnit, 102543) then
-    EnergyNeeded = EnergyNeeded * 0.4
-  end
-
-  return EnergyNeeded * 2
 end
 
 function DFElunesGuidance()
@@ -170,5 +189,66 @@ function DFFerociousBiteV3()
   and RemainingTime ~= nil
   and (RemainingTime >= 8 or not Player.HasTalent(5, 3)) then
     return Spell.Cast(22568, PlayerTarget)
+  end
+end
+
+function DFShadowmeld()
+  if PlayerTarget ~= nil
+  and Spell.CanCast(58984)
+  and Buff.Has(PlayerUnit, 5217)
+  and (Buff.Has(PlayerUnit, 52610) or not Player.HasTalent(5, 3))
+  and (Buff.Has(PlayerUnit, 155672) or not Player.HasTalent(7, 2))
+  and Spell.CanCast(1822, PlayerTarget) then
+    return Spell.Cast(58984)
+  end
+end
+
+function DFRakeV2()
+  if PlayerTarget ~= nil
+  and Spell.CanCast(1822, PlayerTarget, 3, 35)
+  and not Debuff.Has(PlayerTarget, 155722) then
+    IsRakeEnhanced()
+    return Spell.Cast(1822, PlayerTarget)
+  end
+end
+
+-- TODO: test if multidotting works
+function DFRakeV3()
+  local Target = Group.FindDoTTarget(1822, 155722, 3)
+  local HasDebuff, Stacks, RemainingTime = Debuff.Has(Target, 155722)
+  if Target ~= nil
+  and Spell.CanCast(1822, Target, 3, 35)
+  and not Player.HasTalent(7, 2)
+  and (HasDebuff ~= true or RemainingTime < 5) then
+    IsRakeEnhanced()
+    return Spell.Cast(1822, Target)
+  end
+end
+
+function DFRakeV4()
+  local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 155722)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(1822, PlayerTarget, 3, 35)
+  and Player.HasTalent(7, 2)
+  and Buff.Has(PlayerUnit, 155672)
+  and RemainingTime <= 5
+  and TTD > (DFRakeDebuffDuration() / 2)
+  and (not RakeEnhanced or (RakeEnhanced and Buff.Has(PlayerUnit, 102543))) then
+    IsRakeEnhanced()
+    return Spell.Cast(1822, PlayerTarget)
+end
+
+function DFRakeV5()
+  local Target = Group.FindDoTTarget(1822, 155722, 3)
+  local HasDebuff, Stacks, RemainingTime = Debuff.Has(Target, 155722)
+  if Target ~= nil
+  and Spell.CanCast(1822, Target, 3, 35)
+  and Player.HasTalent(7, 2)
+  and Buff.Has(PlayerUnit, 155672)
+  and RemainingTime <= 5
+  and Units.GetUnitsInRadius(PlayerUnit, 8, "hostile") > 1
+  and (not RakeEnhanced or (RakeEnhanced and Buff.Has(PlayerUnit, 102543))) then
+    IsRakeEnhanced()
+    return Spell.Cast(1822, Target)
   end
 end

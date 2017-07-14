@@ -26,6 +26,7 @@ local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 RipCPSpent        = 0 -- This saves how many cp were spent on the last rip (usefull to check if we can apply a stronger rip)
+RakeEnhanced      = false -- This saves whether or not the last used rake was enhanced (through thealth or incarnation)
 
 function Finishers()
   DFRipV1()
@@ -45,11 +46,11 @@ function AoE()
 end
 
 function Generators()
-  -- Shadowmeld
-  -- Rake
-  -- Rake 2
-  -- Rage 3
-  -- Rake 4
+  DFShadowmeld()
+  DFRakeV2()
+  DFRakeV3()
+  DFRakeV4()
+  DFRakeV5()
   -- Brutal Slash
   -- Moonfire
   -- Thrash
