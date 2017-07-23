@@ -27,6 +27,7 @@ Core\BossManager.lua
 Tables\Auras.lua
 Tables\Spells.lua
 Tables\Units.lua
+Tables\Items.lua
 
 # Rotations
 Rotations\DeathKnight\Blood.lua

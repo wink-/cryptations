@@ -50,3 +50,15 @@ function Player.GetGCDDuration()
   local HastePercent = GetHaste() / 100 + 1
   return 1.5 / HastePercent
 end
+
+-- This returns true when the player has at least "Piece" items of the given Table equipped
+function Player.HasSetBonus(Table, Piece)
+  local Count = 0
+  for i = 1, #Table do
+    if IsEquippedItem(Table[i]) then
+      Count = Count + 1
+    end
+  end
+
+  return Count >= Piece
+end
