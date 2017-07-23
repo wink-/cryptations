@@ -141,6 +141,7 @@ function Group.FindDoTTarget(spellID, debuffID, count)
   if PlayerTarget ~= nil
   and getn(Debuff.FindUnitsWith(debuffID, true)) <= count
   and Unit.IsHostile(PlayerTarget)
+  and UnitAffectingCombat(PlayerTarget)
   and Unit.IsInAttackRange(spellID, PlayerTarget)
   and not Debuff.Has(PlayerTarget, debuffID) then
     return PlayerTarget
@@ -154,6 +155,7 @@ function Group.FindDoTTarget(spellID, debuffID, count)
     if ObjectIsType(CurrentObject, ObjectTypes.Unit)
     and ObjectExists(CurrentObject)
     and Unit.IsHostile(CurrentObject)
+    and UnitAffectingCombat(CurrentObject)
     and Unit.IsInLOS(CurrentObject)
     and Unit.IsInAttackRange(spellID, CurrentObject)
     and getn(Debuff.FindUnitsWith(debuffID, true)) <= count

@@ -120,14 +120,13 @@ function Rotation.Interrupt()
     end
     -- interrupt target
   else
-    if UnitGUID("target") ~= nil then
-      Object = GetObjectWithGUID(UnitGUID("target"))
-    end
-    if Object ~= nil and select(9, UnitCastingInfo(Unit)) == false and Unit.IsHostile(Object) then
-      local PercentCasted = Unit.CastedPercent(Object)
+    if PlayerTarget ~= nil
+    and select(9, UnitCastingInfo(PlayerTarget)) == false
+    and Unit.IsHostile(PlayerTarget) then
+      local PercentCasted = Unit.CastedPercent(PlayerTarget)
       if InterruptMinPercent < PercentCasted
       and PercentCasted < InterruptMaxPercent and Interrupt ~= nil then
-        Interrupt(Object)
+        Interrupt(PlayerTarget)
       end
     end
   end
