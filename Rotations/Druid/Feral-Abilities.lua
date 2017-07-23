@@ -15,7 +15,12 @@ local BossManager = LibStub("BossManager")
 local Group       = LibStub("Group")
 
 local RipCPSpent   = 0 -- This saves how many cp were spent on the last rip (usefull to check if we can apply a stronger rip)
-local RakeEnhanced = false -- This saves whether or not the last used rake was enhanced (through thealth or incarnation)
+local RakeEnhanced = false -- This saves whether or not the last used rake was enhanced (through stealth or incarnation)
+
+function OnTargetSwitch()
+  RipCPSpent    = 0
+  RakeEnhanced  = false
+end
 
 function DFRakeDebuffDuration()
   if Player.HasTalent(6, 2) then
@@ -157,7 +162,6 @@ function DFArtifact()
 end
 
 function DFRipV1()
-  -- TODO: maybe remove the check to cast rip if the target does not already have rip
   local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 1079)
   if PlayerTarget ~= nil
   and Spell.CanCast(1079, PlayerTarget, 3, 30)

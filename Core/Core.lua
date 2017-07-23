@@ -38,6 +38,7 @@ function Initialize()
   frame:RegisterEvent("PLAYER_ENTERING_WORLD")
   frame:RegisterEvent("PLAYER_REGEN_DISABLED")
   frame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+  frame:RegisterEvent("PLAYER_TARGET_CHANGED")
 
   local function eventHandler(self, event, arg1, arg2, arg3, arg4, arg5, arg6)
     if event == "UNIT_SPELLCAST_START" and arg1 == "player" and getn(SPELL_QUEUE) ~= 0 then
@@ -72,6 +73,11 @@ function Initialize()
     end
     if event == "PLAYER_EQUIPMENT_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
       Player.GetSetPieceLatestTier()
+    end
+    if event == "PLAYER_TARGET_CHANGED" then
+      if OnTargetSwitch ~= nil then
+        OnTargetSwitch()
+      end
     end
   end
 
