@@ -2,13 +2,6 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.blizzard.com/wow/ui/
                    ..\..\FrameXML\UI.xsd">
-  <Script File="PulseEngine.lua"/>
-  <Frame name="UpdateFrame">
-   <Scripts>
-    <OnLoad>self.TimeSinceLastUpdate = 0</OnLoad>
-    <OnUpdate function="PulseEngine" />
-   </Scripts>
-  </Frame>
   <Frame name="LoadFrame">
     <Scripts>
       <OnLoad> Initialize() </OnLoad>
