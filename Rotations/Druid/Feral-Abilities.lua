@@ -275,12 +275,12 @@ function DFBrutalSlashV1()
   local ChargeTime  = Spell.GetRemainingChargeTime(202028)
   local GCD         = Player.GetGCDDuration()
   if PlayerTarget ~= nil
-  and Spell.CanCast(202028, PlayerTarget, 3, 35)
+  and Spell.CanCast(202028, nil, 3, 20)
   and ObjectIsFacing(PlayerUnit, PlayerTarget)
   and Energy >= 35
   and ((BSCharges >= 2 and ChargeTime <= GCD)
   or #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") > 1) then -- TODO: add TTD
-    return Spell.Cast(202028, PlayerTarget)
+    return Spell.Cast(202028)
   end
 end
 
@@ -298,7 +298,7 @@ end
 function DFThrashV1()
   local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
   if PlayerTarget ~= nil
-  and Spell.CanCast(77758)
+  and Spell.CanCast(77758, nil, 3, 50)
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3
   and (HasDebuff ~= true or RemainingTime < 4) then
     return Spell.Cast(77758)
@@ -317,11 +317,29 @@ end
 
 
 function DFThrashV2()
-  -- TODO: SetBonus function
+  local HasT19Bonus2                = Player.HasSetBonus(T19, 2)
+  local TCRank                      = Player.ArtifactTraitRank(238048)
+  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(106830, nil, 3, 50)
+  and (HasT19Bonus2 or TCRank >= 4)
+  and (HasDebuff ~= true or RemainingTime < 4)
+  and IsEquippedItem(137056) then
+    return Spell.Cast(106830)
+  end
 end
 
 function DFThrashV3()
-  -- TODO: SetBonus function
+  local HasT19Bonus4                = Player.HasSetBonus(T19, 4)
+  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(106830, nil, 3, 50)
+  and (HasT19Bonus4)
+  and (HasDebuff ~= true or RemainingTime < 4)
+  and Buff.Has(PlayerUnit, 135700)
+  and not Buff.Has(PlayerUnit, 145152) then
+    return Spell.Cast(106830)
+  end
 end
 
 function DFShred()
@@ -335,5 +353,44 @@ function DFShred()
   and ((HasDebuff == true and RemainingTime > DFRakeIntervalSec())
   or (EnergyMax - Energy) < 1) then
     return Spell.Cast(5221, PlayerTarget)
+  end
+end
+
+function DFThrashV4()
+  local HasT19Bonus2                = Player.HasSetBonus(T19, 2)
+  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(106830, nil, 3, 50)
+  and (HasT19Bonus2)
+  and (HasDebuff ~= true or RemainingTime < 4) then
+    return Spell.Cast(106830)
+  end
+end
+
+function DFBrutalSlashV2()
+  local HasT19Bonus2                = Player.HasSetBonus(T19, 2)
+  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(202028, nil, 3, 20)
+  and (not HasT19Bonus2 or (HasDebuff == true and RemainingTime >= 4)) then
+    return Spell.Cast(202028)
+  end
+end
+
+function DFThrashV5()
+  if PlayerTarget ~= nil
+  and Spell.CanCast(106830, nil, 3, 50)
+  and IsEquippedItem(137056) then
+    return Spell.Cast(106830)
+  end
+end
+
+function DFSwipeV2()
+  local HasT19Bonus2                = Player.HasSetBonus(T19, 2)
+  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(106785, nil, 3, 45)
+  and (not HasT19Bonus2 or (HasDebuff == true and RemainingTime >= 4)) then
+    return Spell.Cast(106785)
   end
 end

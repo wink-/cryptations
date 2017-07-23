@@ -53,8 +53,8 @@ function Generators()
   DFMoonfire()
   DFThrashV1()
   DFSwipeV1()
-  -- Thrash 3
-  -- Thrash 4
+  DFThrashV2()
+  DFThrashV3()
   DFShred()
 end
 
