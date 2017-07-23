@@ -62,6 +62,8 @@ end
 function DFProwl()
   local Target = GetObjectWithGUID(UnitGUID("target"))
   if Target ~= nil
+  and UnitHealth(Target) ~= 0
+  and not Buff.Has(PlayerUnit, 5215)
   and Unit.IsHostile(Target)
   and Spell.CanCast(5215)
   and Unit.IsInRange(PlayerUnit, Target, 20) then
