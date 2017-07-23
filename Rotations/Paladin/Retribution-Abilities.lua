@@ -55,7 +55,7 @@ end
 
 function PRWakeOfAshes()
   if HolyPower <= 1
-  and Player.HasArtifactTrait(179546)
+  and Player.ArtifactTraitRank(179546) ~= 0
   and Spell.CanCast(205273)
   and Unit.IsFacing(PlayerTarget, 90) then
     return Spell.Cast(205273)

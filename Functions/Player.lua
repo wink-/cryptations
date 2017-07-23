@@ -7,8 +7,9 @@ PLAYER_DAMAGE = {
   damageTakenTime
 }
 
--- given the spellID of the artifact trait, produces true if currently equipped artifact has this trait unlocked
-function Player.HasArtifactTrait(spellID)
+-- given the spellID of the artifact trait, returns the current rank of this artifact
+-- returns 0 if the player does not have the rank unlocked
+function Player.ArtifactTraitRank(spellID)
   local traits = select(2, LAD:GetArtifactTraits())
 
   if traits == nil or getn(traits) == 0 then
@@ -17,11 +18,11 @@ function Player.HasArtifactTrait(spellID)
 
   for i = 1, #traits do
     if traits[i].spellID == spellID then
-      return true
+      return traits[i].currentRank
     end
   end
 
-  return false
+  return 0
 end
 
 -- returns the sum of the damage that the player took over the given period of time (e.g. last 5 seconds)
@@ -51,11 +52,13 @@ function Player.GetGCDDuration()
   return 1.5 / HastePercent
 end
 
--- This returns true when the player has at least "Piece" items of the given Table equipped
-function Player.HasSetBonus(Table, Piece)
-  local Count = 0
-  for i = 1, #Table do
-    if IsEquippedItem(Table[i]) then
+-- This returns true when the player has at least "Piece" items of the given Tier equipped
+-- Tier represents the Table where the item information is in
+function Player.HasSetBonus(Tier, Piece)
+  local _, Class  = UnitClass("player")
+  local Count     = 0
+  for i = 1, #Tier[Class] do
+    if IsEquippedItem(Tier[Class][i]) then
       Count = Count + 1
     end
   end
