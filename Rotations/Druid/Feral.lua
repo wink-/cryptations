@@ -69,8 +69,6 @@ function Pulse()
     PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
     TTD = Unit.ComputeTTD(PlayerTarget)
 
-    Energy          = UnitPower("player", 3)
-    MaxEnergy       = UnitPowerMax("player", 3)
     ComboPoints     = UnitPower("player", 4)
     MaxComboPoints  = UnitPowerMax("player", 4)
 
@@ -79,7 +77,6 @@ function Pulse()
       Rotation.Interrupt()
     end
 
-    DFProwl()
     DFRakeV1()
     DFTigersFury()
     DFIKotJ()
@@ -103,6 +100,7 @@ function Pulse()
     end
   else
     -- out of combat
+    DFProwl()
   end
 end
 

@@ -55,9 +55,11 @@ function IsRakeEnhanced()
 end
 
 function DFProwl()
-  if PlayerTarget ~= nil
+  local Target = GetObjectWithGUID(UnitGUID("target"))
+  if Target ~= nil
+  and Unit.IsHostile(Target)
   and Spell.CanCast(5215)
-  and Unit.IsInRange(PlayerUnit, PlayerTarget, 20) then
+  and Unit.IsInRange(PlayerUnit, Target, 20) then
     return Spell.Cast(5215)
   end
 end
@@ -74,6 +76,8 @@ function DFRakeV1()
 end
 
 function DFTigersFury()
+  local Energy    = UnitPower("player", 3)
+  local MaxEnergy = UnitPowerMax("player", 3)
   if Spell.CanCast(5217)
   and Buff.Has(PlayerUnit, 16870)
   and MaxEnergy - Energy >= 60
@@ -97,6 +101,7 @@ function DFBerserk()
 end
 
 function DFElunesGuidance()
+  local Energy    = UnitPower("player", 3)
   if Spell.CanCast(202060)
   and ComboPoints <= 1
   and Energy >= DFFerociousBiteMaxEnergy() then
@@ -202,6 +207,7 @@ function DFMaim()
 end
 
 function DFFerociousBiteV3()
+  local Energy    = UnitPower("player", 3)
   local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 1079)
   if PlayerTarget ~= nil
   and Spell.CanCast(22568, PlayerTarget, 3, 25)
@@ -214,6 +220,7 @@ end
 
 function DFShadowmeld()
   if PlayerTarget ~= nil
+  and not Unit.IsTanking(PlayerUnit, PlayerTarget)
   and Spell.CanCast(58984)
   and Buff.Has(PlayerUnit, 5217)
   and (Buff.Has(PlayerUnit, 52610) or not Player.HasTalent(5, 3))
@@ -353,13 +360,13 @@ end
 function DFShred()
   local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 155722)
   local Energy    = UnitPower("player", 3)
-  local EnergyMax = UnitPowerMax("player", 3)
+  local MaxEnergy = UnitPowerMax("player", 3)
   if PlayerTarget ~= nil
   and Spell.CanCast(5221, PlayerTarget, 3, 40)
   and ObjectIsFacing(PlayerUnit, PlayerTarget)
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") < 3
   and ((HasDebuff == true and RemainingTime > DFRakeIntervalSec())
-  or (EnergyMax - Energy) < 1) then
+  or (MaxEnergy - Energy) < 1) then
     return Spell.Cast(5221, PlayerTarget)
   end
 end
