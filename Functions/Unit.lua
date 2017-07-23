@@ -284,7 +284,8 @@ function Unit.GetUnitsInRadius(otherUnit, radius, mode, onlyCombat)
   local Units = {}
   for i = 1, ObjectCount do
     Object = GetObjectWithIndex(i)
-    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    if ObjectIsType(Object, ObjectTypes.Unit)
+    and ObjectExists(Object)
     and Unit.IsInRange(otherUnit, Object, radius)
     and UnitHealth(Object) > 1 then
       if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
@@ -297,6 +298,7 @@ function Unit.GetUnitsInRadius(otherUnit, radius, mode, onlyCombat)
       end
     end
   end
+
   return Units
 end
 
@@ -470,11 +472,10 @@ function Unit.FindBestToHeal(range, minUnits, health)
   local UnitCountCurrent  = 0
   local GroupHealth       = 100
   local CurrentUnit       = nil
-  local Units             = nil
-  for i = 1, getn(GROUP_MEMBERS) do
+  for i = 1, #GROUP_MEMBERS do
     CurrentUnit = GROUP_MEMBERS[i]
     Units = Unit.GetUnitsBelowHealth(health, "friendly", true, CurrentUnit, range)
-    UnitCountCurrent = getn(Units)
+    UnitCountCurrent = #Units
     if Unit.PercentHealth(CurrentUnit) <= health then
       UnitCountCurrent = UnitCountCurrent + 1
     end
@@ -490,21 +491,19 @@ function Unit.FindBestToHeal(range, minUnits, health)
   return BestTarget
 end
 
--- returns the unit that is bast to cast aoe on for the given parameters
+-- returns the unit that is best to cast aoe on for the given parameters
 function Unit.FindBestToAOE(range, minUnits)
   local BestTarget        = nil
   local UnitCountBest     = 0
   local UnitCountCurrent  = 0
   local CurrentObject     = nil
-  local Units             = nil
   local ObjectCount       = GetObjectCount()
   for i = 1, ObjectCount do
     CurrentObject = GetObjectWithIndex(i)
     if ObjectIsType(CurrentObject, ObjectTypes.Unit)
     and ObjectExists(CurrentObject)
     and Unit.IsInLOS(CurrentObject) then
-      Units = Unit.GetUnitsInRadius(CurrentObject, range, "hostile", true)
-      UnitCountCurrent = getn(Units)
+      UnitCountCurrent = #Unit.GetUnitsInRadius(CurrentObject, range, "hostile", true)
       if UnitCountCurrent >= minUnits
       and UnitCountCurrent > UnitCountBest then
         UnitCountBest = UnitCountCurrent
