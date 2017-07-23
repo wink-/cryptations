@@ -69,9 +69,6 @@ function Pulse()
     PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
     TTD = Unit.ComputeTTD(PlayerTarget)
 
-    ComboPoints     = UnitPower("player", 4)
-    MaxComboPoints  = UnitPowerMax("player", 4)
-
     -- call interrupt engine
     if Interrupt then
       Rotation.Interrupt()

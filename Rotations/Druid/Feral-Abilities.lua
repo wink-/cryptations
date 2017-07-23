@@ -108,7 +108,8 @@ function DFBerserk()
 end
 
 function DFElunesGuidance()
-  local Energy    = UnitPower("player", 3)
+  local Energy      = UnitPower("player", 3)
+  local ComboPoints = UnitPower("player", 4)
   if Spell.CanCast(202060)
   and ComboPoints <= 1
   and Energy >= DFFerociousBiteMaxEnergy() then
@@ -130,7 +131,8 @@ end
 
 function DFRegrowthV1()
   local HasBuff, Stacks, RemainingTime = Buff.Has(PlayerUnit, 69369)
-  local GCD = Player.GetGCDDuration()
+  local GCD          = Player.GetGCDDuration()
+  local ComboPoints  = UnitPower("player", 4)
   if Spell.CanCast(8936)
   and Player.HasTalent(7, 2)
   and HasBuff
@@ -153,6 +155,8 @@ function DFRegrowthV2()
 end
 
 function DFArtifact()
+  local ComboPoints    = UnitPower("player", 4)
+  local MaxComboPoints = UnitPowerMax("player", 4)
   if PlayerTarget ~= nil
   and Spell.CanCast(210722, PlayerTarget)
   and MaxComboPoints - ComboPoints >= 3
@@ -164,6 +168,7 @@ function DFArtifact()
 end
 
 function DFRipV1()
+  local ComboPoints = UnitPower("player", 4)
   local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 1079)
   if PlayerTarget ~= nil
   and Spell.CanCast(1079, PlayerTarget, 3, 30)
