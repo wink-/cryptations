@@ -7,15 +7,15 @@ local Player    = LibStub("Player")
 -- GLOBAL SETTINGS
 
 -- Targeting behavior : Only one can be true
-ReTargetNearestUnit      = false
-ReTargetHighestUnit      = true
+ReTargetNearestUnit      = true
+ReTargetHighestUnit      = false
 ReTargetLowestUnit       = false
 
 -- Combat behavior
-AllowOutOfCombatRoutine  = true
+AllowOutOfCombatRoutine  = false
 
 -- Interrupt behavior
-InterruptAnyUnit         = true
+InterruptAnyUnit         = false
 InterruptMinPercent      = 20
 InterruptMaxPercent      = 80
 
@@ -66,14 +66,12 @@ function Initialize()
         Group.UpdateMembers()
         Group.UpdateTanks()
       end
-      print("roster update")
     end
     if event == "ACTIVE_TALENT_GROUP_CHANGED" and IsInGroup() then
       Group.UpdateTanks()
     end
     if event == "PLAYER_EQUIPMENT_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
       Player.GetSetPieceLatestTier()
-      print("equip update")
     end
   end
 
