@@ -317,7 +317,7 @@ end
 
 
 function DFThrashV2()
-  local HasT19Bonus2                = Player.HasSetBonus(T19, 2)
+  local HasT19Bonus2                = Player.HasSetPiece(2)
   local TCRank                      = Player.ArtifactTraitRank(238048)
   local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
   if PlayerTarget ~= nil
@@ -330,7 +330,7 @@ function DFThrashV2()
 end
 
 function DFThrashV3()
-  local HasT19Bonus4                = Player.HasSetBonus(T19, 4)
+  local HasT19Bonus4                = Player.HasSetPiece(4)
   local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
   if PlayerTarget ~= nil
   and Spell.CanCast(106830, nil, 3, 50)
@@ -357,7 +357,7 @@ function DFShred()
 end
 
 function DFThrashV4()
-  local HasT19Bonus2                = Player.HasSetBonus(T19, 2)
+  local HasT19Bonus2                = Player.HasSetPiece(2)
   local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
   if PlayerTarget ~= nil
   and Spell.CanCast(106830, nil, 3, 50)
@@ -368,7 +368,7 @@ function DFThrashV4()
 end
 
 function DFBrutalSlashV2()
-  local HasT19Bonus2                = Player.HasSetBonus(T19, 2)
+  local HasT19Bonus2                = Player.HasSetPiece(2)
   local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
   if PlayerTarget ~= nil
   and Spell.CanCast(202028, nil, 3, 20)
@@ -386,7 +386,7 @@ function DFThrashV5()
 end
 
 function DFSwipeV2()
-  local HasT19Bonus2                = Player.HasSetBonus(T19, 2)
+  local HasT19Bonus2                = Player.HasSetPiece(2)
   local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
   if PlayerTarget ~= nil
   and Spell.CanCast(106785, nil, 3, 45)

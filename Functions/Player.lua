@@ -7,6 +7,8 @@ PLAYER_DAMAGE = {
   damageTakenTime
 }
 
+local SetPieceBonus = 0
+
 -- given the spellID of the artifact trait, returns the current rank of this artifact
 -- returns 0 if the player does not have the rank unlocked
 function Player.ArtifactTraitRank(spellID)
@@ -54,6 +56,7 @@ end
 
 -- This returns true when the player has at least "Piece" items of the given Tier equipped
 -- Tier represents the Table where the item information is in
+-- This is a helper for determining the set pieces and should never be called manually
 function Player.HasSetBonus(Tier, Piece)
   local _, Class  = UnitClass("player")
   local Count     = 0
@@ -64,4 +67,25 @@ function Player.HasSetBonus(Tier, Piece)
   end
 
   return Count >= Piece
+end
+
+-- This sets the "SetPieceBonus" variable accordingly
+-- This is called whenever a player changes equipment and should never be called manually
+function Player.GetSetPieceLatestTier()
+  local CurrentTier    = T19
+  local MaxBonusPieces = 4
+  local Count = 0
+  for i = 1, MaxBonusPieces do
+    if Player.HasSetBonus(CurrentTier, i) then
+      Count = i
+    end
+  end
+
+  SetPieceBonus = Count
+end
+
+-- This function returns wheter or not the player has the given set piece bonus
+-- Because of its design, this can only return information about the latest tier sets
+function Player.HasSetPiece(Piece)
+  return SetPieceBonus >= Piece
 end
