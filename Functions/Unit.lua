@@ -112,6 +112,12 @@ function Unit.GetUnitsBelowHealth(healthPercent, mode, onlyCombat, unit, range)
   return Units
 end
 
+-- returns true if the first unit is the second unit's primary target
+function Unit.IsTanking(unit, otherUnit)
+  local IsTanking = UnitDetailedThreatSituation(unit, otherUnit)
+  return IsTanking ~= nil
+end
+
 -- returns true when the given unit is tanking a boss
 function Unit.IsTankingBoss(unit)
   if unit == nil then

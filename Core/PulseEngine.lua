@@ -17,10 +17,7 @@ function PulseEngine(self, elapsed)
     -- when player is looting
 
     -- Pulse the Queue
-    if UnitAffectingCombat("player") or IsInGroup()
-    or (AllowOutOfCombatRoutine and UnitGUID("target") ~= nil) then
-      Rotation.PulseQueue()
-    end
+    Rotation.PulseQueue()
 
     self.TimeSinceLastUpdate = self.TimeSinceLastUpdate - UpdateInterval
   end
