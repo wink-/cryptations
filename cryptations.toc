@@ -18,6 +18,7 @@ Functions\Debuff.lua
 Functions\Player.lua
 Functions\Rotation.lua
 Functions\Group.lua
+Functions\Events.lua
 
 # Core
 Core\Core.lua
