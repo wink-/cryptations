@@ -175,3 +175,18 @@ function Spell.DetectionHandler()
     CurrentSpell = nil
   end
 end
+
+-- wrapper for GetSpellCharges
+-- only returns the current charge count of the given spell
+function Spell.GetCharges(spellID)
+  local Charges = GetSpellCharges(spellID)
+  return Charges
+end
+
+-- returns the remaining time in seconds for the current charge to become active
+function Spell.GetRemainingChargeTime(spellID)
+  local Charges, MaxCharges, Start, Duration = GetSpellCharges(spellID)
+  if Charges >= MaxCharges then return 0 end
+
+  return (Start + Duration) - GetTime()
+end
