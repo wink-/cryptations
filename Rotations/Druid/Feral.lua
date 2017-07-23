@@ -25,8 +25,6 @@ local Player      = LibStub("Player")
 local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
-RipCPSpent        = 0 -- This saves how many cp were spent on the last rip (usefull to check if we can apply a stronger rip)
-RakeEnhanced      = false -- This saves whether or not the last used rake was enhanced (through thealth or incarnation)
 
 function Finishers()
   DFRipV1()
@@ -51,13 +49,13 @@ function Generators()
   DFRakeV3()
   DFRakeV4()
   DFRakeV5()
-  -- Brutal Slash
-  -- Moonfire
-  -- Thrash
-  -- Swipe
+  DFBrutalSlashV1()
+  DFMoonfire()
+  DFThrashV1()
+  DFSwipeV1()
   -- Thrash 3
   -- Thrash 4
-  -- Shred
+  DFShred()
 end
 
 function Pulse()

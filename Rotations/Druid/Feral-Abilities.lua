@@ -14,12 +14,23 @@ local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 local Group       = LibStub("Group")
 
+local RipCPSpent   = 0 -- This saves how many cp were spent on the last rip (usefull to check if we can apply a stronger rip)
+local RakeEnhanced = false -- This saves whether or not the last used rake was enhanced (through thealth or incarnation)
+
 function DFRakeDebuffDuration()
   if Player.HasTalent(6, 2) then
     return 10
   end
 
   return 15
+end
+
+function DFRakeIntervalSec()
+  if Player.HasTalent(6, 2) then
+    return 2
+  end
+
+  return 3
 end
 
 function DFFerociousBiteMaxEnergy()
@@ -241,9 +252,10 @@ function DFRakeV4()
   end
 end
 
+-- same as above but with multidot support
 function DFRakeV5()
   local Target = Group.FindDoTTarget(1822, 155722, 3)
-  local HasDebuff, Stacks, RemainingTime = Debuff.Has(Target, 155722)
+  local HasDebuff, _, RemainingTime = Debuff.Has(Target, 155722)
   if Target ~= nil
   and Spell.CanCast(1822, Target, 3, 35)
   and Unit.IsFacing(Target, MeleeAngle)
@@ -254,5 +266,74 @@ function DFRakeV5()
   and (not RakeEnhanced or (RakeEnhanced and Buff.Has(PlayerUnit, 102543))) then
     IsRakeEnhanced()
     return Spell.Cast(1822, Target)
+  end
+end
+
+function DFBrutalSlashV1()
+  local Energy      = UnitPower("player", 3)
+  local BSCharges   = Spell.GetCharges(202028)
+  local ChargeTime  = Spell.GetRemainingChargeTime(202028)
+  local GCD         = Player.GetGCDDuration()
+  if PlayerTarget ~= nil
+  and Spell.CanCast(202028, PlayerTarget, 3, 35)
+  and ObjectIsFacing(PlayerUnit, PlayerTarget)
+  and Energy >= 35
+  and ((BSCharges >= 2 and ChargeTime <= GCD)
+  or #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") > 1) then -- TODO: add TTD
+    return Spell.Cast(202028, PlayerTarget)
+  end
+end
+
+function DFMoonfire()
+  local Target = Group.FindDoTTarget(8921, 155625, 5)
+  if Target == nil or not ObjectExists(Target) then return end
+  local HasDebuff, _, RemainingTime = Debuff.Has(Target, 155625)
+  if Spell.CanCast(8921, Target)
+  and (HasDebuff ~= true or RemainingTime < 4)
+  and Debuff.Has(Target, 155722) then -- TODO: add TTD
+    return Spell.Cast(8921, Target)
+  end
+end
+
+function DFThrashV1()
+  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(77758)
+  and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3
+  and (HasDebuff ~= true or RemainingTime < 4) then
+    return Spell.Cast(77758)
+  end
+end
+
+function DFSwipeV1()
+  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(106785, nil, 3, 45)
+  and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3
+  and (HasDebuff == true and RemainingTime >= 4) then
+    return Spell.Cast(106785)
+  end
+end
+
+
+function DFThrashV2()
+  -- TODO: SetBonus function
+end
+
+function DFThrashV3()
+  -- TODO: SetBonus function
+end
+
+function DFShred()
+  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 155722)
+  local Energy    = UnitPower("player", 3)
+  local EnergyMax = UnitPowerMax("player", 3)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(5221, PlayerTarget, 3, 40)
+  and ObjectIsFacing(PlayerUnit, PlayerTarget)
+  and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") < 3
+  and ((HasDebuff == true and RemainingTime > DFRakeIntervalSec())
+  or (EnergyMax - Energy) < 1) then
+    return Spell.Cast(5221, PlayerTarget)
   end
 end
