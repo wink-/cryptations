@@ -98,11 +98,12 @@ function Group.FindBestToHeal(radius, minUnits, health)
   local BestUnits         = {}
   local LowestHealthAvg   = 100
   local CurrentHealthAvg  = 100
-  for i = 1, getn(GROUP_MEMBERS) do
+  for i = 1, #GROUP_MEMBERS do
     CurrentUnits = Unit.GetUnitsBelowHealth(health, "friendly", true, GROUP_MEMBERS[i], radius)
+    table.insert(CurrentUnits, GROUP_MEMBERS[i])
     CurrentHealthAvg = Group.AverageHealthCustom(CurrentUnits)
-    if getn(CurrentUnits) >= minUnits
-    and getn(CurrentUnits) > getn(BestUnits)
+    if #CurrentUnits >= minUnits
+    and #CurrentUnits > #BestUnits
     and CurrentHealthAvg < LowestHealthAvg then
       LowestHealthAvg = CurrentHealthAvg
       BestUnits = CurrentUnits
@@ -116,7 +117,7 @@ function Group.FindBestToHeal(radius, minUnits, health)
   return nil
 end
 
--- returns table with group that is the best to cast an aoe spell on
+-- returns table with unit group that is the best to cast an aoe spell on
 function Group.FindBestToAOE(radius, minUnits)
   local CurrentUnits      = {}
   local BestUnits         = {}
@@ -125,9 +126,12 @@ function Group.FindBestToAOE(radius, minUnits)
   for i = 1, ObjectCount do
     CurrentObject = GetObjectWithIndex(i)
     if ObjectIsType(CurrentObject, ObjectTypes.Unit)
+    and Unit.IsHostile(CurrentObject)
+    and (UnitAffectingCombat(CurrentObject) or Unit.IsDummy(CurrentObject))
     and ObjectExists(CurrentObject)
     and Unit.IsInLOS(CurrentObject) then
       CurrentUnits = Unit.GetUnitsInRadius(CurrentObject, radius, "hostile", true)
+      table.insert(CurrentUnits, CurrentObject)
       if #CurrentUnits >= minUnits
       and #CurrentUnits > #BestUnits then
         BestUnits = CurrentUnits
