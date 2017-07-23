@@ -54,6 +54,14 @@ function IsRakeEnhanced()
   end
 end
 
+function DFProwl()
+  if PlayerTarget ~= nil
+  and Spell.CanCast(5215)
+  and Unit.IsInRange(PlayerUnit, PlayerTarget, 20) then
+    return Spell.Cast(5215)
+  end
+end
+
 function DFRakeV1()
   if PlayerTarget ~= nil
   and Spell.CanCast(1822, PlayerTarget, 3, 35) then

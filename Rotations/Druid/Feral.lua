@@ -79,6 +79,7 @@ function Pulse()
       Rotation.Interrupt()
     end
 
+    DFProwl()
     DFRakeV1()
     DFTigersFury()
     DFIKotJ()
