@@ -57,7 +57,12 @@ function DRFlourish()
 end
 
 function EfflorescencePos()
-  return Unit.GetCenterBetweenUnits(Group.FindBestToHeal(10, EFUnits, EFHealth))
+  local Units = Group.FindBestToHeal(10, EFUnits, EFHealth)
+  if Units ~= nil then
+    return Unit.GetCenterBetweenUnits(Units)
+  end
+
+  return nil
 end
 
 function EfflorescenceReplace()

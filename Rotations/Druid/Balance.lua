@@ -58,7 +58,7 @@ function Pulse()
     end
 
     -- Blessing of the Ancients
-    Cooldowns()
+    -- Cooldowns()
     DBStarsurgeV1()
     DBFoE()
     DBNewMoonV1()
@@ -67,7 +67,8 @@ function Pulse()
     DBStellarFlareV1()
     DBStarfallV1()
     if IsEquippedItem(137062)
-    and #Units.GetUnitsInRadius(PlayerUnit, DBStarfallRadius, "hostile") <= 2 then
+    --and #Units.GetUnitsInRadius(PlayerUnit, DBStarfallRadius, "hostile") <= 2
+    then
       EmeraldDreamcatcher()
     end
     DBNewMoonV2()

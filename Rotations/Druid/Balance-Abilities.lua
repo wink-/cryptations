@@ -43,15 +43,6 @@ function DBBotA()
 
 end
 
-function CheckDummy()
-  if PlayerTarget ~= nil
-  and Spell.CanCast()
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget) then
-
-  end
-end
-
 function DBStarsurgeV1()
   local HasBuff, _, RemainingTime = Buff.Has(PlayerUnit, 224706)
   local GCD = Player.GetGCDDuration()
@@ -65,14 +56,21 @@ function DBStarsurgeV1()
   end
 end
 
--- This is experimental
+function DBFoEPos()
+  local Units = Group.FindBestToAOE(5, 3)
+  if Units ~= nil then
+    return Unit.GetCenterBetweenUnits(Units)
+  end
+
+  return nil
+end
+
 function DBFoE()
-  local Target      = Unit.FindBestToAOE(5, 3)
+  local x, y, z = DBFoEPos()
+  if x == nil or y == nil or z == nil then return end
   local LunarPower  = UnitPower("player", 8)
-  if Target ~= nil
-  and Spell.CanCast(202770, nil, 8, 6)
+  if Spell.CanCast(202770, nil, 8, 6)
   and LunarPower >= 80 then
-    local x, y, z = ObjectPosition(Target)
     return Spell.CastGroundSpell(202770, x, y, z)
   end
 end
@@ -145,16 +143,25 @@ function DBNewMoonV2()
   end
 end
 
+function DBStarfallV2Pos()
+  local Units = Group.FindBestToAOE(DBStarfallRadius(), 2)
+  if Units ~= nil then
+    return Unit.GetCenterBetweenUnits(Units)
+  end
+
+  return nil
+end
+
 function DBStarfallV2()
+  local x, y, z = DBStarfallV2Pos()
+  if x == nil or y == nil or z == nil then return end
   local HasBuff = Buff.Has(PlayerUnit, 202770)
-  local Target = Unit.FindBestToAOE(DBStarfallRadius(), 2)
   if Target ~= nil
   and Spell.CanCast(191034, nil, 8, 60)
   and ObjectIsFacing(PlayerUnit, Target)
   and Unit.IsInLOS(Target)
   and (not Player.HasTalent(7, 1)
   or (HasBuff ~= true and Spell.GetRemainingCooldown(202770) > 5)) then
-    local x, y, z = ObjectPosition(Target)
     return Spell.CastGroundSpell(191034, x, y, z)
   end
 end
@@ -167,7 +174,7 @@ function DBStellarFlareV2()
   and ObjectIsFacing(PlayerUnit, Target)
   and Unit.IsInLOS(Target)
   and (HasDebuff ~= true or RemainingTime < 7) then
-    return Spell.Casted(202347, Target)
+    return Spell.Cast(202347, Target)
   end
 end
 
@@ -193,7 +200,7 @@ function DBMoonfireV2()
   and (HasDebuff ~= true or RemainingTime < 5)
   and (not Player.HasTalent(7, 3)
   or #Unit.GetUnitsInRadius(PlayerUnit, 40, "hostile", true) > 1) then
-    return Spell.Casted(8921, Target)
+    return Spell.Cast(8921, Target)
   end
 end
 

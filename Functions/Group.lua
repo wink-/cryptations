@@ -109,7 +109,11 @@ function Group.FindBestToHeal(radius, minUnits, health)
     end
   end
 
-  return BestUnits
+  if #BestUnits >= minUnits then
+    return BestUnits
+  end
+
+  return nil
 end
 
 -- returns table with group that is the best to cast an aoe spell on
@@ -124,12 +128,18 @@ function Group.FindBestToAOE(radius, minUnits)
     and ObjectExists(CurrentObject)
     and Unit.IsInLOS(CurrentObject) then
       CurrentUnits = Unit.GetUnitsInRadius(CurrentObject, radius, "hostile", true)
-      if getn(CurrentUnits) >= minUnits
-      and getn(CurrentUnits) > getn(BestUnits) then
+      if #CurrentUnits >= minUnits
+      and #CurrentUnits > #BestUnits then
         BestUnits = CurrentUnits
       end
     end
   end
+
+  if #BestUnits >= minUnits then
+    return BestUnits
+  end
+
+  return nil
 end
 
 
