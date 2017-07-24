@@ -12,7 +12,7 @@ ReTargetHighestUnit      = false
 ReTargetLowestUnit       = false
 
 -- Combat behavior
-AllowOutOfCombatRoutine  = false
+AllowOutOfCombatRoutine  = true
 
 -- Interrupt behavior
 InterruptAnyUnit         = false
