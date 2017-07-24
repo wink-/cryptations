@@ -57,7 +57,7 @@ function DBStarsurgeV1()
 end
 
 function DBFoEPos()
-  local Units = Group.FindBestToAOE(5, 3)
+  local Units = Group.FindBestToAOE(5, 1)
   if Units ~= nil then
     return Unit.GetCenterBetweenUnits(Units)
   end
@@ -156,8 +156,7 @@ function DBStarfallV2()
   local x, y, z = DBStarfallV2Pos()
   if x == nil or y == nil or z == nil then return end
   local HasBuff = Buff.Has(PlayerUnit, 202770)
-  if Target ~= nil
-  and Spell.CanCast(191034, nil, 8, 60)
+  if Spell.CanCast(191034, nil, 8, 60)
   and ObjectIsFacing(PlayerUnit, Target)
   and Unit.IsInLOS(Target)
   and (not Player.HasTalent(7, 1)
@@ -210,7 +209,7 @@ function DBStarsurgeV2()
   and ObjectIsFacing(PlayerUnit, PlayerTarget)
   and Unit.IsInLOS(PlayerTarget)
   and Buff.Has(PlayerUnit, 209406) then
-    return Spell.Cast(209406, PlayerTarget)
+    return Spell.Cast(78674, PlayerTarget)
   end
 end
 
@@ -224,7 +223,7 @@ function DBStarsurgeV3()
   and (not Player.HasTalent(7, 1)
   or (not Spell.CanCast(202770, nil, 8, 6)
   and not Buff.Has(PlayerUnit, 202770))) then
-    return Spell.Cast(209406, PlayerTarget)
+    return Spell.Cast(78674, PlayerTarget)
   end
 end
 
