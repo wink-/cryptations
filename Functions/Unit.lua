@@ -111,7 +111,7 @@ function Unit.GetUnitsBelowHealth(healthPercent, mode, onlyCombat, unit, range)
       end
     end
   end
-  
+
   return Units
 end
 
@@ -188,6 +188,7 @@ function Unit.FindHighest(mode, onlyCombat)
       end
     end
   end
+
   return Highest
 end
 
@@ -213,6 +214,7 @@ function Unit.FindLowest(mode, onlyCombat)
       end
     end
   end
+
   return Lowest
 end
 

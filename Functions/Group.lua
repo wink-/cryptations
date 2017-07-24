@@ -100,6 +100,7 @@ function Group.FindBestToHeal(radius, minUnits, health)
   local CurrentHealthAvg  = 100
   for i = 1, #GROUP_MEMBERS do
     CurrentUnits = Unit.GetUnitsBelowHealth(health, "friendly", true, GROUP_MEMBERS[i], radius)
+    table.insert(CurrentUnits, GROUP_MEMBERS[i])
     CurrentHealthAvg = Group.AverageHealthCustom(CurrentUnits)
     if #CurrentUnits >= minUnits
     and #CurrentUnits > #BestUnits
@@ -129,6 +130,7 @@ function Group.FindBestToAOE(radius, minUnits)
     and ObjectExists(CurrentObject)
     and Unit.IsInLOS(CurrentObject) then
       CurrentUnits = Unit.GetUnitsInRadius(CurrentObject, radius, "hostile", true)
+      table.insert(CurrentUnits, CurrentObject)
       if #CurrentUnits >= minUnits
       and #CurrentUnits > #BestUnits then
         BestUnits = CurrentUnits
