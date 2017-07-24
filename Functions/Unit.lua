@@ -284,13 +284,10 @@ function Unit.GetUnitsInRadius(otherUnit, radius, mode, onlyCombat)
     return nil
   end
 
-  local ObjectCount = GetObjectCount()
   local Units = {}
-  for i = 1, ObjectCount do
-    local Object = GetObjectWithIndex(i)
-    if ObjectIsType(Object, ObjectTypes.Unit)
-    and ObjectExists(Object)
-    and Object ~= otherUnit
+  for i = 1, #ValidUnits do
+    local Object = ValidUnits[i]
+    if Object ~= otherUnit
     and Unit.IsInRange(otherUnit, Object, radius)
     and UnitHealth(Object) > 1 then
       if mode == "friendly"
@@ -431,7 +428,8 @@ function Unit.IsDummy(unit)
   local Name = ObjectName(unit)
   if Name == "Training Dummy"
   or Name == "Raider's Training Dummy"
-  or Name == "PvP Training Dummy" then
+  or Name == "PvP Training Dummy"
+  or Name == "Dungeoneer's Training Dummy" then
     return true
   end
 

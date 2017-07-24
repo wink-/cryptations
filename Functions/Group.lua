@@ -93,6 +93,7 @@ function Group.TankToHeal()
 end
 
 -- returns table with group that is the best to heal for an aoe heal spell
+-- TODO: add max distance from player
 function Group.FindBestToHeal(radius, minUnits, health)
   local CurrentUnits      = {}
   local BestUnits         = {}
@@ -121,10 +122,9 @@ end
 -- TODO: add max distance from player
 function Group.FindBestToAOE(radius, minUnits)
   local BestUnits         = {}
-  local ObjectCount       = GetObjectCount()
-  for i = 1, ObjectCount do
+  for i = 1, #ValidUnits do
     local CurrentUnits  = {}
-    local CurrentObject = GetObjectWithIndex(i)
+    local CurrentObject = ValidUnits[i]
     if ObjectIsType(CurrentObject, ObjectTypes.Unit)
     and Unit.IsHostile(CurrentObject)
     and (UnitAffectingCombat(CurrentObject) or Unit.IsDummy(CurrentObject))
