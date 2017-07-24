@@ -339,7 +339,7 @@ function Unit.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat, healt
         table.insert(Units, Object)
       elseif mode == "hostile" and Unit.IsHostile(Object)
       and (onlyCombat == false or onlyCombat == nil 
-      or (UnitAffectingCombat(Object) Unit.IsDummy(Object))) then
+      or (UnitAffectingCombat(Object) or Unit.IsDummy(Object))) then
         table.insert(Units, Object)
       end
     end

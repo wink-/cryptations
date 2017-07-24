@@ -157,8 +157,6 @@ function DBStarfallV2()
   if x == nil or y == nil or z == nil then return end
   local HasBuff = Buff.Has(PlayerUnit, 202770)
   if Spell.CanCast(191034, nil, 8, 60)
-  and ObjectIsFacing(PlayerUnit, Target)
-  and Unit.IsInLOS(Target)
   and (not Player.HasTalent(7, 1)
   or (HasBuff ~= true and Spell.GetRemainingCooldown(202770) > 5)) then
     return Spell.CastGroundSpell(191034, x, y, z)
