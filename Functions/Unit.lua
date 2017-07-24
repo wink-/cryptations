@@ -285,8 +285,8 @@ function Unit.GetUnitsInRadius(otherUnit, radius, mode, onlyCombat)
   end
 
   local Units = {}
-  for i = 1, #ValidUnits do
-    local Object = ValidUnits[i]
+  for i = 1, #UNIT_TRACKER do
+    local Object = UNIT_TRACKER[i]
     if Object ~= otherUnit
     and Unit.IsInRange(otherUnit, Object, radius)
     and UnitHealth(Object) > 1 then

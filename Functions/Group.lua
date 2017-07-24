@@ -122,9 +122,9 @@ end
 -- TODO: add max distance from player
 function Group.FindBestToAOE(radius, minUnits)
   local BestUnits         = {}
-  for i = 1, #ValidUnits do
+  for i = 1, #UNIT_TRACKER do
     local CurrentUnits  = {}
-    local CurrentObject = ValidUnits[i]
+    local CurrentObject = UNIT_TRACKER[i]
     if ObjectIsType(CurrentObject, ObjectTypes.Unit)
     and Unit.IsHostile(CurrentObject)
     and (UnitAffectingCombat(CurrentObject) or Unit.IsDummy(CurrentObject))

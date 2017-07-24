@@ -79,6 +79,9 @@ function Initialize()
         OnTargetSwitch()
       end
     end
+    if event == "PLAYER_ENTERING_WORLD" and FireHack == nil then
+      return message("No unlocker attatched.")
+    end
   end
 
   frame:SetScript("OnEvent", eventHandler)
