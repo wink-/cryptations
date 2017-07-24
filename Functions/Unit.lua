@@ -96,7 +96,9 @@ function Unit.GetUnitsBelowHealth(healthPercent, mode, onlyCombat, unit, range)
   local Object = nil
   for i = 1, ObjectCount do
     Object = GetObjectWithIndex(i)
-    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    if ObjectIsType(Object, ObjectTypes.Unit)
+    and ObjectExists(Object)
+    and (unit == nil or Object ~= unit)
     and Unit.PercentHealth(Object) < healthPercent
     and ((range == nil and unit == nil) or Unit.IsInRange(unit, Object, range)) then
       if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
@@ -109,6 +111,7 @@ function Unit.GetUnitsBelowHealth(healthPercent, mode, onlyCombat, unit, range)
       end
     end
   end
+  
   return Units
 end
 
@@ -280,12 +283,12 @@ function Unit.GetUnitsInRadius(otherUnit, radius, mode, onlyCombat)
   end
 
   local ObjectCount = GetObjectCount()
-  local Object = nil
   local Units = {}
   for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
+    local Object = GetObjectWithIndex(i)
     if ObjectIsType(Object, ObjectTypes.Unit)
     and ObjectExists(Object)
+    and Object ~= otherUnit
     and Unit.IsInRange(otherUnit, Object, radius)
     and UnitHealth(Object) > 1 then
       if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
@@ -317,9 +320,13 @@ function Unit.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat, healt
   local Units = {}
   for i = 1, ObjectCount do
     Object = GetObjectWithIndex(i)
-    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
-    and Unit.IsFacing(Object, angle) and Unit.IsInRange(otherUnit, Object, distance)
-    and UnitHealth(Object) > 1 and (healthPercent == nil or Unit.PercentHealth(Object) <= healthPercent) then
+    if ObjectExists(Object)
+    and ObjectIsType(Object, ObjectTypes.Unit)
+    and Object ~= otherUnit
+    and Unit.IsFacing(Object, angle)
+    and Unit.IsInRange(otherUnit, Object, distance)
+    and UnitHealth(Object) > 1
+    and (healthPercent == nil or Unit.PercentHealth(Object) <= healthPercent) then
       if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
       or (UnitInParty(Object) or UnitInRaid(Object)))
       and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
@@ -496,12 +503,12 @@ function Unit.FindBestToAOE(range, minUnits)
   local BestTarget        = nil
   local UnitCountBest     = 0
   local UnitCountCurrent  = 0
-  local CurrentObject     = nil
   local ObjectCount       = GetObjectCount()
   for i = 1, ObjectCount do
-    CurrentObject = GetObjectWithIndex(i)
+    local CurrentObject = GetObjectWithIndex(i)
     if ObjectIsType(CurrentObject, ObjectTypes.Unit)
     and ObjectExists(CurrentObject)
+    and UnitAffectingCombat(CurrentObject)
     and Unit.IsInLOS(CurrentObject) then
       UnitCountCurrent = #Unit.GetUnitsInRadius(CurrentObject, range, "hostile", true)
       if UnitCountCurrent >= minUnits
