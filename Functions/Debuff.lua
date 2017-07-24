@@ -80,9 +80,5 @@ function Debuff.FindUnitsWith(DebuffID, onlyPlayer)
     end
   end
 
-  if #Units ~= 0 then
-    return Units
-  end
-
-  return nil
+  return Units
 end
