@@ -338,7 +338,7 @@ function Unit.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat, healt
       or (UnitAffectingCombat(Object) or Unit.IsDummy(Object))) then
         table.insert(Units, Object)
       elseif mode == "hostile" and Unit.IsHostile(Object)
-      and (onlyCombat == false or onlyCombat == nil 
+      and (onlyCombat == false or onlyCombat == nil
       or (UnitAffectingCombat(Object) or Unit.IsDummy(Object))) then
         table.insert(Units, Object)
       end
@@ -428,10 +428,11 @@ function Unit.IsDummy(unit)
     return nil
   end
 
-  for i = 1, getn(TrainingDummies) do
-    if Unit.GetCreatureID(unit) == TrainingDummies[i] then
-      return true
-    end
+  local Name = ObjectName(unit)
+  if Name == "Training Dummy"
+  or Name == "Raider's Training Dummy"
+  or Name == "PvP Training Dummy" then
+    return true
   end
 
   return false
