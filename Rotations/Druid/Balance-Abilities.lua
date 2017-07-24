@@ -56,17 +56,8 @@ function DBStarsurgeV1()
   end
 end
 
-function DBFoEPos()
-  local Units = Group.FindBestToAOE(5, 1)
-  if Units ~= nil then
-    return Unit.GetCenterBetweenUnits(Units)
-  end
-
-  return nil
-end
-
 function DBFoE()
-  local x, y, z = DBFoEPos()
+  local x, y, z = ObjectPosition(Unit.FindBestToAOE(5, 1))
   if x == nil or y == nil or z == nil then return end
   local LunarPower  = UnitPower("player", 8)
   if Spell.CanCast(202770, nil, 8, 6)
@@ -144,12 +135,7 @@ function DBNewMoonV2()
 end
 
 function DBStarfallV2Pos()
-  local Units = Group.FindBestToAOE(DBStarfallRadius(), 2)
-  if Units ~= nil then
-    return Unit.GetCenterBetweenUnits(Units)
-  end
-
-  return nil
+  return ObjectPosition(Unit.FindBestToAOE(DBStarfallRadius(), 2))
 end
 
 function DBStarfallV2()
