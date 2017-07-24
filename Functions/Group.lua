@@ -122,16 +122,15 @@ end
 -- TODO: add max distance from player
 function Group.FindBestToAOE(radius, minUnits)
   local BestUnits         = {}
-  for i = 1, #UNIT_TRACKER do
+  for Object, _ in pairs(UNIT_TRACKER) do
     local CurrentUnits  = {}
-    local CurrentObject = UNIT_TRACKER[i]
-    if ObjectIsType(CurrentObject, ObjectTypes.Unit)
-    and Unit.IsHostile(CurrentObject)
-    and (UnitAffectingCombat(CurrentObject) or Unit.IsDummy(CurrentObject))
-    and ObjectExists(CurrentObject)
-    and Unit.IsInLOS(CurrentObject) then
-      CurrentUnits = Unit.GetUnitsInRadius(CurrentObject, radius, "hostile", true)
-      table.insert(CurrentUnits, CurrentObject)
+    if ObjectIsType(Object, ObjectTypes.Unit)
+    and Unit.IsHostile(Object)
+    and (UnitAffectingCombat(Object) or Unit.IsDummy(Object))
+    and ObjectExists(Object)
+    and Unit.IsInLOS(Object) then
+      CurrentUnits = Unit.GetUnitsInRadius(Object, radius, "hostile", true)
+      table.insert(CurrentUnits, Object)
       if #CurrentUnits >= minUnits
       and #CurrentUnits > #BestUnits then
         BestUnits = CurrentUnits
@@ -145,7 +144,6 @@ function Group.FindBestToAOE(radius, minUnits)
 
   return nil
 end
-
 
 -- this returns the first unit to DoT according to the given parameters
 -- spellID is used to check if the unit is in attack range
@@ -162,19 +160,16 @@ function Group.FindDoTTarget(spellID, debuffID, count)
   end
 
   -- check if any other unit is suitable for a dot
-  local ObjectCount = GetObjectCount()
-  local CurrentObject = nil
-  for i = 1, ObjectCount do
-    CurrentObject = GetObjectWithIndex(i)
-    if ObjectIsType(CurrentObject, ObjectTypes.Unit)
-    and ObjectExists(CurrentObject)
-    and Unit.IsHostile(CurrentObject)
-    and (UnitAffectingCombat(CurrentObject) or Unit.IsDummy(CurrentObject))
-    and Unit.IsInLOS(CurrentObject)
-    and Unit.IsInAttackRange(spellID, CurrentObject)
+  for Object, _ in pairs(UNIT_TRACKER) do
+    if ObjectIsType(Object, ObjectTypes.Unit)
+    and ObjectExists(Object)
+    and Unit.IsHostile(Object)
+    and (UnitAffectingCombat(Object) or Unit.IsDummy(Object))
+    and Unit.IsInLOS(Object)
+    and Unit.IsInAttackRange(spellID, Object)
     and getn(Debuff.FindUnitsWith(debuffID, true)) <= count
-    and not Debuff.Has(CurrentObject, debuffID) then
-      return CurrentObject
+    and not Debuff.Has(Object, debuffID) then
+      return Object
     end
   end
 

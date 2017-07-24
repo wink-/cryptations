@@ -4,9 +4,10 @@ local Unit = LibStub("Unit")
 UNIT_TRACKER = {}
 TTD_TABLE = {}
 
+-- This keeps track of all of the valid units and their ttd
 function GetUnits()
   -- cache new units
-  if UnitAffectingCombat("player")then
+  if UnitAffectingCombat("player") then
     for i = 1, GetObjectCount() do
       local Object = GetObjectWithIndex(i)
       if ObjectIsType(Object, ObjectTypes.Unit)
