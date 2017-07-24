@@ -87,10 +87,10 @@ function Pulse()
   end
 end
 
-function Interrupt(Unit)
-  if Spell.CanCast(78675, Unit, 0, UnitPowerMax("player", 0) * 0.168)
-  and Unit.IsInLOS(Unit)
-  and ObjectIsFacing(PlayerUnit, Unit) then
-    return Spell.Cast(78675, Unit)
+function Interrupt(Target)
+  if Spell.CanCast(78675, Target, 0, UnitPowerMax("player", 0) * 0.168)
+  and Unit.IsInLOS(Target)
+  and ObjectIsFacing(PlayerUnit, Target) then
+    return Spell.Cast(78675, Target)
   end
 end
