@@ -293,12 +293,15 @@ function Unit.GetUnitsInRadius(otherUnit, radius, mode, onlyCombat)
     and Object ~= otherUnit
     and Unit.IsInRange(otherUnit, Object, radius)
     and UnitHealth(Object) > 1 then
-      if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
+      if mode == "friendly"
+      and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
       or (UnitInParty(Object) or UnitInRaid(Object)))
-      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+      and (onlyCombat == false or onlyCombat == nil
+      or (UnitAffectingCombat(Object) or Unit.IsDummy(Object))) then
         table.insert(Units, Object)
       elseif mode == "hostile" and Unit.IsHostile(Object)
-      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+      and (onlyCombat == false or onlyCombat == nil
+      or (UnitAffectingCombat(Object) or Unit.IsDummy(Object))) then
         table.insert(Units, Object)
       end
     end
@@ -331,10 +334,12 @@ function Unit.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat, healt
     and (healthPercent == nil or Unit.PercentHealth(Object) <= healthPercent) then
       if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
       or (UnitInParty(Object) or UnitInRaid(Object)))
-      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+      and (onlyCombat == false or onlyCombat == nil
+      or (UnitAffectingCombat(Object) or Unit.IsDummy(Object))) then
         table.insert(Units, Object)
       elseif mode == "hostile" and Unit.IsHostile(Object)
-      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+      and (onlyCombat == false or onlyCombat == nil 
+      or (UnitAffectingCombat(Object) Unit.IsDummy(Object))) then
         table.insert(Units, Object)
       end
     end
@@ -510,7 +515,7 @@ function Unit.FindBestToAOE(range, minUnits)
     local CurrentObject = GetObjectWithIndex(i)
     if ObjectIsType(CurrentObject, ObjectTypes.Unit)
     and ObjectExists(CurrentObject)
-    and UnitAffectingCombat(CurrentObject)
+    and (UnitAffectingCombat(CurrentObject) or Unit.IsDummy(CurrentObject))
     and Unit.IsInLOS(CurrentObject) then
       UnitCountCurrent = #Unit.GetUnitsInRadius(CurrentObject, range, "hostile", true)
       if UnitCountCurrent >= minUnits

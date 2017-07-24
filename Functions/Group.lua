@@ -118,6 +118,7 @@ function Group.FindBestToHeal(radius, minUnits, health)
 end
 
 -- returns table with unit group that is the best to cast an aoe spell on
+-- TODO: add max distance from player
 function Group.FindBestToAOE(radius, minUnits)
   local BestUnits         = {}
   local ObjectCount       = GetObjectCount()
@@ -126,7 +127,7 @@ function Group.FindBestToAOE(radius, minUnits)
     local CurrentObject = GetObjectWithIndex(i)
     if ObjectIsType(CurrentObject, ObjectTypes.Unit)
     and Unit.IsHostile(CurrentObject)
-    and UnitAffectingCombat(CurrentObject)
+    and (UnitAffectingCombat(CurrentObject) or Unit.IsDummy(CurrentObject))
     and ObjectExists(CurrentObject)
     and Unit.IsInLOS(CurrentObject) then
       CurrentUnits = Unit.GetUnitsInRadius(CurrentObject, radius, "hostile", true)
@@ -154,7 +155,7 @@ function Group.FindDoTTarget(spellID, debuffID, count)
   if PlayerTarget ~= nil
   and getn(Debuff.FindUnitsWith(debuffID, true)) <= count
   and Unit.IsHostile(PlayerTarget)
-  and UnitAffectingCombat(PlayerTarget)
+  and (UnitAffectingCombat(PlayerTarget) or Unit.IsDummy(PlayerTarget))
   and Unit.IsInAttackRange(spellID, PlayerTarget)
   and not Debuff.Has(PlayerTarget, debuffID) then
     return PlayerTarget
@@ -168,7 +169,7 @@ function Group.FindDoTTarget(spellID, debuffID, count)
     if ObjectIsType(CurrentObject, ObjectTypes.Unit)
     and ObjectExists(CurrentObject)
     and Unit.IsHostile(CurrentObject)
-    and UnitAffectingCombat(CurrentObject)
+    and (UnitAffectingCombat(CurrentObject) or Unit.IsDummy(CurrentObject))
     and Unit.IsInLOS(CurrentObject)
     and Unit.IsInAttackRange(spellID, CurrentObject)
     and getn(Debuff.FindUnitsWith(debuffID, true)) <= count
