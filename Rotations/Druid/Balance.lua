@@ -57,7 +57,7 @@ function Pulse()
       Rotation.Interrupt()
     end
 
-    -- Blessing of the Ancients
+    DBMoonkin()
     Cooldowns()
     DBStarsurgeV1()
     DBFoE()
@@ -83,6 +83,7 @@ function Pulse()
     DBSolarWrathV2()
   else
     -- out of combat
+    DBBotA()
   end
 end
 

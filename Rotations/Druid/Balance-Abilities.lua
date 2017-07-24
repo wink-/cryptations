@@ -39,8 +39,18 @@ function DBStarfallRadius()
   return Radius
 end
 
-function DBBotA()
+function DBMoonkin()
+  if Spell.CanCast(24858)
+  and not Buff.Has(PlayerUnit, 24858) then
+    return Spell.Cast(24858)
+  end
+end
 
+function DBBotA()
+  if Spell.CanCast(202360)
+  and not Buff.Has(PlayerUnit, 202737) then
+    return Spell.Cast(202360)
+  end
 end
 
 function DBStarsurgeV1()
