@@ -263,3 +263,50 @@ function DBSolarWrathV2()
     return Spell.Cast(190984, PlayerTarget)
   end
 end
+
+function DBAstralCommunion()
+  local HasBuff       = Buff.Has(PlayerUnit, 202770)
+  local LunarPower    = UnitPower("player", 8)
+  local LunarPowerMax = UnitPowerMax("player", 8)
+  if Spell.CanCast(202359)
+  and LunarPowerMax - LunarPower >= 75
+  and (not Player.HasTalent(7, 1) or HasBuff ~= true) then
+    return Spell.Cast(202359)
+  end
+end
+
+function DBFoN()
+  if Spell.CanCast(205636)
+  and not IsInGroup() then
+    local x, y, z = ObjectPosition(PlayerUnit)
+    return Spell.CastGroundSpell(205636, x, y, z)
+  end
+end
+
+function DBWoE()
+  if Spell.CanCast(202425) then
+    return Spell.Cast(202425)
+  end
+end
+
+function DBIncarnation()
+  local StarfallIsValid = DBStarfallV2Pos() ~= nil
+  if PlayerTarget ~= nil
+  and Spell.CanCast(102560)
+  and Spell.CanCast(191034, nil, 8, 60)
+  and StarfallIsValid
+  or (Spell.CanCast(78674, PlayerTarget, 8, 40) and not StarfallIsValid) then
+    return Spell.Cast(102560)
+  end
+end
+
+function DBCA()
+  local StarfallIsValid = DBStarfallV2Pos() ~= nil
+  if PlayerTarget ~= nil
+  and Spell.CanCast(194223)
+  and Spell.CanCast(191034, nil, 8, 60)
+  and StarfallIsValid
+  or (Spell.CanCast(78674, PlayerTarget, 8, 40) and not StarfallIsValid) then
+    return Spell.Cast(194223)
+  end
+end
