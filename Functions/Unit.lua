@@ -447,10 +447,8 @@ function Unit.FindBestToHeal(range, minUnits, health)
   for i = 1, #GROUP_MEMBERS do
     CurrentUnit = GROUP_MEMBERS[i]
     Units = Unit.GetUnitsBelowHealth(health, "friendly", true, CurrentUnit, range)
+    table.insert(Units, CurrentUnit)
     UnitCountCurrent = #Units
-    if Unit.PercentHealth(CurrentUnit) <= health then
-      UnitCountCurrent = UnitCountCurrent + 1
-    end
     if UnitCountCurrent >= minUnits
     and UnitCountCurrent > UnitCountBest
     and Group.AverageHealthCustom(Units) < GroupHealth then
@@ -473,7 +471,7 @@ function Unit.FindBestToAOE(range, minUnits)
     and ObjectExists(Object)
     and (UnitAffectingCombat(Object) or Unit.IsDummy(Object))
     and Unit.IsInLOS(Object) then
-      UnitCountCurrent = #Unit.GetUnitsInRadius(Object, range, "hostile", true)
+      UnitCountCurrent = #Unit.GetUnitsInRadius(Object, range, "hostile", true) + 1
       if UnitCountCurrent >= minUnits
       and UnitCountCurrent > UnitCountBest then
         UnitCountBest = UnitCountCurrent
