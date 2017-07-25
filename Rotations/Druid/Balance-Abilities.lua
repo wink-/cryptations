@@ -54,14 +54,13 @@ function DBBotA()
 end
 
 function DBStarsurgeV1()
-  local HasBuff, _, RemainingTime = Buff.Has(PlayerUnit, 224706)
   local GCD = Player.GetGCDDuration()
   if PlayerTarget ~= nil
   and Spell.CanCast(78674, PlayerTarget, 8, 40)
   and ObjectIsFacing(PlayerUnit, PlayerTarget)
   and Unit.IsInLOS(PlayerTarget)
-  and HasBuff == true
-  and RemainingTime < GCD then
+  and Buff.Has(PlayerUnit, 224706)
+  and Buff.RemainingTime(PlayerUnit, 224706) < GCD then
     return Spell.Cast(78674, PlayerTarget)
   end
 end
@@ -77,55 +76,55 @@ function DBFoE()
 end
 
 function DBNewMoonV1()
-  local HasBuff, _, RemainingTime = Buff.Has(PlayerUnit, 224706)
   if PlayerTarget ~= nil
   and Spell.CanCast(202767, PlayerTarget)
   and ObjectIsFacing(PlayerUnit, PlayerTarget)
   and Unit.IsInLOS(PlayerTarget)
   and Spell.GetRemainingChargeTime(202767) == 0
-  and (HasBuff ~= true or RemainingTime > DBNewMoonCastTime()) then
+  and (not Buff.Has(PlayerUnit, 224706)
+  or Buff.RemainingTime(PlayerUnit, 224706) > DBNewMoonCastTime()) then
      return Spell.Cast(202767, PlayerTarget)
   end
 end
 
 function DBMoonfireV1()
-  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 164812)
+
   if PlayerTarget ~= nil
   and Spell.CanCast(8921, PlayerTarget, 0, MaxMana * 0.06)
   and Unit.IsInLOS(PlayerTarget)
-  and (HasDebuff ~= true or RemainingTime < 3) then
+  and (not Debuff.Has(PlayerTarget, 164812, true)
+  or Debuff.RemainingTime(PlayerTarget, 164812, true) < 3) then
     return Spell.Cast(8921, PlayerTarget)
   end
 end
 
 function DBSunfireV1()
-  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 164815)
   if PlayerTarget ~= nil
   and Spell.CanCast(93402, PlayerTarget, 0, MaxMana * 0.12)
   and Unit.IsInLOS(PlayerTarget)
-  and (HasDebuff ~= true or RemainingTime < 3) then
+  and (not Debuff.Has(PlayerTarget, 164815, true)
+  or Debuff.RemainingTime(PlayerTarget, 164815, true) < 3) then
     return Spell.Cast(93402, PlayerTarget)
   end
 end
 
 function DBStellarFlareV1()
-  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 202347)
   if PlayerTarget ~= nil
   and Spell.CanCast(202347, PlayerTarget, 8, 10)
   and Unit.IsInLOS(PlayerTarget)
   and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and (HasDebuff ~= true or RemainingTime < 3) then
+  and (not Debuff.Has(PlayerTarget, 202347, true)
+  or Debuff.RemainingTime(PlayerTarget, 202347, true) < 3) then
     return Spell.Cast(202347, PlayerTarget)
   end
 end
 
 function DBStarfallV1()
-  local HasBuff = Buff.Has(PlayerUnit, 209406)
   if PlayerTarget ~= nil
   and Spell.CanCast(191034, nil, 8, 60)
   and Unit.IsInLOS(PlayerTarget)
   and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and HasBuff then
+  and Buff.Has(PlayerUnit, 209406) then
     local x, y, z = ObjectPosition(PlayerTarget)
     return Spell.CastGroundSpell(191034, x, y, z)
   end
@@ -151,33 +150,32 @@ end
 function DBStarfallV2()
   local x, y, z = DBStarfallV2Pos()
   if x == nil or y == nil or z == nil then return end
-  local HasBuff = Buff.Has(PlayerUnit, 202770)
   if Spell.CanCast(191034, nil, 8, 60)
   and (not Player.HasTalent(7, 1)
-  or (HasBuff ~= true and Spell.GetRemainingCooldown(202770) > 5)) then
+  or (not Buff.Has(PlayerUnit, 202770) and Spell.GetRemainingCooldown(202770) > 5)) then
     return Spell.CastGroundSpell(191034, x, y, z)
   end
 end
 
 function DBStellarFlareV2()
   local Target = Group.FindDoTTarget(202347, 202347, 2)
-  local HasDebuff, _, RemainingTime = Debuff.Has(Target, 202347)
   if Target == nil or not ObjectExists(Target) then return end
   if Spell.CanCast(202347, Target, 8, 10)
   and ObjectIsFacing(PlayerUnit, Target)
   and Unit.IsInLOS(Target)
-  and (HasDebuff ~= true or RemainingTime < 7) then
+  and (not Debuff.Has(Target, 202347, true)
+  or Debuff.RemainingTime(Target, 202347, true) < 7) then
     return Spell.Cast(202347, Target)
   end
 end
 
 function DBSunfireV2()
   local Target = Group.FindDoTTarget(93402, 164815, 10)
-  local HasDebuff, _, RemainingTime = Debuff.Has(Target, 164815)
   if Target == nil or not ObjectExists(Target) then return end
   if Spell.CanCast(93402, Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(PlayerTarget)
-  and (HasDebuff ~= true or RemainingTime < 5)
+  and (not Debuff.Has(Target, 164815, true)
+  or Debuff.RemainingTime(Target, 164815, true) < 5)
   and (not Player.HasTalent(7, 3)
   or #Unit.GetUnitsInRadius(PlayerUnit, 40, "hostile", true) > 1) then
     return Spell.Cast(93402, Target)
@@ -186,11 +184,11 @@ end
 
 function DBMoonfireV2()
   local Target = Group.FindDoTTarget(8921, 164812, 10)
-  local HasDebuff, _, RemainingTime = Debuff.Has(Target, 164812)
   if Target == nil or not ObjectExists(Target) then return end
   if Spell.CanCast(8921, Target, 0, MaxMana * 0.06)
   and Unit.IsInLOS(PlayerTarget)
-  and (HasDebuff ~= true or RemainingTime < 5)
+  and (not Debuff.Has(Target, 164812, true)
+  or Debuff.RemainingTime(Target, 164812, true) < 5)
   and (not Player.HasTalent(7, 3)
   or #Unit.GetUnitsInRadius(PlayerUnit, 40, "hostile", true) > 1) then
     return Spell.Cast(8921, Target)
@@ -261,12 +259,11 @@ function DBSolarWrathV2()
 end
 
 function DBAstralCommunion()
-  local HasBuff       = Buff.Has(PlayerUnit, 202770)
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
   if Spell.CanCast(202359)
   and LunarPowerMax - LunarPower >= 75
-  and (not Player.HasTalent(7, 1) or HasBuff ~= true) then
+  and (not Player.HasTalent(7, 1) or not Buff.Has(PlayerUnit, 202770)) then
     return Spell.Cast(202359)
   end
 end
