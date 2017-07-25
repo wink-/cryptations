@@ -44,28 +44,3 @@ function GetUnits()
   end
 end
 AddTimerCallback(0.1, GetUnits)
-
-local Keys = {
-  ["TABULATOR"] = 0x09,
-  ["ENTER"] = 0x0D
-}
-
-function TabCallback()
-  print("Tab callback")
-end
-
-local KeyCallbacks = {
-  ["TABULATOR"] = TabCallback
-}
-
-function KeyListener()
-  for k, v in pairs(Keys) do
-    if GetKeyState(v) then
-      local Callback = KeyCallbacks[k]
-      if Callback ~= nil then
-        Callback()
-      end
-    end
-  end
-end
-AddTimerCallback(0.01, KeyListener)
