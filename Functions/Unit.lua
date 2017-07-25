@@ -92,10 +92,7 @@ end
 -- range (optional) : the range which shall be scanned for units
 function Unit.GetUnitsBelowHealth(healthPercent, mode, onlyCombat, unit, range)
   local Units = {}
-  local ObjectCount = GetObjectCount()
-  local Object = nil
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
+  for Object, _ in pairs(UNIT_TRACKER) do
     if ObjectIsType(Object, ObjectTypes.Unit)
     and ObjectExists(Object)
     and (unit == nil or Object ~= unit)
@@ -172,10 +169,7 @@ end
 -- onlyCombat (optional) : true or false
 function Unit.FindHighest(mode, onlyCombat)
   local Highest = nil
-  local ObjectCount = GetObjectCount()
-  local Object = nil
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
+  for Object, _ in pairs(UNIT_TRACKER) do
     if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
     and (Highest == nil or Unit.PercentHealth(Object) > Unit.PercentHealth(Highest)) then
       if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
@@ -197,10 +191,7 @@ end
 -- onlyCombat (optional) : true or false
 function Unit.FindLowest(mode, onlyCombat)
   local Lowest = nil
-  local ObjectCount = GetObjectCount()
-  local Object = nil
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
+  for Object, _ in pairs(UNIT_TRACKER) do
     if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
     and (Lowest == nil or Unit.PercentHealth(Object) < Unit.PercentHealth(Lowest))
     and UnitHealth(Object) > 1 then
@@ -228,10 +219,7 @@ function Unit.FindNearest(otherUnit, mode, onlyCombat)
   end
 
   local Nearest = nil
-  local ObjectCount = GetObjectCount()
-  local Object = nil
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
+  for Object, _ in pairs(UNIT_TRACKER) do
     if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
     and (Nearest == nil or GetDistanceBetweenObjects(otherUnit, Object) < GetDistanceBetweenObjects(otherUnit, Nearest))
     and UnitHealth(Object) > 1 and Object ~= PlayerUnit then
@@ -284,13 +272,9 @@ function Unit.GetUnitsInRadius(otherUnit, radius, mode, onlyCombat)
     return nil
   end
 
-  local ObjectCount = GetObjectCount()
   local Units = {}
-  for i = 1, ObjectCount do
-    local Object = GetObjectWithIndex(i)
-    if ObjectIsType(Object, ObjectTypes.Unit)
-    and ObjectExists(Object)
-    and Object ~= otherUnit
+  for Object, _ in pairs(UNIT_TRACKER) do
+    if Object ~= otherUnit
     and Unit.IsInRange(otherUnit, Object, radius)
     and UnitHealth(Object) > 1 then
       if mode == "friendly"
@@ -320,11 +304,8 @@ function Unit.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat, healt
     return nil
   end
 
-  local ObjectCount = GetObjectCount()
-  local Object = nil
   local Units = {}
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
+  for Object, _ in pairs(UNIT_TRACKER) do
     if ObjectExists(Object)
     and ObjectIsType(Object, ObjectTypes.Unit)
     and Object ~= otherUnit
@@ -361,31 +342,6 @@ function Unit.CastedPercent(unit)
     PercentCasted = math.floor((1 - (select(6,  UnitCastingInfo(unit)) - GetTime() * 1000) / CastTime) * 100)
   end
   return PercentCasted
-end
-
--- This is not tested well and might not work as expected
--- produces the time to die for the given unit
-function Unit.ComputeTTD(unit)
-  if unit == nil or not ObjectExists(unit) or Unit.IsDummy(unit) then
-    return 9999
-  end
-
-  -- check if the unit is already known to the ttd table
-  for i = 1, getn(TTD_TABLE) do
-    if TTD_TABLE[i].unit == unit then
-      -- update values
-      TTD_TABLE[i].duration = GetTime() - TTD_TABLE[i].start
-      TTD_TABLE[i].dps = (UnitHealthMax(TTD_TABLE[i].unit) - UnitHealth(TTD_TABLE[i].unit)) / TTD_TABLE[i].duration
-      TTD_TABLE[i].ttd = UnitHealth(TTD_TABLE[i].unit) / TTD_TABLE[i].dps
-
-      return TTD_TABLE[i].ttd
-    end
-  end
-
-  -- add the unit to the ttd table
-  local Entry = {unit = unit, start = GetTime(), duration = 0, dps = 0, ttd = 0}
-  table.insert(TTD_TABLE, Entry)
-  return 9999
 end
 
 -- returns the ID of the given unit (must be a creature)
@@ -431,7 +387,8 @@ function Unit.IsDummy(unit)
   local Name = ObjectName(unit)
   if Name == "Training Dummy"
   or Name == "Raider's Training Dummy"
-  or Name == "PvP Training Dummy" then
+  or Name == "PvP Training Dummy"
+  or Name == "Dungeoneer's Training Dummy" then
     return true
   end
 
@@ -511,18 +468,16 @@ function Unit.FindBestToAOE(range, minUnits)
   local BestTarget        = nil
   local UnitCountBest     = 0
   local UnitCountCurrent  = 0
-  local ObjectCount       = GetObjectCount()
-  for i = 1, ObjectCount do
-    local CurrentObject = GetObjectWithIndex(i)
-    if ObjectIsType(CurrentObject, ObjectTypes.Unit)
-    and ObjectExists(CurrentObject)
-    and (UnitAffectingCombat(CurrentObject) or Unit.IsDummy(CurrentObject))
-    and Unit.IsInLOS(CurrentObject) then
-      UnitCountCurrent = #Unit.GetUnitsInRadius(CurrentObject, range, "hostile", true)
+  for Object, _ in pairs(UNIT_TRACKER) do
+    if ObjectIsType(Object, ObjectTypes.Unit)
+    and ObjectExists(Object)
+    and (UnitAffectingCombat(Object) or Unit.IsDummy(Object))
+    and Unit.IsInLOS(Object) then
+      UnitCountCurrent = #Unit.GetUnitsInRadius(Object, range, "hostile", true)
       if UnitCountCurrent >= minUnits
       and UnitCountCurrent > UnitCountBest then
         UnitCountBest = UnitCountCurrent
-        BestTarget = CurrentObject
+        BestTarget = Object
       end
     end
   end

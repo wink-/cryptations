@@ -1,10 +1,6 @@
 local Rotation = LibStub("Rotation")
 
 function PulseEngine(self, elapsed)
-  if FireHack == nil then
-    return message("No Unlocker Loaded. Attatch Unlocker and Reload")
-  end
-
   -- TODO: pulse engine delays for:
   -- when player left combat
   -- when player is looting
@@ -13,4 +9,6 @@ function PulseEngine(self, elapsed)
   Rotation.PulseQueue()
 end
 
-AddTimerCallback(0.1, PulseEngine)
+if FireHack ~= nil then
+  AddTimerCallback(0.1, PulseEngine)
+end

@@ -92,68 +92,13 @@ function Group.TankToHeal()
   return LowestTank
 end
 
--- returns table with group that is the best to heal for an aoe heal spell
-function Group.FindBestToHeal(radius, minUnits, health)
-  local CurrentUnits      = {}
-  local BestUnits         = {}
-  local LowestHealthAvg   = 100
-  local CurrentHealthAvg  = 100
-  for i = 1, #GROUP_MEMBERS do
-    CurrentUnits = Unit.GetUnitsBelowHealth(health, "friendly", true, GROUP_MEMBERS[i], radius)
-    table.insert(CurrentUnits, GROUP_MEMBERS[i])
-    CurrentHealthAvg = Group.AverageHealthCustom(CurrentUnits)
-    if #CurrentUnits >= minUnits
-    and #CurrentUnits > #BestUnits
-    and CurrentHealthAvg < LowestHealthAvg then
-      LowestHealthAvg = CurrentHealthAvg
-      BestUnits = CurrentUnits
-    end
-  end
-
-  if #BestUnits >= minUnits then
-    return BestUnits
-  end
-
-  return nil
-end
-
--- returns table with unit group that is the best to cast an aoe spell on
--- TODO: add max distance from player
-function Group.FindBestToAOE(radius, minUnits)
-  local BestUnits         = {}
-  local ObjectCount       = GetObjectCount()
-  for i = 1, ObjectCount do
-    local CurrentUnits  = {}
-    local CurrentObject = GetObjectWithIndex(i)
-    if ObjectIsType(CurrentObject, ObjectTypes.Unit)
-    and Unit.IsHostile(CurrentObject)
-    and (UnitAffectingCombat(CurrentObject) or Unit.IsDummy(CurrentObject))
-    and ObjectExists(CurrentObject)
-    and Unit.IsInLOS(CurrentObject) then
-      CurrentUnits = Unit.GetUnitsInRadius(CurrentObject, radius, "hostile", true)
-      table.insert(CurrentUnits, CurrentObject)
-      if #CurrentUnits >= minUnits
-      and #CurrentUnits > #BestUnits then
-        BestUnits = CurrentUnits
-      end
-    end
-  end
-
-  if #BestUnits >= minUnits then
-    return BestUnits
-  end
-
-  return nil
-end
-
-
 -- this returns the first unit to DoT according to the given parameters
 -- spellID is used to check if the unit is in attack range
 -- count: units to keep the buff up on
 function Group.FindDoTTarget(spellID, debuffID, count)
   -- first check if the player's current target is suitable for a dot
   if PlayerTarget ~= nil
-  and getn(Debuff.FindUnitsWith(debuffID, true)) <= count
+  and #Debuff.FindUnitsWith(debuffID, true) <= count
   and Unit.IsHostile(PlayerTarget)
   and (UnitAffectingCombat(PlayerTarget) or Unit.IsDummy(PlayerTarget))
   and Unit.IsInAttackRange(spellID, PlayerTarget)
@@ -162,19 +107,16 @@ function Group.FindDoTTarget(spellID, debuffID, count)
   end
 
   -- check if any other unit is suitable for a dot
-  local ObjectCount = GetObjectCount()
-  local CurrentObject = nil
-  for i = 1, ObjectCount do
-    CurrentObject = GetObjectWithIndex(i)
-    if ObjectIsType(CurrentObject, ObjectTypes.Unit)
-    and ObjectExists(CurrentObject)
-    and Unit.IsHostile(CurrentObject)
-    and (UnitAffectingCombat(CurrentObject) or Unit.IsDummy(CurrentObject))
-    and Unit.IsInLOS(CurrentObject)
-    and Unit.IsInAttackRange(spellID, CurrentObject)
-    and getn(Debuff.FindUnitsWith(debuffID, true)) <= count
-    and not Debuff.Has(CurrentObject, debuffID) then
-      return CurrentObject
+  for Object, _ in pairs(UNIT_TRACKER) do
+    if ObjectIsType(Object, ObjectTypes.Unit)
+    and ObjectExists(Object)
+    and Unit.IsHostile(Object)
+    and (UnitAffectingCombat(Object) or Unit.IsDummy(Object))
+    and Unit.IsInLOS(Object)
+    and Unit.IsInAttackRange(spellID, Object)
+    and #Debuff.FindUnitsWith(debuffID, true) <= count
+    and not Debuff.Has(Object, debuffID) then
+      return Object
     end
   end
 
