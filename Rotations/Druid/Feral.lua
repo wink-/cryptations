@@ -22,8 +22,6 @@ local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
 local Rotation    = LibStub("Rotation")
 local Player      = LibStub("Player")
-local Buff        = LibStub("Buff")
-local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 
 function Finishers()

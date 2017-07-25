@@ -118,11 +118,10 @@ function DFElunesGuidance()
 end
 
 function DFFerociousBiteV1()
-  local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 1079)
   if PlayerTarget ~= nil
   and Spell.CanCast(22568, PlayerTarget, 3, 25)
-  and HasDebuff
-  and RemainingTime < 1
+  and Debuff.Has(PlayerTarget, 1079)
+  and Debuff.RemainingTime(PlayerTarget, 1079) < 1
   and TTD > 3
   and (Unit.PercentHealth(PlayerTarget) < 25 or Player.HasTalent(6, 1)) then
     return Spell.Cast(22568, PlayerTarget)
@@ -130,26 +129,24 @@ function DFFerociousBiteV1()
 end
 
 function DFRegrowthV1()
-  local HasBuff, Stacks, RemainingTime = Buff.Has(PlayerUnit, 69369)
   local GCD          = Player.GetGCDDuration()
   local ComboPoints  = UnitPower("player", 4)
   if Spell.CanCast(8936)
   and Player.HasTalent(7, 2)
-  and HasBuff
+  and Buff.Has(PlayerUnit, 69369)
   and not Buff.Has(PlayerUnit, 145152)
-  and (ComboPoints >= 5 or RemainingTime <= GCD
+  and (ComboPoints >= 5 or Buff.RemainingTime(PlayerUnit, 69369) <= GCD
   or (ComboPoints == 2 and Spell.GetRemainingCooldown(210722) <= GCD)) then
     return Spell.Cast(8936, PlayerUnit)
   end
 end
 
 function DFRegrowthV2()
-  local HasBuff, Stacks, RemainingTime = Buff.Has(PlayerUnit, 69369)
   if Spell.CanCast(8936, PlayerUnit)
   and IsEquippedItem(137024)
   and Player.HasTalent(7, 2)
   and not Buff.Has(PlayerUnit, 145152)
-  and Stacks > 1 then
+  and Buff.Stacks(PlayerUnit, 69369) > 1 then
     return Spell.Cast(8936, PlayerUnit)
   end
 end
@@ -169,10 +166,10 @@ end
 
 function DFRipV1()
   local ComboPoints = UnitPower("player", 4)
-  local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 1079)
   if PlayerTarget ~= nil
   and Spell.CanCast(1079, PlayerTarget, 3, 30)
-  and (RipCPSpent == 0 or ComboPoints > RipCPSpent or HasDebuff ~= true)
+  and (RipCPSpent == 0 or ComboPoints > RipCPSpent
+  or Debuff.Has(PlayerTarget, 1079) ~= true)
   and (Buff.Has(PlayerUnit, 52610) or not Player.HasTalent(5, 3)) then
     RipCPSpent = ComboPoints
     return Spell.Cast(1079, PlayerTarget)
@@ -190,10 +187,10 @@ function DFFerociousBiteV2()
 end
 
 function DFRipV2()
-  local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 1079)
   if PlayerTarget ~= nil
   and Spell.CanCast(1079, PlayerTarget, 3, 30)
-  and (HasDebuff ~= true or RemainingTime < 7)
+  and (Debuff.Has(PlayerTarget, 1079) ~= true
+  or Debuff.RemainingTime(PlayerTarget, 1079) < 7)
   and (Buff.Has(PlayerUnit, 52610) or not Player.HasTalent(5, 3))
   and not Player.HasTalent(6, 1) then
     return Spell.Cast(1079, PlayerTarget)
@@ -201,10 +198,10 @@ function DFRipV2()
 end
 
 function DFSavageRoar()
-  local HasBuff, Stacks, RemainingTime = Buff.Has(PlayerUnit, 52610)
   if PlayerTarget ~= nil
   and Spell.CanCast(52610, PlayerTarget, 3, 40)
-  and (HasBuff ~= true or RemainingTime <= 12) then
+  and (Buff.Has(PlayerUnit, 52610) ~= true
+  or Buff.RemainingTime(PlayerUnit, 52610) <= 12) then
     return Spell.Cast(52610, PlayerTarget)
   end
 end
@@ -212,19 +209,19 @@ end
 function DFMaim()
   if PlayerTarget ~= nil
   and Spell.CanCast(22570, PlayerTarget, 3, 35)
-  and Buff.Has(PlayerUnit, 144354) then -- TODO: make sure this is the right buff id
+  and Buff.Has(PlayerUnit, 212875) then
     return Spell.Cast(22570, PlayerTarget)
   end
 end
 
 function DFFerociousBiteV3()
   local Energy    = UnitPower("player", 3)
-  local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 1079)
   if PlayerTarget ~= nil
   and Spell.CanCast(22568, PlayerTarget, 3, 25)
   and Energy >= DFFerociousBiteMaxEnergy()
-  and RemainingTime ~= nil
-  and (RemainingTime >= 8 or not Player.HasTalent(5, 3)) then
+  and Debuff.Has(PlayerTarget, 1079)
+  and (Debuff.RemainingTime(PlayerTarget, 1079) >= 8
+  or not Player.HasTalent(5, 3)) then
     return Spell.Cast(22568, PlayerTarget)
   end
 end
@@ -250,27 +247,25 @@ function DFRakeV2()
   end
 end
 
--- TODO: test if multidotting works
 function DFRakeV3()
   local Target = Group.FindDoTTarget(1822, 155722, 3)
-  local HasDebuff, Stacks, RemainingTime = Debuff.Has(Target, 155722)
   if Target ~= nil
   and Spell.CanCast(1822, Target, 3, 35)
   and Unit.IsFacing(Target, MeleeAngle)
   and not Player.HasTalent(7, 2)
-  and (HasDebuff ~= true or RemainingTime < 5) then
+  and (not Debuff.Has(Target, 155722)
+  or Debuff.RemainingTime(Target, 155722) < 5) then
     IsRakeEnhanced()
     return Spell.Cast(1822, Target)
   end
 end
 
 function DFRakeV4()
-  local HasDebuff, Stacks, RemainingTime = Debuff.Has(PlayerTarget, 155722)
   if PlayerTarget ~= nil
   and Spell.CanCast(1822, PlayerTarget, 3, 35)
   and Player.HasTalent(7, 2)
   and Buff.Has(PlayerUnit, 145152)
-  and RemainingTime <= 5
+  and Debuff.RemainingTime(PlayerTarget, 155722) <= 5
   and TTD > (DFRakeDebuffDuration() / 2)
   and (not RakeEnhanced or (RakeEnhanced and Buff.Has(PlayerUnit, 102543))) then
     IsRakeEnhanced()
@@ -281,13 +276,13 @@ end
 -- same as above but with multidot support
 function DFRakeV5()
   local Target = Group.FindDoTTarget(1822, 155722, 3)
-  local HasDebuff, _, RemainingTime = Debuff.Has(Target, 155722)
   if Target ~= nil
   and Spell.CanCast(1822, Target, 3, 35)
   and Unit.IsFacing(Target, MeleeAngle)
   and Player.HasTalent(7, 2)
   and Buff.Has(PlayerUnit, 145152)
-  and (HasDebuff ~= true or RemainingTime <= 5)
+  and (not Debuff.Has(Target, 155722)
+  or Debuff.RemainingTime(Target, 155722) <= 5)
   and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile")) >= 0
   and (not RakeEnhanced or (RakeEnhanced and Buff.Has(PlayerUnit, 102543))) then
     IsRakeEnhanced()
@@ -313,55 +308,54 @@ end
 function DFMoonfire()
   local Target = Group.FindDoTTarget(8921, 155625, 5)
   if Target == nil or not ObjectExists(Target) then return end
-  local HasDebuff, _, RemainingTime = Debuff.Has(Target, 155625)
   if Spell.CanCast(8921, Target)
-  and (HasDebuff ~= true or RemainingTime < 4)
+  and (not Debuff.Has(Target, 155625)
+  or Debuff.RemainingTime(Target, 155625) < 4)
   and Debuff.Has(Target, 155722) then -- TODO: add TTD
     return Spell.Cast(8921, Target)
   end
 end
 
 function DFThrashV1()
-  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
   if PlayerTarget ~= nil
   and Spell.CanCast(77758, nil, 3, 50)
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3
-  and (HasDebuff ~= true or RemainingTime < 4) then
+  and (not Debuff.Has(PlayerTarget, 106830) or RemainingTime < 4) then
     return Spell.Cast(77758)
   end
 end
 
 function DFSwipeV1()
-  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
   if PlayerTarget ~= nil
   and Spell.CanCast(106785, nil, 3, 45)
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3
-  and (HasDebuff == true and RemainingTime >= 4) then
+  and (Debuff.Has(PlayerTarget, 106830)
+  and Debuff.RemainingTime(PlayerTarget, 106830) >= 4) then
     return Spell.Cast(106785)
   end
 end
 
 
 function DFThrashV2()
-  local HasT19Bonus2                = Player.HasSetPiece(2)
-  local TCRank                      = Player.ArtifactTraitRank(238048)
-  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
+  local HasT19Bonus2 = Player.HasSetPiece(2)
+  local TCRank       = Player.ArtifactTraitRank(238048)
   if PlayerTarget ~= nil
   and Spell.CanCast(106830, nil, 3, 50)
   and (HasT19Bonus2 or TCRank >= 4)
-  and (HasDebuff ~= true or RemainingTime < 4)
+  and (not Debuff.Has(PlayerTarget, 106830)
+  or Debuff.RemainingTime(PlayerTarget, 106830) < 4)
   and IsEquippedItem(137056) then
     return Spell.Cast(106830)
   end
 end
 
 function DFThrashV3()
-  local HasT19Bonus4                = Player.HasSetPiece(4)
-  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
+  local HasT19Bonus4 = Player.HasSetPiece(4)
   if PlayerTarget ~= nil
   and Spell.CanCast(106830, nil, 3, 50)
   and (HasT19Bonus4)
-  and (HasDebuff ~= true or RemainingTime < 4)
+  and (not Debuff.Has(PlayerTarget, 106830)
+  or Debuff.RemainingTime(PlayerTarget, 106830) < 4)
   and Buff.Has(PlayerUnit, 135700)
   and not Buff.Has(PlayerUnit, 145152) then
     return Spell.Cast(106830)
@@ -369,36 +363,36 @@ function DFThrashV3()
 end
 
 function DFShred()
-  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 155722)
   local Energy    = UnitPower("player", 3)
   local MaxEnergy = UnitPowerMax("player", 3)
   if PlayerTarget ~= nil
   and Spell.CanCast(5221, PlayerTarget, 3, 40)
   and ObjectIsFacing(PlayerUnit, PlayerTarget)
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") < 3
-  and ((HasDebuff == true and RemainingTime > DFRakeIntervalSec())
+  and ((Debuff.Has(PlayerTarget, 155722)
+  and Debuff.RemainingTime(PlayerTarget, 155722) > DFRakeIntervalSec())
   or (MaxEnergy - Energy) < 1) then
     return Spell.Cast(5221, PlayerTarget)
   end
 end
 
 function DFThrashV4()
-  local HasT19Bonus2                = Player.HasSetPiece(2)
-  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
+  local HasT19Bonus2 = Player.HasSetPiece(2)
   if PlayerTarget ~= nil
   and Spell.CanCast(106830, nil, 3, 50)
   and (HasT19Bonus2)
-  and (HasDebuff ~= true or RemainingTime < 4) then
+  and (not Debuff.Has(PlayerTarget, 106830)
+  or Debuff.RemainingTime(PlayerTarget, 106830) < 4) then
     return Spell.Cast(106830)
   end
 end
 
 function DFBrutalSlashV2()
-  local HasT19Bonus2                = Player.HasSetPiece(2)
-  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
+  local HasT19Bonus2 = Player.HasSetPiece(2)
   if PlayerTarget ~= nil
   and Spell.CanCast(202028, nil, 3, 20)
-  and (not HasT19Bonus2 or (HasDebuff == true and RemainingTime >= 4)) then
+  and (not HasT19Bonus2 or (Debuff.Has(PlayerTarget, 106830)
+  and Debuff.RemainingTime(PlayerTarget, 106830) >= 4)) then
     return Spell.Cast(202028)
   end
 end
@@ -412,11 +406,11 @@ function DFThrashV5()
 end
 
 function DFSwipeV2()
-  local HasT19Bonus2                = Player.HasSetPiece(2)
-  local HasDebuff, _, RemainingTime = Debuff.Has(PlayerTarget, 106830)
+  local HasT19Bonus2 = Player.HasSetPiece(2)
   if PlayerTarget ~= nil
   and Spell.CanCast(106785, nil, 3, 45)
-  and (not HasT19Bonus2 or (HasDebuff == true and RemainingTime >= 4)) then
+  and (not HasT19Bonus2 or (Debuff.Has(PlayerTarget, 106830)
+  and Debuff.RemainingTime(PlayerTarget, 106830) >= 4)) then
     return Spell.Cast(106785)
   end
 end
