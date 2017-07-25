@@ -1,58 +1,92 @@
 local Buff = LibStub("Buff")
 
 -- given an unit and a buffID, produces true if unit has Buff
--- second return argument is the buff count as a value (e.g. 2 stacks would give 2)
--- third return argument is the remaining buff time
 -- onlyPlayer (optional): if this is checked, only returns true if the unit has the buff from the player
 function Buff.Has(unit, buffID, onlyPlayer)
   if unit == nil then
     return nil
   end
 
-  local BuffCount = Buff.GetCount(unit)
-
   -- iterate over unit's auras
-  for i = 1, BuffCount do
-    if select(11, UnitBuff(unit, i)) == buffID then
-      if onlyPlayer == true and select(8, UnitBuff(unit, i)) == "player"
-      or onlyPlayer == false or onlyPlayer == nil then
-        local BuffStacks = select(4, UnitBuff(unit, i))
-        local RemainingTime = select(7, UnitBuff(unit, i)) - GetTime()
-        return true, BuffStacks, RemainingTime
+  for i = 1, 50 do
+    local Name, _, _, _, _, _, _, Caster, _, _, _, ID = UnitBuff(unit, i)
+    if ID == buffID then
+      if (onlyPlayer ~= true or Caster == "player") then
+        return true
       end
     end
   end
+
   return false
 end
 
--- returns number of how many buffs the given unit has
-function Buff.GetCount(unit)
+-- returns number of how many applications of the given buff the given unit has
+-- onlyPlayer (optional): if this is checked, only returns true if the unit has the buff from the player
+function Buff.GetCount(unit, buffID, onlyPlayer)
   if unit == nil then
     return nil
   end
 
-  local BuffIndex = 1
   local BuffCount = 0
 
-  while (select(1, UnitBuff(unit, BuffIndex))) do
-    BuffIndex = BuffIndex + 1
-    BuffCount = BuffCount + 1
+  for i = 1, 50 do
+    local Name, _, _, _, _, _, _, Caster, _, _, _, ID = UnitBuff(unit, i)
+    if ID == buffID
+    and (onlyPlayer ~= true or Caster == "player") then
+      BuffCount = BuffCount + 1
+    end
   end
+
   return BuffCount
+end
+
+-- returns the remaining time of the given buff on the given unit
+-- returns 0 if no buff was found with the given parameters
+-- onlyPlayer (optional): if this is checked, only returns true if the unit has the buff from the player
+function Buff.RemainingTime(unit, buffID, onlyPlayer)
+  if unit == nil then
+    return nil
+  end
+
+  for i = 1, 50 do
+    local Name, _, _, _, _, _, Expires, Caster, _, _, _, ID = UnitBuff(unit, i)
+    if ID == buffID
+    and (onlyPlayer ~= true or Caster == "player") then
+      return Expires - GetTime()
+    end
+  end
+
+  return 0
+end
+
+-- returns how many stacks the given unit has of the given buff
+-- returns 0 if no buff was found with the given parameters
+-- onlyPlayer (optional): if this is checked, only returns true if the unit has the buff from the player
+function Buff.Stacks(unit, buffID, onlyPlayer)
+  if unit == nil then
+    return nil
+  end
+
+  for i = 1, 50 do
+    local Name, _, _, Stacks, _, _, _, Caster, _, _, _, ID = UnitBuff(unit, i)
+    if ID == buffID
+    and (onlyPlayer ~= true or Caster == "player") then
+      return Stacks
+    end
+  end
+
+  return 0
 end
 
 -- returns table containing every unit that has the given buff
 -- onlyPlayer (optional): if this is checked, only units that got the buff from the player will be returned
 function Buff.FindUnitsWith(buffID, onlyPlayer)
-  local ObjectCount = GetObjectCount()
-  local Object = nil
   local Units = {}
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
-    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
-    and Buff.Has(Object, buffID, onlyPlayer) then
+  for Object, _ in pairs(UNIT_TRACKER) do
+    if Buff.Has(Object, buffID, onlyPlayer) then
       table.insert(Units, Object)
     end
   end
+
   return Units
 end

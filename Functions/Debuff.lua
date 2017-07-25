@@ -1,24 +1,18 @@
 local Debuff = LibStub("Debuff")
 
--- given an unit and debuffID, produces true if unit has debuff
--- second return argument is the debuff count as a value (e.g. 2 stacks would give 2)
--- third return argument is the remaining buff time
--- onlyPlayer (optional): if this is checked, only returns true if the unit has the buff from the player
+-- given an unit and a DebuffID, produces true if unit has Debuff
+-- onlyPlayer (optional): if this is checked, only returns true if the unit has the Debuff from the player
 function Debuff.Has(unit, debuffID, onlyPlayer)
   if unit == nil then
     return nil
   end
 
-  local DebuffCount = Debuff.GetCount(unit)
-
   -- iterate over unit's auras
-  for i = 1, DebuffCount do
-    if select(11, UnitDebuff(unit, i)) == debuffID then
-      if onlyPlayer == true and select(8, UnitDebuff(unit, i)) == "player"
-      or onlyPlayer == false or onlyPlayer == nil then
-        local DebuffStacks = select(4, UnitDebuff(unit, i))
-        local RemainingTime = select(7, UnitDebuff(unit, i)) - GetTime()
-        return true, DebuffStacks, RemainingTime
+  for i = 1, 50 do
+    local Name, _, _, _, _, _, _, Caster, _, _, _, ID = UnitDebuff(unit, i)
+    if ID == DebuffID then
+      if (onlyPlayer ~= true or Caster == "player") then
+        return true
       end
     end
   end
@@ -26,35 +20,73 @@ function Debuff.Has(unit, debuffID, onlyPlayer)
   return false
 end
 
--- returns number of how many debuffs the given unit has
-function Debuff.GetCount(unit)
+-- returns number of how many applications of the given Debuff the given unit has
+-- onlyPlayer (optional): if this is checked, only returns true if the unit has the Debuff from the player
+function Debuff.GetCount(unit, debuffID, onlyPlayer)
   if unit == nil then
     return nil
   end
 
-  local DebuffIndex = 1
   local DebuffCount = 0
 
-  while (select(1, UnitDebuff(unit, DebuffIndex))) do
-    DebuffIndex = DebuffIndex + 1
-    DebuffCount = DebuffCount + 1
+  for i = 1, 50 do
+    local Name, _, _, _, _, _, _, Caster, _, _, _, ID = UnitDebuff(unit, i)
+    if ID == DebuffID
+    and (onlyPlayer ~= true or Caster == "player") then
+      DebuffCount = DebuffCount + 1
+    end
   end
 
   return DebuffCount
 end
 
--- returns table containing every unit that has the given debuff
--- onlyPlayer (optional): if this is checked, only units that got the buff from the player will be returned
+-- returns the remaining time of the given Debuff on the given unit
+-- returns 0 if no Debuff was found with the given parameters
+-- onlyPlayer (optional): if this is checked, only returns true if the unit has the Debuff from the player
+function Debuff.RemainingTime(unit, debuffID, onlyPlayer)
+  if unit == nil then
+    return nil
+  end
+
+  for i = 1, 50 do
+    local Name, _, _, _, _, _, Expires, Caster, _, _, _, ID = UnitDebuff(unit, i)
+    if ID == DebuffID
+    and (onlyPlayer ~= true or Caster == "player") then
+      return Expires - GetTime()
+    end
+  end
+
+  return 0
+end
+
+-- returns how many stacks the given unit has of the given Debuff
+-- returns 0 if no Debuff was found with the given parameters
+-- onlyPlayer (optional): if this is checked, only returns true if the unit has the Debuff from the player
+function Debuff.Stacks(unit, debuffID, onlyPlayer)
+  if unit == nil then
+    return nil
+  end
+
+  for i = 1, 50 do
+    local Name, _, _, Stacks, _, _, _, Caster, _, _, _, ID = UnitDebuff(unit, i)
+    if ID == DebuffID
+    and (onlyPlayer ~= true or Caster == "player") then
+      return Stacks
+    end
+  end
+
+  return 0
+end
+
+-- returns table containing every unit that has the given Debuff
+-- onlyPlayer (optional): if this is checked, only units that got the Debuff from the player will be returned
 function Debuff.FindUnitsWith(debuffID, onlyPlayer)
-  local ObjectCount = GetObjectCount()
-  local Object = nil
   local Units = {}
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
-    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
-    and Debuff.Has(Object, debuffID, onlyPlayer) then
+  for Object, _ in pairs(UNIT_TRACKER) do
+    if Debuff.Has(Object, DebuffID, onlyPlayer) then
       table.insert(Units, Object)
     end
   end
+
   return Units
 end
