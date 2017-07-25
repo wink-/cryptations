@@ -23,3 +23,10 @@ LossOfControlAuras = {
   51514,      -- Hex
   108194,     -- Asphyxiate
 }
+
+-- This is the aurabook and it contains all debuff / buff auras that are relevant
+AB = {
+  ["Moonfire DoT"] = 164812,
+  ["Sunfire DoT"] = 164815,
+  ["Stellar Flare DoT"] = 202347
+}
