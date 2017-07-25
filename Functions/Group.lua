@@ -98,7 +98,7 @@ end
 function Group.FindDoTTarget(spellID, debuffID, count)
   -- first check if the player's current target is suitable for a dot
   if PlayerTarget ~= nil
-  and getn(Debuff.FindUnitsWith(debuffID, true)) <= count
+  and #Debuff.FindUnitsWith(debuffID, true) <= count
   and Unit.IsHostile(PlayerTarget)
   and (UnitAffectingCombat(PlayerTarget) or Unit.IsDummy(PlayerTarget))
   and Unit.IsInAttackRange(spellID, PlayerTarget)
@@ -114,7 +114,7 @@ function Group.FindDoTTarget(spellID, debuffID, count)
     and (UnitAffectingCombat(Object) or Unit.IsDummy(Object))
     and Unit.IsInLOS(Object)
     and Unit.IsInAttackRange(spellID, Object)
-    and getn(Debuff.FindUnitsWith(debuffID, true)) <= count
+    and #Debuff.FindUnitsWith(debuffID, true) <= count
     and not Debuff.Has(Object, debuffID) then
       return Object
     end
