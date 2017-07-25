@@ -57,7 +57,7 @@ function Pulse()
       Rotation.Interrupt()
     end
 
-    -- Blessing of the Ancients
+    DBMoonkin()
     Cooldowns()
     DBStarsurgeV1()
     DBFoE()
@@ -83,8 +83,14 @@ function Pulse()
     DBSolarWrathV2()
   else
     -- out of combat
+    DBBotA()
   end
 end
 
-function Interrupt()
+function Interrupt(Target)
+  if Spell.CanCast(78675, Target, 0, UnitPowerMax("player", 0) * 0.168)
+  and Unit.IsInLOS(Target)
+  and ObjectIsFacing(PlayerUnit, Target) then
+    return Spell.Cast(78675, Target)
+  end
 end
