@@ -30,6 +30,32 @@ function DBArtifactState()
   end
 end
 
+function DBPowerGainSolarWrath()
+  local Power = 8
+  if Buff.Has(PlayerUnit, 194223)
+  or Buff.Has(PlayerUnit, 102560) then
+    Power = Power * 1.5
+  end
+  if Buff.Has(PlayerUnit, 202737) then
+    Power = Power * 1.25
+  end
+
+  return Power
+end
+
+function DBPowerGainLunarStrike()
+  local Power = 12
+  if Buff.Has(PlayerUnit, 194223)
+  or Buff.Has(PlayerUnit, 102560) then
+    Power = Power * 1.5
+  end
+  if Buff.Has(PlayerUnit, 202737) then
+    Power = Power * 1.25
+  end
+
+  return Power
+end
+
 function DBStarfallRadius()
   local Radius = 15
   if Player.HasTalent(7, 2) then
@@ -301,5 +327,77 @@ function DBCA()
   and StarfallIsValid
   or (Spell.CanCast(78674, PlayerTarget, 8, 40) and not StarfallIsValid) then
     return Spell.Cast(194223)
+  end
+end
+
+function DBStarsurgeV4()
+  local LunarPower = UnitPower("player", 8)
+  local GCD = Player.GetGCDDuration()
+  if PlayerTarget ~= nil
+  and Spell.CanCast(78674, PlayerTarget, 8, 40)
+  and ObjectIsFacing(PlayerUnit, PlayerTarget)
+  and Unit.IsInLOS(PlayerTarget)
+  and (Buff.Has(PlayerUnit, 102560)
+  and Buff.RemainingTime(PlayerUnit, 102560) <= math.floor(LunarPower / 40) * GCD)
+  or (Buff.Has(PlayerUnit, 194223)
+  and Buff.RemainingTime(PlayerUnit, 194223) <= math.floor(LunarPower / 40) * GCD) then
+    return Spell.Cast(78674, PlayerTarget)
+  end
+end
+
+function DBSolarWrathV3()
+  local LunarPower    = UnitPower("player", 8)
+  local LunarPowerMax = UnitPowerMax("player", 8)
+  local SWCastTime    = 1.5 / (GetHaste() / 100 + 1)
+  local LSCastTime    = 2.5 / (GetHaste() / 100 + 1)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(190984, PlayerTarget)
+  and ObjectIsFacing(PlayerUnit, PlayerTarget)
+  and Unit.IsInLOS(PlayerTarget)
+  and Buff.Stack(PlayerUnit, 164545) > 1
+  and LunarPowerMax - LunarPower >= DBPowerGainSolarWrath()
+  and Buff.RemainingTime(PlayerUnit, 224706) > math.max(0.75, SWCastTime) * 2
+  and Buff.RemainingTime(PlayerUnit, 224706) < LSCastTime + math.max(0.75, SWCastTime) then
+    return Spell.Cast(190984, PlayerUnit)
+  end
+end
+
+function DBLunarStrikeV3()
+  local LSCastTime    = 2.5 / (GetHaste() / 100 + 1)
+  local LunarPower    = UnitPower("player", 8)
+  local LunarPowerMax = UnitPowerMax("player", 8)
+  if PlayerTarget     ~= nil
+  and Spell.CanCast(194153, PlayerTarget)
+  and ObjectIsFacing(PlayerUnit, PlayerTarget)
+  and Unit.IsInLOS(PlayerTarget)
+  and Buff.Has(PlayerUnit, 164547)
+  and Buff.RemainingTime(PlayerUnit, 224706) > LSCastTime
+  and LunarPowerMax - LunarPower >= DBPowerGainLunarStrike() then
+    return Spell.Cast(194153, PlayerTarget)
+  end
+end
+
+function DBSolarWrathV4()
+  local LunarPower    = UnitPower("player", 8)
+  local LunarPowerMax = UnitPowerMax("player", 8)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(190984, PlayerTarget)
+  and ObjectIsFacing(PlayerUnit, PlayerTarget)
+  and Unit.IsInLOS(PlayerTarget)
+  and Buff.Has(PlayerUnit, 164545)
+  and LunarPowerMax - LunarPower >= DBPowerGainSolarWrath() then
+    return Spell.Cast(190984, PlayerTarget)
+  end
+end
+
+function DBStarsurgeV5()
+  local LunarPower    = UnitPower("player", 8)
+  local LunarPowerMax = UnitPowerMax("player", 8)
+  if PlayerTarget ~= nil
+  and Spell.CanCast(78674, PlayerTarget, 8, 40)
+  and ObjectIsFacing(PlayerUnit, PlayerTarget)
+  and Unit.IsInLOS(PlayerTarget)
+  and LunarPowerMax - LunarPower <= DBPowerGainLunarStrike() then
+    return Spell.Cast(78674, PlayerTarget)
   end
 end

@@ -25,11 +25,11 @@ local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 
 function EmeraldDreamcatcher()
-  -- StarsurgeV4
-  -- Solar WrathV3
-  -- Lunar StrikeV3
-  -- Solar WrathV4
-  -- StarsurgeV5
+  DBStarsurgeV4()
+  DBSolarWrathV3()
+  DBLunarStrikeV3()
+  DBSolarWrathV4()
+  DBStarsurgeV5()
 end
 
 function Cooldowns()
