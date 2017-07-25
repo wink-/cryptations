@@ -11,8 +11,8 @@ function Debuff.Has(unit, debuffID, onlyPlayer)
 
   -- iterate over unit's auras
   for i = 1, MAXITERATIONS do
-    local Name, _, _, _, _, _, _, Caster, _, _, _, ID = UnitDebuff(unit, i)
-    if ID == DebuffID then
+    local Name, _, _, _, _, _, _, Caster, _, _, ID = UnitDebuff(unit, i)
+    if ID == debuffID then
       if (onlyPlayer ~= true or Caster == "player") then
         return true
       end
@@ -32,8 +32,8 @@ function Debuff.GetCount(unit, debuffID, onlyPlayer)
   local DebuffCount = 0
 
   for i = 1, MAXITERATIONS do
-    local Name, _, _, _, _, _, _, Caster, _, _, _, ID = UnitDebuff(unit, i)
-    if ID == DebuffID
+    local Name, _, _, _, _, _, _, Caster, _, _, ID = UnitDebuff(unit, i)
+    if ID == debuffID
     and (onlyPlayer ~= true or Caster == "player") then
       DebuffCount = DebuffCount + 1
     end
@@ -51,8 +51,8 @@ function Debuff.RemainingTime(unit, debuffID, onlyPlayer)
   end
 
   for i = 1, MAXITERATIONS do
-    local Name, _, _, _, _, _, Expires, Caster, _, _, _, ID = UnitDebuff(unit, i)
-    if ID == DebuffID
+    local Name, _, _, _, _, _, Expires, Caster, _, _, ID = UnitDebuff(unit, i)
+    if ID == debuffID
     and (onlyPlayer ~= true or Caster == "player") then
       return Expires - GetTime()
     end
@@ -70,8 +70,8 @@ function Debuff.Stacks(unit, debuffID, onlyPlayer)
   end
 
   for i = 1, MAXITERATIONS do
-    local Name, _, _, Stacks, _, _, _, Caster, _, _, _, ID = UnitDebuff(unit, i)
-    if ID == DebuffID
+    local Name, _, _, Stacks, _, _, _, Caster, _, _, ID = UnitDebuff(unit, i)
+    if ID == debuffID
     and (onlyPlayer ~= true or Caster == "player") then
       return Stacks
     end

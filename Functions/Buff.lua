@@ -11,7 +11,7 @@ function Buff.Has(unit, buffID, onlyPlayer)
 
   -- iterate over unit's auras
   for i = 1, MAXITERATIONS do
-    local Name, _, _, _, _, _, _, Caster, _, _, _, ID = UnitBuff(unit, i)
+    local Name, _, _, _, _, _, _, Caster, _, _, ID = UnitBuff(unit, i)
     if ID == buffID then
       if (onlyPlayer ~= true or Caster == "player") then
         return true
@@ -32,7 +32,7 @@ function Buff.GetCount(unit, buffID, onlyPlayer)
   local BuffCount = 0
 
   for i = 1, MAXITERATIONS do
-    local Name, _, _, _, _, _, _, Caster, _, _, _, ID = UnitBuff(unit, i)
+    local Name, _, _, _, _, _, _, Caster, _, _, ID = UnitBuff(unit, i)
     if ID == buffID
     and (onlyPlayer ~= true or Caster == "player") then
       BuffCount = BuffCount + 1
@@ -51,7 +51,7 @@ function Buff.RemainingTime(unit, buffID, onlyPlayer)
   end
 
   for i = 1, MAXITERATIONS do
-    local Name, _, _, _, _, _, Expires, Caster, _, _, _, ID = UnitBuff(unit, i)
+    local Name, _, _, _, _, _, Expires, Caster, _, _, ID = UnitBuff(unit, i)
     if ID == buffID
     and (onlyPlayer ~= true or Caster == "player") then
       return Expires - GetTime()
@@ -70,7 +70,7 @@ function Buff.Stacks(unit, buffID, onlyPlayer)
   end
 
   for i = 1, MAXITERATIONS do
-    local Name, _, _, Stacks, _, _, _, Caster, _, _, _, ID = UnitBuff(unit, i)
+    local Name, _, _, Stacks, _, _, _, Caster, _, _, ID = UnitBuff(unit, i)
     if ID == buffID
     and (onlyPlayer ~= true or Caster == "player") then
       return Stacks
