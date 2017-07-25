@@ -154,9 +154,7 @@ end
 function PRDivineStorm_ST()
   if PlayerTarget~= nil
   and Spell.CanCast(53385, nil, 9, 3) then
-    local HasBuff, Stacks, RemainingTime = Buff.Has(PlayerTarget, 151813)
-    if HasBuff ~= nil
-    and HasBuff == true
+    if Buff.Has(PlayerTarget, 151813)
     and Stacks >= 25 then
     -- or Spell.GetRemainingCooldown(20271) >= 1
     -- or TTD < JudgmentTTD
