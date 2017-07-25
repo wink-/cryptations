@@ -238,6 +238,8 @@ function DBStarsurgeV3()
   and Unit.IsInLOS(PlayerTarget)
   and not IsEquippedItem(137062)
   and #Unit.GetUnitsInRadius(PlayerUnit, DBStarfallRadius(), "hostile", true) < 2
+  and Buff.Stacks(PlayerUnit, 164545) < 3
+  and Buff.Stacks(PlayerUnit, 164547) < 3
   and (not Player.HasTalent(7, 1)
   or (not Spell.CanCast(202770, nil, 8, 6)
   and not Buff.Has(PlayerUnit, 202770))) then
