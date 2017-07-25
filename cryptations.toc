@@ -47,6 +47,7 @@ Rotations\Druid\Guardian-Abilities.lua
 Rotations\Druid\Guardian.lua
 Rotations\Druid\Restoration-Abilities.lua
 Rotations\Druid\Restoration.lua
+Rotations\Druid\SpellBook.lua
 
 Rotations\Hunter\BeastMastery.lua
 Rotations\Hunter\Marksmanship.lua
@@ -67,6 +68,7 @@ Rotations\Paladin\Protection-Abilities.lua
 Rotations\Paladin\Protection.lua
 Rotations\Paladin\Retribution-Abilities.lua
 Rotations\Paladin\Retribution.lua
+Rotations\Paladin\SpellBool.lua
 
 Rotations\Priest\Discipline.lua
 Rotations\Priest\Holy.lua
