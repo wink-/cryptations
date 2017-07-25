@@ -92,5 +92,3 @@ Rotations\Warrior\Protection.lua
 
 # Pulse Engine
 Core\PulseEngine.lua
-
-frame.xml

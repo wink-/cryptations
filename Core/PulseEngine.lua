@@ -1,6 +1,13 @@
 local Rotation = LibStub("Rotation")
 
 function PulseEngine(self, elapsed)
+
+  if PlayerUnit == nil
+  or PlayerUnit ~= ObjectPointer("player")
+  or not ObjectExists(PlayerUnit) then
+    PlayerUnit = ObjectPointer("player")
+  end
+
   -- TODO: pulse engine delays for:
   -- when player left combat
   -- when player is looting
@@ -9,6 +16,6 @@ function PulseEngine(self, elapsed)
   Rotation.PulseQueue()
 end
 
-if FireHack ~= nil then
+if FireHack then
   AddTimerCallback(0.1, PulseEngine)
 end

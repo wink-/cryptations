@@ -20,11 +20,6 @@ InterruptMinPercent      = 20
 InterruptMaxPercent      = 80
 
 function Initialize()
-  if FireHack then
-    if PlayerUnit == nil or not ObjectExists(PlayerUnit) then
-      PlayerUnit = GetObjectWithGUID(UnitGUID("player"))
-    end
-  end
 
   -- Setup event frame
   local frame = CreateFrame("FRAME", "EventFrame")
@@ -79,11 +74,14 @@ function Initialize()
         OnTargetSwitch()
       end
     end
-    if event == "PLAYER_ENTERING_WORLD" and FireHack == nil then
-      return message("No unlocker attatched.")
-    end
   end
 
   frame:SetScript("OnEvent", eventHandler)
   spellframe:SetScript("OnUpdate", Spell.DetectionHandler)
+end
+
+if FireHack then
+  Initialize()
+else
+  return message("No unlocker attatched. Please attatch unlocker and reload")
 end
