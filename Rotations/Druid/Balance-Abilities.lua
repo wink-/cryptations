@@ -41,7 +41,7 @@ end
 
 function DBMoonkin()
   if Spell.CanCast(24858)
-  and not Buff.Has(PlayerUnit, 24858) then
+  and not Player.IsInShapeshift() then
     return Spell.Cast(24858)
   end
 end

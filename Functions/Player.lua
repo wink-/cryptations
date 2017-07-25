@@ -89,3 +89,9 @@ end
 function Player.HasSetPiece(Piece)
   return SetPieceBonus >= Piece
 end
+
+-- returns true if the player is currently using any shapeshift
+function Player.IsInShapeshift()
+  if GetShapeshiftForm() ~= 0 then return true end
+  return false
+end

@@ -57,7 +57,6 @@ function Pulse()
       Rotation.Interrupt()
     end
 
-    DBMoonkin()
     Cooldowns()
     DBStarsurgeV1()
     DBFoE()
@@ -84,6 +83,7 @@ function Pulse()
   else
     -- out of combat
     DBBotA()
+    DBMoonkin()
   end
 end
 
