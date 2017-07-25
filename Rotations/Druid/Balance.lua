@@ -36,11 +36,11 @@ function Cooldowns()
   -- Potion
   -- Trinkets
   -- Racials
-  -- Astral Communion
-  -- Force of Nature
-  -- Warrior of Elune
-  -- Incarnation: Chosen of Elune
-  -- Celestial Alignment
+  DBAstralCommunion()
+  DBFoN()
+  DBWoE()
+  DBIncarnation()
+  DBCA()
 end
 
 function Pulse()
@@ -57,8 +57,8 @@ function Pulse()
       Rotation.Interrupt()
     end
 
-    -- Blessing of the Ancients
-    -- Cooldowns()
+    DBMoonkin()
+    Cooldowns()
     DBStarsurgeV1()
     DBFoE()
     DBNewMoonV1()
@@ -67,8 +67,7 @@ function Pulse()
     DBStellarFlareV1()
     DBStarfallV1()
     if IsEquippedItem(137062)
-    --and #Units.GetUnitsInRadius(PlayerUnit, DBStarfallRadius, "hostile") <= 2
-    then
+    and #Units.GetUnitsInRadius(PlayerUnit, DBStarfallRadius, "hostile") <= 2 then
       EmeraldDreamcatcher()
     end
     DBNewMoonV2()
@@ -84,8 +83,14 @@ function Pulse()
     DBSolarWrathV2()
   else
     -- out of combat
+    DBBotA()
   end
 end
 
-function Interrupt()
+function Interrupt(Target)
+  if Spell.CanCast(78675, Target, 0, UnitPowerMax("player", 0) * 0.168)
+  and Unit.IsInLOS(Target)
+  and ObjectIsFacing(PlayerUnit, Target) then
+    return Spell.Cast(78675, Target)
+  end
 end

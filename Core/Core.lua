@@ -12,7 +12,7 @@ ReTargetHighestUnit      = false
 ReTargetLowestUnit       = false
 
 -- Combat behavior
-AllowOutOfCombatRoutine  = false
+AllowOutOfCombatRoutine  = true
 
 -- Interrupt behavior
 InterruptAnyUnit         = false
@@ -78,6 +78,9 @@ function Initialize()
       if OnTargetSwitch ~= nil then
         OnTargetSwitch()
       end
+    end
+    if event == "PLAYER_ENTERING_WORLD" and FireHack == nil then
+      return message("No unlocker attatched.")
     end
   end
 

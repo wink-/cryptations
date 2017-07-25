@@ -164,7 +164,7 @@ function PHJudgment()
 end
 
 function PHLightsHammerPos()
-  return Unit.GetCenterBetweenUnits(Group.FindBestToHeal(10, LHUnits, LHHealth))
+  return ObjectPosition(Unit.FindBestToHeal(10, LHUnits, LHHealth))
 end
 
 function PHLightsHammer()
@@ -199,17 +199,14 @@ function PHHolyPrismTarget()
   local BestTarget        = nil
   local UnitCountBest     = 0
   local UnitCountCurrent  = 0
-  local CurrentObject     = nil
   local Units             = nil
-  local ObjectCount       = GetObjectCount()
-  for i = 1, ObjectCount do
-    CurrentObject = GetObjectWithIndex(i)
-    if ObjectIsType(CurrentObject, ObjectTypes.Unit)
-    and ObjectExists(CurrentObject)
-    and Unit.IsInLOS(CurrentObject)
-    and Unit.IsHostile(CurrentObject) then
-      Units = Unit.GetUnitsInRadius(CurrentObject, 15, "friendly", true)
-      UnitCountCurrent = getn(Units)
+  for Object, _ in pairs(UNIT_TRACKER) do
+    if ObjectIsType(Object, ObjectTypes.Unit)
+    and ObjectExists(Object)
+    and Unit.IsInLOS(Object)
+    and Unit.IsHostile(Object) then
+      Units = Unit.GetUnitsInRadius(Object, 15, "friendly", true)
+      UnitCountCurrent = #Units
       if UnitCountCurrent >= HolyPrismUnits
       and UnitCountCurrent > UnitCountBest then
         UnitCountBest = UnitCountCurrent
