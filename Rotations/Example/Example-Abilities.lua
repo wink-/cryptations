@@ -17,6 +17,8 @@ local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 local Group       = LibStub("Group")
 
+
+
 -- Here are the functions for the abilities.
 -- The conditions required to cast the spell are declared inside these functions.
 -- You can have multiple functions for the same ability

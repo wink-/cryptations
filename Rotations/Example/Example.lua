@@ -18,6 +18,25 @@ end
 
 local Settings = json.decode(content)
 
+-- Settings (they may be declared as locals though)
+Interrupt = Settings.Interrupt
+Dispell   = Settings.Dispell
+Taunt     = Settings.Taunt
+
+-- This is the table that holds the key combinations
+-- and the function that should be called upon pressing the key(s).
+-- Some functions are already pre coded, look them up on the wiki.
+-- If you need your own functions, implement them in Class-Abilities.lua
+KeyCallbacks = {
+  [Settings.PauseKey] = PauseRotation,
+  [Settings.ToggleAoE] = ToggleAoE
+
+  -- WHICH WOULD INTERNALLY LOOK LIKE THIS
+
+  ["CTRL, P"] = PauseRotation,
+  ["CTRL, A"] = ToggleAoE
+}
+
 -- Every rotation MUST have this. The rough structure comes here.
 function Pulse()
   -- Every rotation can should be structured like a priority list.
