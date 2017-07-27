@@ -44,3 +44,10 @@ function GetUnits()
   end
 end
 AddTimerCallback(0.1, GetUnits)
+
+-- This function "listens" to any key input
+-- If there is a Callback function assigned for a certain "HotKey" it will be executed
+-- Every class must have a table called "KeyCallbacks" where this function can access to
+function KeyListener()
+
+end
