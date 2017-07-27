@@ -18,10 +18,12 @@ end
 
 local Settings = json.decode(content)
 
--- Settings (they may be declared as locals though)
+-- Settings that you can use for the rotations.
+-- Look inside the Example.JSON for more info.
 Interrupt = Settings.Interrupt
 Dispell   = Settings.Dispell
 Taunt     = Settings.Taunt
+AoECount  = Settings.AoECount
 
 -- This is the table that holds the key combinations
 -- and the function that should be called upon pressing the key(s).

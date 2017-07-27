@@ -1,0 +1,10 @@
+-- JSON used for settings should look like this
+-- The name of the file MUST be "Class-Spec.JSON" and MUST be placed into /Profiles/
+{
+  "Interrupt": true,
+  "Dispell": false,
+  "Taunt": false,
+  "AoECount": 5.0,
+  "PauseKey": "CTRL, P",
+  "ToggleAoE": "CTRL, A"
+}
