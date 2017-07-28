@@ -78,13 +78,14 @@ end
 
 -- Every rotation that should / can dispell MUST have this in order to dispell.
 -- You can either put a function here which is defined in the Class-Abilities.lua or Class-Common.lua or use conditions here.
-function Dispell(TargetToDispell)
+function Dispell(TargetToDispell, DispellType)
  -- CleanseToxins()
 
  -- OR
 
  -- if Spell.CanCast(ID, TargetToDispell)
  -- and Unit.IsInLOS(TargetToDispell)
+ -- and DispellType == "Curse"
  -- and etc. then
  -- return Spell.Cast(ID, TargetToDispell)
 end
