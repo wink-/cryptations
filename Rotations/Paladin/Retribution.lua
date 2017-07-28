@@ -81,7 +81,7 @@ function Pulse()
     PRShieldOfVengeance()
 
     if Debuff.Has(197277, PlayerTarget, true)
-    and Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3 then
+    and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3 then
       PRDivineStorm_AOE()
     else
       SingleTargetSpenders()
