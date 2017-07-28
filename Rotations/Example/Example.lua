@@ -35,8 +35,8 @@ KeyCallbacks = {
 
   -- WHICH WOULD INTERNALLY LOOK LIKE THIS
 
-  ["CTRL, P"] = PauseRotation,
-  ["CTRL, A"] = ToggleAoE
+  ["CTRL,P"] = PauseRotation,
+  ["CTRL,A"] = ToggleAoE
 }
 
 -- Every rotation MUST have this. The rough structure comes here.
