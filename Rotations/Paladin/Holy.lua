@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end

@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
@@ -72,7 +72,7 @@ function Pulse()
     PPFlashOfLight()
 
     -- AOE ROTATION
-    if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= 3 then
+    if #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true) >= 3 then
       PPConsecration()
       PPAvengersShield()
       PPJudgment()

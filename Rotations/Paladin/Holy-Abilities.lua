@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
@@ -61,7 +61,7 @@ function PHTyrsDeliverance()
   if TyrsDeliverance
   and Spell.CanCast(200652) then
     if GetNumGroupMembers() ~= 1
-    and getn(TargetUnits) >= TDUnits
+    and #TargetUnits >= TDUnits
     and Spell.GetPreviousSpell() ~= 200652
     and Group.AverageHealthCustom(TargetUnits) <= TDHealth then
       return Spell.Cast(200652)
@@ -112,7 +112,7 @@ function PHBoL()
   local Target = Group.TankToHeal()
   if Target ~= nil
   and BoL
-  and not select(4, GetTalentInfo(7, 3, 1))
+  and not Player.HasTalent(7, 3)
   and Spell.CanCast(53563, Target, 0, MaxMana * 0.025)
   and Unit.IsInLOS(Target)
   and not Buff.Has(Target, 53563) then
@@ -182,14 +182,14 @@ function PHLoD()
   and Spell.CanCast(85222, nil, 0, MaxMana * 0.14) then
     -- Rule of Law
     if Buff.Has(PlayerUnit, 214202)
-    and (getn(Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 22.5, "friendly", true, LoDHealth)) >= LoDUnits) then
+    and (#Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 22.5, "friendly", true, LoDHealth) >= LoDUnits) then
       return Spell.Cast(85222)
     -- Beacon of the Lightbringer
-    elseif select(4, GetTalentInfo(7, 2, 1))
-    and (getn(Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 19.5, "friendly", true, LoDHealth)) >= LoDUnits) then
+  elseif Player.HasTalent(7, 2)
+    and (#Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 19.5, "friendly", true, LoDHealth) >= LoDUnits) then
       return Spell.Cast(85222)
     -- Standard
-  elseif (getn(Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 15, "friendly", true, LoDHealth)) >= LoDUnits) then
+  elseif (#Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 15, "friendly", true, LoDHealth) >= LoDUnits) then
       return Spell.Cast(85222)
     end
   end

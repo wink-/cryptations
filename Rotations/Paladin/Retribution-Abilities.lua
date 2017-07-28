@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
@@ -40,7 +40,7 @@ function PRHolyWrath()
   if HolyWrath
   and Spell.CanCast(210220)
   and Unit.PercentHealth(PlayerUnit) <= HWHealth
-  and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= HWUnits then
+  and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true) >= HWUnits then
     return Spell.Cast(210220)
   end
 end
@@ -48,7 +48,7 @@ end
 function PRConsecration()
   if Spell.CanCast(205228)
   and not Unit.IsMoving(PlayerUnit)
-  and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= 2 then
+  and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true) >= 2 then
     return Spell.Cast(205228)
   end
 end
@@ -65,7 +65,7 @@ end
 -- TODO: add Righteous Verdict support if useful
 function PRBladeOfJustice()
   if PlayerTarget ~= nil
-  and not select(4, GetTalentInfo(4, 3, 1))
+  and not Player.HasTalent(4, 3)
   and Spell.CanCast(184575, PlayerTarget) then
     Spell.Cast(184575, PlayerTarget)
   end
@@ -74,7 +74,7 @@ end
 -- TODO: add Righteous Verdict support if useful
 function PRDivineHammer()
   if PlayerTarget ~= nil
-  and select(4, GetTalentInfo(4, 3, 1))
+  and Player.HasTalent(4, 3)
   and Spell.CanCast(198034, PlayerTarget) then
     Spell.Cast(198034, PlayerTarget)
   end
@@ -82,7 +82,7 @@ end
 
 function PRZeal()
   if PlayerTarget ~= nil
-  and select(4, GetTalentInfo(2, 2, 1))
+  and Player.HasTalent(2, 2)
   and Spell.CanCast(217020, PlayerTarget) then
     Spell.Cast(217020, PlayerTarget)
   end
@@ -90,7 +90,7 @@ end
 
 function PRCrusaderStrike()
   if PlayerTarget ~= nil
-  and not select(4, GetTalentInfo(2, 2, 1))
+  and not Player.HasTalent(2, 2)
   and Spell.CanCast(35395, PlayerTarget) then
     Spell.Cast(35395, PlayerTarget)
   end
@@ -114,7 +114,7 @@ end
 
 function PRWordOfGlory()
   if WoG
-  and getn(Unit.GetUnitsBelowHealth(WoGHealth, "friendly", true, PlayerUnit, 15)) >= WoGUnits
+  and #Unit.GetUnitsBelowHealth(WoGHealth, "friendly", true, PlayerUnit, 15) >= WoGUnits
   and Spell.CanCast(210191) then
     Spell.Cast(210191)
   end
@@ -122,7 +122,7 @@ end
 
 function PRJudgment_Debuff()
   if HolyPower >= 3 or (HolyPower >= 2
-  and select(4, GetTalentInfo(2, 1, 1)))
+  and Player.HasTalent(2, 1)
   and TTD >= JudgmentTTD
   and Unit.IsInAttackRange(85256, PlayerTarget)
   and Spell.CanCast(20271, PlayerTarget) and Unit.IsInLOS(PlayerTarget) then
@@ -132,7 +132,7 @@ end
 
 function PRExecutionSentence()
   if PlayerTarget ~= nil
-  and select(4, GetTalentInfo(1, 2, 1))
+  and Player.HasTalent(1, 2)
   and Spell.CanCast(213757, PlayerTarget, 9, 3) then
       return Spell.Cast(213757, PlayerTarget)
   end

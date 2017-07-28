@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
@@ -10,6 +10,7 @@ local Spell       = LibStub("Spell")
 local Buff        = LibStub("Buff")
 local BossManager = LibStub("BossManager")
 local Group       = LibStub("Group")
+local Player      = LibStub("Player")
 
 function PPAvengingWrath()
   if PlayerTarget ~= nil
@@ -50,7 +51,7 @@ end
 
 function PPEyeOfTyr()
   if Spell.CanCast(209202) and EyeOfTyr
-  and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= EoTUnits then
+  and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true) >= EoTUnits then
     return Spell.Cast(209202)
   end
 end
@@ -59,10 +60,10 @@ function PPSepharim()
   if PlayerTarget ~= nil
   and Spell.CanCast(152262)
   and Sepharim
-  and select(4, GetTalentInfo(7, 2, 1))
+  and Player.HasTalent(7, 2)
   and (PlayerUnit ~= MainTank or not Unit.IsTankingBoss(PlayerUnit))
   and Unit.IsInAttackRange(53600, PlayerTarget)
-  and select(1, GetSpellCharges(53600)) >= 1 then
+  and Spell.GetCharges(53600) >= 1 then
     return Spell.Cast(152262)
   end
 end
@@ -73,12 +74,12 @@ function PPSotR()
   and Spell.CanCast(53600, PlayerTarget)
   and not Buff.Has(PlayerUnit, 53600)
   and Unit.IsFacing(PlayerTarget, CastAngle) then
-    if select(4, GetTalentInfo(7, 2, 1))
-    and select(1, GetSpellCharges(53600)) > 2
+    if Player.HasTalent(7, 2)
+    and Spell.GetCharges(53600) > 2
     and PlayerUnit ~= MainTank then
       return Spell.Cast(53600)
-    elseif select(1, GetSpellCharges(53600)) > 1
-    and not select(4, GetTalentInfo(7, 2, 1)) then
+    elseif Spell.GetCharges(53600) > 1
+    and not Player.HasTalent(7, 2) then
       return Spell.Cast(53600)
     elseif UnitHealth(PlayerUnit) <= UnitHealthMax(PlayerUnit) * 0.4 then
       return Spell.Cast(53600)
@@ -89,7 +90,7 @@ end
 function PPLotP()
   if Spell.CanCast(184092)
   and Unit.PercentHealth(PlayerUnit) <= LoHHealth
-  and not select(4, GetTalentInfo(5, 1, 1))
+  and not Player.HasTalent(5, 1)
   and (Spell.GetPreviousSpell() ~= 184092 or Spell.GetTimeSinceLastSpell() >= 500) then
     return Spell.Cast(184092)
   end
@@ -107,7 +108,7 @@ end
 function PPHotP()
   local Target = PPHotPTarget()
   if Target ~= nil
-  and select(4, GetTalentInfo(5, 1, 1))
+  and Player.HasTalent(5, 1)
   and Spell.CanCast(213652, Target, nil, nil, false)
   and (Spell.GetPreviousSpell() ~= 213652 or Spell.GetTimeSinceLastSpell() >= 500) then
     return Spell.Cast(213652, Target)
@@ -151,7 +152,7 @@ end
 
 function PPBlessedHammer()
   if PlayerTarget ~= nil
-  and select(4, GetTalentInfo(1, 2, 1))
+  and Player.HasTalent(1, 2)
   and Spell.CanCast(204019, nil, nil, nil, false)
   and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
     return Spell.Cast(204019)
@@ -160,9 +161,9 @@ end
 
 function PPBlessedHammerST()
   if PlayerTarget ~= nil
-  and select(4, GetTalentInfo(1, 2, 1))
+  and Player.HasTalent(1, 2)
   and Spell.CanCast(204019, nil, nil, nil, false)
-  and select(1, GetSpellCharges(204019)) == 3
+  and Spell.GetCharges(204019) == 3
   and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
     return Spell.Cast(204019)
   end
@@ -171,7 +172,7 @@ end
 function PPHotR()
   if PlayerTarget ~= nil
   and Spell.CanCast(53595)
-  and not select(4, GetTalentInfo(1, 2, 1))
+  and not Player.HasTalent(1, 2)
   and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
     return Spell.Cast(53595)
   end
