@@ -5,6 +5,6 @@
   "Dispell": false,
   "Taunt": false,
   "AoECount": 5.0,
-  "PauseKey": "CTRL, P",
-  "ToggleAoE": "CTRL, A"
+  "PauseKey": "CTRL,P",
+  "ToggleAoE": "CTRL,A"
 }
