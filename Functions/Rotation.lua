@@ -12,11 +12,11 @@ local Debuff    = LibStub("Debuff")
 function Rotation.PulseQueue()
 
   -- pulse rotation if spellQueue is empty
-  if getn(SPELL_QUEUE) == 0
+  if #SPELL_QUEUE == 0
   and not Unit.IsCasting(PlayerUnit)
   and not Unit.IsChanneling(PlayerUnit) then
     Pulse()
-  elseif getn(SPELL_QUEUE) ~= 0 then
+  elseif #SPELL_QUEUE ~= 0 then
     local SpellID = SPELL_QUEUE[1].spell
     SpellTarget = "target"
 
@@ -33,7 +33,8 @@ function Rotation.PulseQueue()
       Spell.Cast(SpellID, SpellTarget)
 
       -- instantly remove the spell and add it to the history if it is an instant cast
-      if select(4, GetSpellInfo(SpellID)) == 0 then
+      local _, _, _, CastTime = GetSpellInfo(SpellID)
+      if CastTime == 0 then
         Spell.DeQueue(SpellID)
         Spell.AddToHistory(SpellID)
       end
@@ -43,7 +44,7 @@ end
 
 -- removes every entry from the whole queue
 function Rotation.CleanUpQueue()
-  for i = 1, getn(SPELL_QUEUE) do
+  for i = 1, #SPELL_QUEUE do
     table.remove(SPELL_QUEUE, 1)
   end
 end
@@ -80,13 +81,13 @@ function Rotation.Taunt()
   for i = 1, ObjectCount do
     Object = GetObjectWithIndex(i)
     if ObjectIsType(Object, ObjectTypes.Unit) and Unit.IsHostile(Object) then
-      local IsTanking = select(1, UnitDetailedThreatSituation(PlayerUnit, Object))
+      local IsTanking = UnitDetailedThreatSituation(PlayerUnit, Object)
 
       -- check if other tank is tanking the object
-      if getn(GROUP_TANKS) > 1 then
-        for j = 1, getn(GROUP_TANKS) do
+      if #GROUP_TANKS > 1 then
+        for j = 1, #GROUP_TANKS do
           if GROUP_TANKS[i] ~= PlayerUnit
-          and select(1, UnitDetailedThreatSituation(GROUP_TANKS[i], Object)) == true then
+          and UnitDetailedThreatSituation(GROUP_TANKS[i], Object) == true then
             IsOtherTankTanking = true
             print("othertankistanking")
           end
@@ -104,13 +105,12 @@ end
 
 -- Handles Interrupting
 function Rotation.Interrupt()
-  local ObjectCount = GetObjectCount()
-  local Object = nil
   -- interrupt any unit
   if InterruptAnyUnit then
-    for i = 1, ObjectCount do
-      Object = GetObjectWithIndex(i)
-      if Object ~= nil and select(9, UnitCastingInfo(Object)) == false and Unit.IsHostile(Object) then
+    for Object, _ in pairs(UNIT_TRACKER) do
+      local _, _, _, _, _, _, _, _, NotInterruptible = UnitCastingInfo(Object)
+      if NotInterruptible == 1
+      and Unit.IsHostile(Object) then
         local PercentCasted = Unit.CastedPercent(Object)
         if InterruptMinPercent < PercentCasted
         and PercentCasted < InterruptMaxPercent and Interrupt ~= nil then
@@ -120,8 +120,9 @@ function Rotation.Interrupt()
     end
     -- interrupt target
   else
+    local _, _, _, _, _, _, _, _, NotInterruptible = UnitCastingInfo(PlayerTarget)
     if PlayerTarget ~= nil
-    and select(9, UnitCastingInfo(PlayerTarget)) == false
+    and NotInterruptible == false
     and Unit.IsHostile(PlayerTarget) then
       local PercentCasted = Unit.CastedPercent(PlayerTarget)
       if InterruptMinPercent < PercentCasted
@@ -135,12 +136,13 @@ end
 -- Handles Disspelling of group members
 function Rotation.Dispell()
   local Unit = nil
-  for i = 1, getn(GROUP_MEMBERS) do
+  for i = 1, #GROUP_MEMBERS do
     Unit = GROUP_MEMBERS[i]
     for j = 1, Debuff.GetCount(Unit) do
-      if select(5, UnitDebuff(Unit, j)) ~= nil
+      local _, _, _, _, DispellType = UnitDebuff(Unit, j)
+      if DispellType ~= nil
       and Dispell ~= nil then
-        Dispell(Unit, select(5, UnitDebuff(Unit, j)))
+        Dispell(Unit, DispellType)
       end
     end
   end

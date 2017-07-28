@@ -18,9 +18,10 @@ function Group.UpdateTanks()
   local Object = nil
   for i = 1, ObjectCount do
     Object = GetObjectWithIndex(i)
-    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    if ObjectExists(Object)
+    and ObjectIsType(Object, ObjectTypes.Unit)
     and (UnitInParty(Object) or UnitInRaid(Object))
-    and (UnitGroupRolesAssigned(Object) == "TANK" or ObjectID(Object) == 72218) then
+    and (UnitGroupRolesAssigned(Object) == "TANK" or ObjectID(Object) == 72218) then -- ObjectID refers to Oto the Protector
       table.insert(GROUP_TANKS, Object)
     end
   end
@@ -44,7 +45,7 @@ end
 function Group.AverageHealth()
   local Health = 0
   local Count  = 0
-  for i = 1, getn(GROUP_MEMBERS) do
+  for i = 1, #GROUP_MEMBERS do
     Health = Health + Unit.PercentHealth(GROUP_MEMBERS[i])
     Count = Count + 1
   end
@@ -56,7 +57,7 @@ end
 function Group.AverageHealthCustom(units)
   local Health = 0
   local Count   = 0
-  for i = 1, getn(units) do
+  for i = 1, #units do
     Health = Health + Unit.PercentHealth(units[i])
     Count = Count + 1
   end

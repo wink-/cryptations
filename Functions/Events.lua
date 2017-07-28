@@ -45,9 +45,13 @@ function GetUnits()
 end
 AddTimerCallback(0.1, GetUnits)
 
+Keys = {
+ -- TODO: test if wow's keybinding works for my needs
+}
 -- This function "listens" to any key input
 -- If there is a Callback function assigned for a certain "HotKey" it will be executed
 -- Every class must have a table called "KeyCallbacks" where this function can access to
 function KeyListener()
 
 end
+AddTimerCallback(0.05, KeyListener)
