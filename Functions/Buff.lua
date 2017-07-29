@@ -84,9 +84,18 @@ end
 -- onlyPlayer (optional): if this is checked, only units that got the buff from the player will be returned
 function Buff.FindUnitsWith(buffID, onlyPlayer)
   local Units = {}
+
+  -- for enemy units
   for Object, _ in pairs(UNIT_TRACKER) do
     if Buff.Has(Object, buffID, onlyPlayer) then
       table.insert(Units, Object)
+    end
+  end
+
+  -- for group units
+  for i = 1, #GROUP_MEMBERS do
+    if Buff.Has(GROUP_MEMBERS[i], buffID, onlyPlayer) then
+      table.insert(Units, GROUP_MEMBERS[i])
     end
   end
 
