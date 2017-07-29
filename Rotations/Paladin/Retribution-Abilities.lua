@@ -121,11 +121,14 @@ function PRWordOfGlory()
 end
 
 function PRJudgment_Debuff()
-  if HolyPower >= 3 or (HolyPower >= 2
-  and Player.HasTalent(2, 1)
-  and TTD >= JudgmentTTD
+  if PlayerTarget ~= nil
+  and Spell.CanCast(20271, PlayerTarget)
   and Unit.IsInAttackRange(85256, PlayerTarget)
-  and Spell.CanCast(20271, PlayerTarget) and Unit.IsInLOS(PlayerTarget) then
+  and Unit.IsInLOS(PlayerTarget)
+  and TTD >= JudgmentTTD
+  and (HolyPower >= 3
+  or (HolyPower >= 2
+  and Player.HasTalent(2, 1))) then
     return Spell.Cast(20271, PlayerTarget)
   end
 end
