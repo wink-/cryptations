@@ -17,19 +17,19 @@ local Group       = LibStub("Group")
 
 function PHAvengingWrath()
   if AvengingWrath
-  and Spell.CanCast(31842)
+  and Spell.CanCast(SB["Avenging Wrath"])
   and GetNumGroupMembers() ~= 1
   and Group.AverageHealth() <= AWHealth then
-    return Spell.Cast(31842)
+    return Spell.Cast(SB["Avenging Wrath"])
   end
 end
 
 function PHHolyAvenger()
   if HolyAvenger
-  and Spell.CanCast(105809)
+  and Spell.CanCast(SB["Holy Avenger"])
   and GetNumGroupMembers() ~= 1
   and Group.AverageHealth() <= HAHealth then
-    return Spell.Cast(105809)
+    return Spell.Cast(SB["Holy Avenger"])
   end
 end
 
@@ -37,9 +37,9 @@ function PHLayOnHands()
   local Target = Group.UnitToHeal()
   if Target ~= nil
   and LayOnHands
-  and Spell.CanCast(633, Target)
+  and Spell.CanCast(SB["Lay on Hands"], Target)
   and Unit.PercentHealth(Target) <= LoHHealth then
-    return Spell.Cast(633, Target)
+    return Spell.Cast(SB["Lay on Hands"], Target)
   end
 end
 
@@ -47,11 +47,14 @@ function PHBoS()
   local Target = Group.UnitToHeal()
   if Target ~= nil
   and BoS
-  and Spell.CanCast(6940, Target)
-  and Spell.CanCast(498)
-  and not Buff.Has(Target, 6940)
+  and Spell.CanCast(SB["Blessing of Sacrifice"], Target)
+  and Spell.CanCast(SB["Divine Protection"])
+  and not Buff.Has(Target, SB["Blessing of Sacrifice"])
   and Unit.PercentHealth(Target) <= BoSHealth then
-    local Sequence = {498, 6940}
+    local Sequence = {
+      SB["Divine Protection"],
+      SB["Blessing of Sacrifice"]
+    }
     return Spell.AddToQueue(Sequence, Target)
   end
 end
@@ -59,12 +62,11 @@ end
 function PHTyrsDeliverance()
   local TargetUnits = Unit.GetUnitsInRadius(PlayerUnit, 15, "friendly")
   if TyrsDeliverance
-  and Spell.CanCast(200652) then
+  and Spell.CanCast(SB["Tyr's Deliverance"]) then
     if GetNumGroupMembers() ~= 1
     and #TargetUnits >= TDUnits
-    and Spell.GetPreviousSpell() ~= 200652
     and Group.AverageHealthCustom(TargetUnits) <= TDHealth then
-      return Spell.Cast(200652)
+      return Spell.Cast(SB["Tyr's Deliverance"])
     end
   end
 end
@@ -73,9 +75,9 @@ function PHHolyShock()
   local Target = Group.UnitToHeal()
   if Target ~= nil
   and Unit.PercentHealth(Target) <= HSHealth
-  and Spell.CanCast(20473, Target, 0, MaxMana * 0.1)
+  and Spell.CanCast(SB["Holy Shock"], Target, 0, MaxMana * 0.1)
   and Unit.IsInLOS(Target) then
-    return Spell.Cast(20473, Target)
+    return Spell.Cast(SB["Holy Shock"], Target)
   end
 end
 
@@ -83,9 +85,9 @@ function PHHolyLight()
   local Target = Group.UnitToHeal()
   if Target ~= nil
   and Unit.PercentHealth(Target) <= HLHealth
-  and Spell.CanCast(82326, Target, 0, MaxMana * 0.12)
+  and Spell.CanCast(SB["Holy Light"], Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(Target) then
-    return Spell.Cast(82326, Target)
+    return Spell.Cast(SB["Holy Light"], Target)
   end
 end
 
@@ -94,17 +96,17 @@ function PHLotM()
   if Target ~= nil
   and LotM
   and Unit.IsMoving(PlayerUnit)
-  and not Spell.CanCast(20473, Target, 0, MaxMana * 0.1)
-  and Spell.CanCast(183998, Target, 0, MaxMana * 0.075)
+  and not Spell.CanCast(SB["Holy Shock"], Target, 0, MaxMana * 0.1)
+  and Spell.CanCast(SB["Light of the Martyr"], Target, 0, MaxMana * 0.075)
   and Unit.IsInLOS(Target) then
-    return Spell.Cast(183998, Target)
+    return Spell.Cast(SB["Light of the Martyr"], Target)
   end
 end
 
 function PHRuleOfLaw()
   if RuleOfLaw
-  and Spell.CanCast(214202) then
-    return Spell.Cast(214202)
+  and Spell.CanCast(SB["Rule of Law"]) then
+    return Spell.Cast(SB["Rule of Law"])
   end
 end
 
@@ -113,10 +115,10 @@ function PHBoL()
   if Target ~= nil
   and BoL
   and not Player.HasTalent(7, 3)
-  and Spell.CanCast(53563, Target, 0, MaxMana * 0.025)
+  and Spell.CanCast(SB["Beacon of Light"], Target, 0, MaxMana * 0.025)
   and Unit.IsInLOS(Target)
-  and not Buff.Has(Target, 53563) then
-    return Spell.Cast(53563, Target)
+  and not Buff.Has(Target, AB["Beacon of Light"]) then
+    return Spell.Cast(SB["Beacon of Light"], Target)
   end
 end
 
@@ -124,27 +126,27 @@ function PHBoF()
   local Target = Group.UnitToHeal()
   if Target ~= nil
   and BoF
-  and Spell.CanCast(156910, Target, 0, MaxMana * 0.03125)
-  and not Buff.Has(Target, 156910)
+  and Spell.CanCast(SB["Beacon of Faith"], Target, 0, MaxMana * 0.03125)
+  and not Buff.Has(Target, AB["Beacon of Faith"])
   and Unit.IsInLOS(Target)
-  and not Buff.Has(Target, 53563) then
-    return Spell.Cast(156910, Target)
+  and not Buff.Has(Target, AB["Beacon of Light"]) then
+    return Spell.Cast(SB["Beacon of Faith"], Target)
   end
 end
 
 function PHBestowFaith()
   local Target = Group.TankToHeal()
   if Target ~= nil
-  and Spell.CanCast(223306, Target, 0, MaxMana * 0.06)
+  and Spell.CanCast(SB["Bestow Faith"], Target, 0, MaxMana * 0.06)
   and Unit.IsInLOS(Target)
-  and not Buff.Has(Target, 223306)
+  and not Buff.Has(Target, AB["Bestow Faith"])
   and Unit.PercentHealth(Target) <= BestowFaithHealth then
-    return Spell.Cast(223306, Target)
+    return Spell.Cast(SB["Bestow Faith"], Target)
   end
 end
 
 function PHInfusionProc()
-  if Buff.Has(PlayerUnit, 53576) then
+  if Buff.Has(PlayerUnit, AB["Infusion of Light"]) then
     if InfusionHL then
       PHHolyLight()
     elseif InfusionFoL then
@@ -156,10 +158,10 @@ end
 function PHJudgment()
   if Judgment
   and PlayerTarget ~= nil
-  and IsSpellKnown(183778)
-  and Spell.CanCast(20271, PlayerTarget, 0, MaxMana * 0.03)
+  and IsSpellKnown(183778) -- TODO: change to Player.HasTalent()
+  and Spell.CanCast(SB["Judgment"], PlayerTarget, 0, MaxMana * 0.03)
   and Unit.IsInLOS(PlayerTarget) then
-    return Spell.Cast(20271, PlayerTarget)
+    return Spell.Cast(SB["Judgment"], PlayerTarget)
   end
 end
 
@@ -172,25 +174,25 @@ function PHLightsHammer()
   if x ~= nil and y ~= nil and z ~= nil
   and GetTotemInfo(1) == false
   and LightsHammer
-  and Spell.CanCast(114158, nil, 0, MaxMana * 0.28) then
-    return Spell.CastGroundSpell(114158, x, y, z)
+  and Spell.CanCast(SB["Light's Hammer"], nil, 0, MaxMana * 0.28) then
+    return Spell.CastGroundSpell(SB["Light's Hammer"], x, y, z)
   end
 end
 
 function PHLoD()
   if LightOfDawn
-  and Spell.CanCast(85222, nil, 0, MaxMana * 0.14) then
+  and Spell.CanCast(SB["Light of Dawn"], nil, 0, MaxMana * 0.14) then
     -- Rule of Law
-    if Buff.Has(PlayerUnit, 214202)
+    if Buff.Has(PlayerUnit, AB["Rule of Law"])
     and (#Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 22.5, "friendly", true, LoDHealth) >= LoDUnits) then
-      return Spell.Cast(85222)
+      return Spell.Cast(SB["Light of Dawn"])
     -- Beacon of the Lightbringer
   elseif Player.HasTalent(7, 2)
     and (#Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 19.5, "friendly", true, LoDHealth) >= LoDUnits) then
-      return Spell.Cast(85222)
+      return Spell.Cast(SB["Light of Dawn"])
     -- Standard
   elseif (#Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 15, "friendly", true, LoDHealth) >= LoDUnits) then
-      return Spell.Cast(85222)
+      return Spell.Cast(SB["Light of Dawn"])
     end
   end
 end
@@ -222,8 +224,8 @@ function PHHolyPrism()
   local Target = PHHolyPrismTarget()
   if Target ~= nil
   and UseHolyPrism
-  and Spell.CanCast(114165, Target, 0, MaxMana * 0.17) then
-    return Spell.Cast(114165, Target)
+  and Spell.CanCast(SB["Holy Prism"], Target, 0, MaxMana * 0.17) then
+    return Spell.Cast(SB["Holy Prism"], Target)
   end
 end
 
@@ -231,9 +233,9 @@ function PHBoV()
   local Target = Unit.FindBestToHeal(30, BoVUnits, BoVHealth)
   if Target ~= nil
   and BeaconOfVirtue
-  and Spell.CanCast(200025, Target, 0, MaxMana * 0.1)
+  and Spell.CanCast(SB["Beacon of Virtue"], Target, 0, MaxMana * 0.1)
   and Unit.IsInLOS(Target) then
-    return Spell.Cast(200025, Target)
+    return Spell.Cast(SB["Beacon of Virtue"], Target)
   end
 end
 
@@ -241,8 +243,8 @@ function PHFlashOfLight()
   local Target = Group.UnitToHeal()
   if Target ~= nil
   and Unit.PercentHealth(Target) <= FoLHealth
-  and Spell.CanCast(82326, Target, 0, MaxMana * 0.12)
+  and Spell.CanCast(SB["Flash of Light"], Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(Target) then
-    return Spell.Cast(82326, Target)
+    return Spell.Cast(SB["Flash of Light"], Target)
   end
 end

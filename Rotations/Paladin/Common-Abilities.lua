@@ -9,26 +9,26 @@ local Unit  = LibStub("Unit")
 
 function PRebuke()
   if PlayerTarget ~= nil
-  and Spell.CanCast(96231, PlayerTarget)
+  and Spell.CanCast(SB["Rebuke"], PlayerTarget)
   and Unit.IsInLOS(PlayerTarget) then
-    return Spell.Cast(96231, PlayerTarget)
+    return Spell.Cast(SB["Rebuke"], PlayerTarget)
   end
 end
 
 function PBlindingLight()
   if PlayerTarget ~= nil
-  and Spell.CanCast(115750)
+  and Spell.CanCast(SB["Blinding Light"])
   and Unit.IsInLOS(PlayerTarget)
   and Unit.IsInRange(PlayerUnit, PlayerTarget, 10) then
-    return Spell.Cast(115750, PlayerTarget)
+    return Spell.Cast(SB["Blinding Light"], PlayerTarget)
   end
 end
 
 function PHammerOfJustice()
   if PlayerTarget ~= nil
-  and Spell.CanCast(853, PlayerTarget)
+  and Spell.CanCast(SB["Hammer of Justice"], PlayerTarget)
   and Unit.IsInLOS(PlayerTarget)
   and not Unit.IsBoss(PlayerTarget) then
-    return Spell.Cast(853, PlayerTarget)
+    return Spell.Cast(SB["Hammer of Justice"], PlayerTarget)
   end
 end
