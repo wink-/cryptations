@@ -25,8 +25,21 @@ LossOfControlAuras = {
 }
 
 -- This is the aurabook and it contains all debuff / buff auras that are relevant
+-- If a spell's buff / debuff is the same as its ID it is still listed here
 AB = {
   ["Moonfire DoT"] = 164812,
   ["Sunfire DoT"] = 164815,
-  ["Stellar Flare DoT"] = 202347
+  ["Stellar Flare DoT"] = 202347,
+  ["Infusion of Light"] = 53576,
+  ["Rule of Law"] = 214202,
+  ["Blessing of Sacrifice"] = 6940,
+  ["Beacon of Light"] = 53563,
+  ["Beacon of Faith"] = 156910,
+  ["Bestow Faith"] = 223306,
+  ["Guardian of Ancient Kings"] = 86659,
+  ["Ardent Defender"] = 31850,
+  ["Consecration"] = 26573,
+  ["Judgment Retribution"] = 197277,
+  ["Judgment"] = 20271,
+  ["Divine Protection"] = 498
 }
