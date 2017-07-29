@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
@@ -99,7 +99,7 @@ end
 function DGPulverize()
   if PlayerTarget ~= nil
   and Spell.CanCast(80313, PlayerTarget)
-  and select(2, Debuff.Has(PlayerTarget, 77758)) >= 2 then
+  and Debuff.Stacks(PlayerTarget, 77758) >= 2 then
     return Spell.Cast(80313, PlayerTarget)
   end
 end

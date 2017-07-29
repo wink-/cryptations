@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
@@ -47,7 +47,7 @@ function DREoG()
 end
 
 function HoTCount()
-  return RejuvenationCount() + getn(Buff.FindUnitsWith(33763, true))
+  return RejuvenationCount() + #Buff.FindUnitsWith(33763, true)
 end
 
 function DRFlourish()
@@ -88,7 +88,7 @@ function DRLifebloom()
   and Spell.CanCast(33763, Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(Target) then
     if not Buff.Has(Target, 33763, true)
-    or select(3, Buff.Has(Target, 33763, true)) <= LBTime then
+    or Buff.RemainingTime(Target, 33763, true) <= LBTime then
       return Spell.Cast(33763, Target)
     end
   end
@@ -127,12 +127,12 @@ end
 
 -- returns the count of rejuvenations applied by the player
 function RejuvenationCount()
-  return getn(Buff.FindUnitsWith(774, true))
+  return #Buff.FindUnitsWith(774, true)
 end
 
 -- returns the lowest unit that does not have a rejuvenation from the player on it
 function RejuvenationTarget()
-  for i = 1, getn(GROUP_MEMBERS) do
+  for i = 1, #GROUP_MEMBERS do
     if not Buff.Has(GROUP_MEMBERS[i], 774, true)
     and Unit.PercentHealth(GROUP_MEMBERS[i]) <= RejuvHealth then
       return GROUP_MEMBERS[i]

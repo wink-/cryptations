@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
@@ -85,12 +85,12 @@ function Pulse()
       Finishers()
     end
     DFArtifact()
-    if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile")) >= 5
+    if #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 5
     and ComboPoints <= 4 then
       AoE()
     end
     if ComboPoints <= 4
-    and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile")) < 5 then
+    and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") < 5 then
       Generators()
     end
   else

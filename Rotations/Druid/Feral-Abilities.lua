@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
@@ -283,7 +283,7 @@ function DFRakeV5()
   and Buff.Has(PlayerUnit, 145152)
   and (not Debuff.Has(Target, 155722)
   or Debuff.RemainingTime(Target, 155722) <= 5)
-  and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile")) >= 0
+  and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 0
   and (not RakeEnhanced or (RakeEnhanced and Buff.Has(PlayerUnit, 102543))) then
     IsRakeEnhanced()
     return Spell.Cast(1822, Target)
