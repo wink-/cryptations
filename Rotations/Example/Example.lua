@@ -31,7 +31,7 @@ AoECount  = Settings.AoECount
 -- If you need your own functions, implement them in Class-Abilities.lua
 KeyCallbacks = {
   [Settings.PauseKey] = PauseRotation,
-  [Settings.ToggleAoE] = ToggleAoE
+  [Settings.ToggleAoE] = ToggleAoE,
 
   -- WHICH WOULD INTERNALLY LOOK LIKE THIS
 
@@ -41,12 +41,20 @@ KeyCallbacks = {
 
 -- Every rotation MUST have this. The rough structure comes here.
 function Pulse()
-  -- Every rotation can should be structured like a priority list.
-  -- This is ok since the conditions are handled within the functions that are called here.
-  -- If you want you can also implement it like a behaviour tree but keep in mind to not put a lot of conditions here.
+  -- This is the Action List of your rotation.
+  -- You can structure it as you wish but keep in mind that you MUST only call spell functions here
+  -- You can also use conds but only for greater blocks that also contain spells
 
   -- EXFireball()
   -- EXFireblast()
+
+  -- Cond Example
+  -- if Unit.PercentHealth(PlayerUnit) <= 50 then
+  -- function1()
+  -- function2()
+  -- function3()
+  -- end
+
   -- etc.
 end
 
