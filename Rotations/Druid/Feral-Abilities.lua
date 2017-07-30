@@ -329,11 +329,11 @@ end
 
 function DFSwipeV1()
   if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Swipe"], nil, 3, 45)
+  and Spell.CanCast(SB["Swipe Cat"], nil, 3, 45)
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3
   and (Debuff.Has(PlayerTarget, AB["Thrash"])
   and Debuff.RemainingTime(PlayerTarget, AB["Thrash"]) >= 4) then
-    return Spell.Cast(SB["Swipe"])
+    return Spell.Cast(SB["Swipe Cat"])
   end
 end
 
@@ -410,9 +410,9 @@ end
 function DFSwipeV2()
   local HasT19Bonus2 = Player.HasSetPiece(2)
   if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Swipe"], nil, 3, 45)
+  and Spell.CanCast(SB["Swipe Cat"], nil, 3, 45)
   and (not HasT19Bonus2 or (Debuff.Has(PlayerTarget, AB["Thrash"])
   and Debuff.RemainingTime(PlayerTarget, AB["Thrash"]) >= 4)) then
-    return Spell.Cast(SB["Swipe"])
+    return Spell.Cast(SB["Swipe Cat
   end
 end
