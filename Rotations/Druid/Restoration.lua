@@ -80,8 +80,8 @@ function Pulse()
 end
 
 function Dispell(unit, dispellType)
-  if Spell.CanCast(88423, unit, 0, MaxMana * 0.13)
+  if Spell.CanCast(SB["Nature's Cure"], unit, 0, MaxMana * 0.13)
   and dispellType ~= "Disease" then
-    return Spell.Cast(88423, unit)
+    return Spell.Cast(SB["Nature's Cure"], unit)
   end
 end

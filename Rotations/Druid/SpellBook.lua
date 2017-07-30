@@ -37,6 +37,7 @@ SB = {
   ["Maul"] = 6807,
   ["Moonfire"] = 8921,
   ["Moonkin Form"] = 24858,
+  ["Nature's Cure"] = 88423,
   ["New Moon"] = 202767,
   ["Prowl"] = 5215,
   ["Pulverize"] = 80313,
