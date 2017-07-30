@@ -413,6 +413,6 @@ function DFSwipeV2()
   and Spell.CanCast(SB["Swipe Cat"], nil, 3, 45)
   and (not HasT19Bonus2 or (Debuff.Has(PlayerTarget, AB["Thrash"])
   and Debuff.RemainingTime(PlayerTarget, AB["Thrash"]) >= 4)) then
-    return Spell.Cast(SB["Swipe Cat
+    return Spell.Cast(SB["Swipe Cat"])
   end
 end
