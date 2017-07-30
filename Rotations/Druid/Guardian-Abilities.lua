@@ -14,119 +14,117 @@ local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 
 function SwitchToBearForm()
-  if not Buff.Has(PlayerUnit, 5487) then
-    if AutoSwitchForm then
-      return Spell.Cast(5487)
-    else
-      return
-    end
+  if AutoSwitchForm
+  and not Player.IsInShapeshift()
+  then
+    return Spell.Cast(SB["Bear Form"])
   end
 end
 
 function DGSurvivalInstincts()
-  if Spell.CanCast(61336)
+  if Spell.CanCast(SB["Survival Instincts"])
   and SurvInstincts then
     if Unit.PercentHealth(PlayerUnit) <= SIHealth
     or BossManager.IsDefCooldownNeeded() then
-      return Spell.Cast(61336)
+      return Spell.Cast(SB["Survival Instincts"])
     end
   end
 end
 
 function DGBarkskin()
-  if Spell.CanCast(22812)
+  if Spell.CanCast(SB["Barkskin"])
   and Barkskin then
     if Unit.PercentHealth(PlayerUnit) <= BSHealth
     or BossManager.IsDefCooldownNeeded() then
-      return Spell.Cast(22812)
+      return Spell.Cast(SB["Barkskin"])
     end
   end
 end
 
 function DGRotS()
-  if Spell.CanCast(200851) and UseRotS then
+  if Spell.CanCast(SB["Rage of the Sleeper"]) and UseRotS then
     if Unit.PercentHealth(PlayerUnit) <= RotSHealth
     or BossManager.IsDefCooldownNeeded() then
-      return Spell.Cast(200851)
+      return Spell.Cast(SB["Rage of the Sleeper"])
     end
   end
 end
 
 function DGIronfur()
-  if Spell.CanCast(192081) and Ironfur then
+  if Spell.CanCast(SB["Ironfur"]) and Ironfur then
     if Unit.PercentHealth(PlayerUnit) <= IFHealth
     or BossManager.IsDefCooldownNeeded() then
-      return Spell.Cast(192081)
+      return Spell.Cast(SB["Ironfur"])
     end
   end
 end
 
 function DGFrenziedRegeneration()
-  if Spell.CanCast(22842) and FRegen then
+  if Spell.CanCast(SB["Frenzied Regeneration"]) and FRegen then
     if Player.GetDamageOverPeriod(5) >= UnitHealthMax(PlayerUnit) * (FRHealth / 100) then
-      return Spell.Cast(22842)
+      return Spell.Cast(SB["Frenzied Regeneration"])
     end
   end
 end
 
 function DGMoonfire()
   if PlayerTarget ~= nil
-  and Spell.CanCast(8921, PlayerTarget)
+  and Spell.CanCast(SB["Moonfire"], PlayerTarget)
   and Moonfire
   and Unit.IsInLOS(PlayerTarget) then
-    if Buff.Has(PlayerUnit, 203964)
-    or not Debuff.Has(PlayerTarget, 164812) then
-      return Spell.Cast(8921, PlayerTarget)
+    if Buff.Has(PlayerUnit, AB["Galactic Guardian"])
+    or not Debuff.Has(PlayerTarget, AB["Moonfire"]) then
+      return Spell.Cast(SB["Moonfire"], PlayerTarget)
     end
   end
 end
 
 function DGMangle()
   if PlayerTarget ~= nil
-  and Spell.CanCast(33917, PlayerTarget) then
-    return Spell.Cast(33917, PlayerTarget)
+  and Spell.CanCast(SB["Mangle"], PlayerTarget) then
+    return Spell.Cast(SB["Mangle"], PlayerTarget)
   end
 end
 
 function DGThrash()
   if PlayerTarget ~= nil
-  and Spell.CanCast(77758, nil, nil, nil, false)
+  and Spell.CanCast(SB["Thrash"], nil, nil, nil, false)
   and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
-    return Spell.Cast(77758)
+    return Spell.Cast(SB["Thrash"])
   end
 end
 
 function DGPulverize()
   if PlayerTarget ~= nil
-  and Spell.CanCast(80313, PlayerTarget)
-  and Debuff.Stacks(PlayerTarget, 77758) >= 2 then
-    return Spell.Cast(80313, PlayerTarget)
+  and Spell.CanCast(SB["Pulverize"], PlayerTarget)
+  and Debuff.Stacks(PlayerTarget, AB["Thrash"]) >= 2 then
+    return Spell.Cast(SB["Pulverize"], PlayerTarget)
   end
 end
 
 function DGMaul()
   if PlayerTarget ~= nil
-  and Spell.CanCast(6807, PlayerTarget, 1, 45) then
+  and Spell.CanCast(SB["Maul"], PlayerTarget, 1, 45) then
     if Rage >= MaulRage
     and Unit.PercentHealth(PlayerUnit) >= MaulHealth then
-      return Spell.Cast(6807, PlayerTarget)
+      return Spell.Cast(SB["Maul"], PlayerTarget)
     end
   end
 end
 
 function DGSwipe()
   if PlayerTarget ~= nil
-  and Spell.CanCast(213764)
+  and Spell.CanCast(SB["Swipe Bear"])
   and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
-    return Spell.Cast(213764)
+    return Spell.Cast(SB["Swipe Bear"])
   end
 end
 
 function DGGrowl()
   if PlayerTarget ~= nil
-  and Spell.CanCast(6795, PlayerTarget)
+  and Spell.CanCast(SB["Growl"], PlayerTarget)
   and Unit.IsHostile(PlayerTarget)
   and Unit.IsInLOS(PlayerTarget) then
-    return Spell.Cast(6795, PlayerTarget)
+    return Spell.Cast(SB["Growl"], PlayerTarget)
   end
 end
