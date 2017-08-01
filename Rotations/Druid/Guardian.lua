@@ -16,26 +16,25 @@ end
 
 local Settings = json.decode(content)
 
-Taunt           = Settings.UseTaunt
-Interrupt       = Settings.UseInterruptEngine
-SurvInstincts   = Settings.UseSurvivalInstincts
-Barkskin        = Settings.UseBarkskin
-Ironfur         = Settings.UseIronfur
-FRegen          = Settings.UseFrenziedRegeneration
-Moonfire        = Settings.UseMoonfire
-Maul            = Settings.UseMaul
-RotS            = Settings.UseRotS
+Taunt           = Settings.Taunt
+Interrupt       = Settings.Interrupt
+SurvInstincts   = Settings.SurvInstincts
+Barkskin        = Settings.Barkskin
+Ironfur         = Settings.Ironfur
+FRegen          = Settings.FRegen
+Moonfire        = Settings.Moonfire
+Maul            = Settings.Maul
+RotS            = Settings.RotS
 AutoSwitchForm  = Settings.AutoSwitchForm
-SIHealth        = Settings.SurvivalInstincsHealth
-BSHealth        = Settings.BarkskinHealth
-IFHealth        = Settings.IronFurHealth
-FRHealth        = Settings.FrenziedRegenerationHealth
+SIHealth        = Settings.SIHealth
+BSHealth        = Settings.BSHealth
+IFHealth        = Settings.IFHealth
+FRHealth        = Settings.FRHealth
 MaulHealth      = Settings.MaulHealth
 MaulRage        = Settings.MaulRage
 RotSHealth      = Settings.RotSHealth
 MaxMana         = UnitPowerMax("player" , 0)
 MaxHealth       = UnitHealthMax("player")
-Rage            = UnitPower("player", 1)
 
 local Unit        = LibStub("Unit")
 local Rotation    = LibStub("Rotation")
