@@ -15,7 +15,4 @@ function PulseEngine(self, elapsed)
   -- Pulse the Queue
   Rotation.PulseQueue()
 end
-
-if FireHack then
-  AddTimerCallback(0.1, PulseEngine)
-end
+AddTimerCallback(0.1, PulseEngine)
