@@ -166,7 +166,7 @@ function PHJudgment()
 end
 
 function PHLightsHammerPos()
-  return ObjectPosition(Unit.FindBestToHeal(10, LHUnits, LHHealth))
+  return ObjectPosition(Unit.FindBestToHeal(10, LHUnits, LHHealth, 40))
 end
 
 function PHLightsHammer()
@@ -230,7 +230,7 @@ function PHHolyPrism()
 end
 
 function PHBoV()
-  local Target = Unit.FindBestToHeal(30, BoVUnits, BoVHealth)
+  local Target = Unit.FindBestToHeal(30, BoVUnits, BoVHealth, 40)
   if Target ~= nil
   and BeaconOfVirtue
   and Spell.CanCast(SB["Beacon of Virtue"], Target, 0, MaxMana * 0.1)

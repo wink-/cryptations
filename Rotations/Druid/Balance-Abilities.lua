@@ -92,7 +92,7 @@ function DBStarsurgeV1()
 end
 
 function DBFoE()
-  local x, y, z = ObjectPosition(Unit.FindBestToAOE(5, 1))
+  local x, y, z = ObjectPosition(Unit.FindBestToAOE(5, 1, 40))
   if x == nil or y == nil or z == nil then return end
   local LunarPower  = UnitPower("player", 8)
   if Spell.CanCast(SB["Fury of Elune"], nil, 8, 6)
@@ -170,7 +170,7 @@ function DBNewMoonV2()
 end
 
 function DBStarfallV2Pos()
-  return ObjectPosition(Unit.FindBestToAOE(DBStarfallRadius(), 2))
+  return ObjectPosition(Unit.FindBestToAOE(DBStarfallRadius(), 2, 40))
 end
 
 function DBStarfallV2()

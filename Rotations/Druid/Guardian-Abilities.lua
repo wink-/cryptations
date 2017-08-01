@@ -15,8 +15,7 @@ local BossManager = LibStub("BossManager")
 
 function SwitchToBearForm()
   if AutoSwitchForm
-  and not Player.IsInShapeshift()
-  then
+  and not Player.IsInShapeshift() then
     return Spell.Cast(SB["Bear Form"])
   end
 end

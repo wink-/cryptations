@@ -57,7 +57,7 @@ function DRFlourish()
 end
 
 function EfflorescencePos()
-  local Units = Group.FindBestToHeal(10, EFUnits, EFHealth)
+  local Units = Group.FindBestToHeal(10, EFUnits, EFHealth, 40)
   if Units ~= nil then
     return Unit.GetCenterBetweenUnits(Units)
   end
@@ -152,7 +152,7 @@ function DRRejuvenation()
 end
 
 function DRWildGrowth()
-  local Target = Unit.FindBestToHeal(30, WGUnits, WGHealth)
+  local Target = Unit.FindBestToHeal(30, WGUnits, WGHealth, 40)
   if Target ~= nil
   and Spell.CanCast(SB["Wild Growth"], Target, 0, MaxMana * 0.34)
   and Unit.IsInLOS(Target) then

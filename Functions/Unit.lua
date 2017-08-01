@@ -344,8 +344,9 @@ function Unit.CastedPercent(unit)
   local _, _, _, _, StartTime, EndTime = UnitCastingInfo(unit)
   if StartTime ~= nil then
     CastTime = EndTime - StartTime
-    PercentCasted = math.floor((1 - EndTime - GetTime() * 1000) / CastTime) * 100)
+    PercentCasted = math.floor((1 - EndTime - GetTime() * 1000) / CastTime) * 100
   end
+
   return PercentCasted
 end
 
@@ -449,7 +450,7 @@ function Unit.GetDebuffs(unit)
 end
 
 -- returns the unit that is best to heal for the given parameters
-function Unit.FindBestToHeal(range, minUnits, health)
+function Unit.FindBestToHeal(range, minUnits, health, maxDistance)
   local BestTarget        = nil
   local UnitCountBest     = 0
   local UnitCountCurrent  = 0
@@ -460,7 +461,8 @@ function Unit.FindBestToHeal(range, minUnits, health)
     Units = Unit.GetUnitsBelowHealth(health, "friendly", true, CurrentUnit, range)
     table.insert(Units, CurrentUnit)
     UnitCountCurrent = #Units
-    if UnitCountCurrent >= minUnits
+    if Unit.IsInRange(CurrentUnit, PlayerUnit, maxDistance)
+    and UnitCountCurrent >= minUnits
     and UnitCountCurrent > UnitCountBest
     and Group.AverageHealthCustom(Units) < GroupHealth then
       UnitCountBest = UnitCountCurrent
@@ -473,13 +475,14 @@ function Unit.FindBestToHeal(range, minUnits, health)
 end
 
 -- returns the unit that is best to cast aoe on for the given parameters
-function Unit.FindBestToAOE(range, minUnits)
+function Unit.FindBestToAOE(range, minUnits, maxDistance)
   local BestTarget        = nil
   local UnitCountBest     = 0
   local UnitCountCurrent  = 0
   for Object, _ in pairs(UNIT_TRACKER) do
     if ObjectIsType(Object, ObjectTypes.Unit)
     and ObjectExists(Object)
+    and Unit.IsInRange(Object, PlayerUnit, maxDistance)
     and (UnitAffectingCombat(Object) or Unit.IsDummy(Object))
     and Unit.IsInLOS(Object) then
       UnitCountCurrent = #Unit.GetUnitsInRadius(Object, range, "hostile", true) + 1
