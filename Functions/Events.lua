@@ -1,11 +1,10 @@
 local Unit = LibStub("Unit")
 
--- Improve this according to time based caching
 UNIT_TRACKER = {}
 TTD_TABLE = {}
 
 -- This keeps track of all of the valid units and their ttd
-function GetUnits()
+function Events.GetUnits()
   -- cache new units
   if UnitAffectingCombat("player") then
     for i = 1, GetObjectCount() do
@@ -35,6 +34,7 @@ function GetUnits()
     end
   end
   -- remove not existing units
+  -- TODO: test if table.wipe(UNIT_TRACKER), table.wipe(TTD_TABLE) is faster
   for Object,_ in pairs(UNIT_TRACKER) do
     if not ObjectExists(Object)
     or UnitHealth(Object) <= 1 then
@@ -43,10 +43,10 @@ function GetUnits()
     end
   end
 end
-AddTimerCallback(0.1, GetUnits)
+AddTimerCallback(0.1, Events.GetUnits)
 
 Keys = {
- -- TODO: test if wow's keybinding works for my needs
+
 }
 -- This function "listens" to any key input
 -- If there is a Callback function assigned for a certain "HotKey" it will be executed
@@ -54,4 +54,4 @@ Keys = {
 function KeyListener()
 
 end
-AddTimerCallback(0.05, KeyListener)
+AddTimerCallback(0.05, Events.KeyListener)
