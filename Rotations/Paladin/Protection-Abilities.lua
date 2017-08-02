@@ -13,29 +13,32 @@ local Group       = LibStub("Group")
 local Player      = LibStub("Player")
 
 function PPAvengingWrath()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(31884) and AvengingWrath
-  and Unit.IsInRange(PlayerUnit, PlayerTarget, 30) then
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(31884)
+  and AvengingWrath
+  and Unit.IsInRange(PlayerUnit, Target, 30) then
     return Spell.Cast(31884)
   end
 end
 
 -- TODO: add check so that def cooldowns do not stack if they shouldn't
 function PPGotaK()
-  if Spell.CanCast(86659) and GotaK then
-    if Unit.PercentHealth(PlayerUnit) <= GotaKHealth
-    or BossManager.IsDefCooldownNeeded() then
-      return Spell.Cast(86659)
-    end
+  if Spell.CanCast(86659)
+  and GotaK
+  and (Unit.PercentHealth(PlayerUnit) <= GotaKHealth
+  or BossManager.IsDefCooldownNeeded()) then
+    return Spell.Cast(86659)
   end
 end
 
 function PPArdentDefender()
-  if Spell.CanCast(31850) and ArdentDefender then
-    if Unit.PercentHealth(PlayerUnit) <= ADHealth
-    or BossManager.IsDefCooldownNeeded() then
-      return Spell.Cast(31850)
-    end
+  if Spell.CanCast(31850)
+  and ArdentDefender
+  and (Unit.PercentHealth(PlayerUnit) <= ADHealth
+    or BossManager.IsDefCooldownNeeded()) then
+    return Spell.Cast(31850)
   end
 end
 
@@ -43,37 +46,43 @@ function PPLayOnHandsTarget()
 end
 
 function PPLayOnHands()
-  if Spell.CanCast(633) and LayOnHands
+  if Spell.CanCast(633)
+  and LayOnHands
   and Unit.PercentHealth(PlayerUnit) <= LoHHealth then
     return Spell.Cast(633)
   end
 end
 
 function PPEyeOfTyr()
-  if Spell.CanCast(209202) and EyeOfTyr
+  if Spell.CanCast(209202)
+  and EyeOfTyr
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true) >= EoTUnits then
     return Spell.Cast(209202)
   end
 end
 
 function PPSepharim()
-  if PlayerTarget ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(152262)
   and Sepharim
   and Player.HasTalent(7, 2)
   and (PlayerUnit ~= MainTank or not Unit.IsTankingBoss(PlayerUnit))
-  and Unit.IsInAttackRange(53600, PlayerTarget)
+  and Unit.IsInAttackRange(53600, Target)
   and Spell.GetCharges(53600) >= 1 then
     return Spell.Cast(152262)
   end
 end
 
 function PPSotR()
-  if PlayerTarget ~= nil
-  and Unit.IsHostile(PlayerTarget)
-  and Spell.CanCast(53600, PlayerTarget)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Unit.IsHostile(Target)
+  and Spell.CanCast(53600, Target)
   and not Buff.Has(PlayerUnit, 53600)
-  and Unit.IsFacing(PlayerTarget, CastAngle) then
+  and Unit.IsFacing(Target, CastAngle) then
     if Player.HasTalent(7, 2)
     and Spell.GetCharges(53600) > 2
     and PlayerUnit ~= MainTank then
@@ -107,6 +116,7 @@ end
 
 function PPHotP()
   local Target = PPHotPTarget()
+
   if Target ~= nil
   and Player.HasTalent(5, 1)
   and Spell.CanCast(213652, Target, nil, nil, false)
@@ -125,64 +135,67 @@ function PPFlashOfLight()
 end
 
 function PPConsecration()
+  local Target = PlayerTarget()
+
   if not Unit.IsMoving(PlayerUnit)
   and Spell.CanCast(26573)
-  and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
+  and Unit.IsInRange(PlayerUnit, Target, 8) then
     return Spell.Cast(26573)
   end
 end
 
 function PPAvengersShield()
-  if PlayerTarget ~= nil
-  and Unit.IsInLOS(PlayerTarget)
-  and Spell.CanCast(31935, PlayerTarget)
-  and Unit.IsFacing(PlayerTarget, CastAngle) then
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Unit.IsInLOS(Target)
+  and Spell.CanCast(31935, Target)
+  and Unit.IsFacing(Target, CastAngle) then
     return Spell.Cast(31935)
   end
 end
 
 function PPJudgment()
-  if PlayerTarget ~= nil
-  and Unit.IsInLOS(PlayerTarget)
-  and Spell.CanCast(20271, PlayerTarget)
-  and Unit.IsFacing(PlayerTarget, CastAngle) then
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Unit.IsInLOS(Target)
+  and Spell.CanCast(20271, Target)
+  and Unit.IsFacing(Target, CastAngle) then
     return Spell.Cast(20271)
   end
 end
 
 function PPBlessedHammer()
-  if PlayerTarget ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Player.HasTalent(1, 2)
   and Spell.CanCast(204019, nil, nil, nil, false)
-  and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
+  and Unit.IsInRange(PlayerUnit, Target, 8) then
     return Spell.Cast(204019)
   end
 end
 
 function PPBlessedHammerST()
-  if PlayerTarget ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Player.HasTalent(1, 2)
   and Spell.CanCast(204019, nil, nil, nil, false)
   and Spell.GetCharges(204019) == 3
-  and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
+  and Unit.IsInRange(PlayerUnit, Target, 8) then
     return Spell.Cast(204019)
   end
 end
 
 function PPHotR()
-  if PlayerTarget ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(53595)
   and not Player.HasTalent(1, 2)
-  and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
+  and Unit.IsInRange(PlayerUnit, Target, 8) then
     return Spell.Cast(53595)
-  end
-end
-
-function PPHoR()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(62124, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget) then
-    -- Here it is necessary to let the queue cast the spell
-    return Spell.AddToQueue(62124, PlayerTarget)
   end
 end

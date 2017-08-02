@@ -35,6 +35,7 @@ end
 
 function PHLayOnHands()
   local Target = Group.UnitToHeal()
+
   if Target ~= nil
   and LayOnHands
   and Spell.CanCast(SB["Lay on Hands"], Target)
@@ -45,6 +46,7 @@ end
 
 function PHBoS()
   local Target = Group.UnitToHeal()
+
   if Target ~= nil
   and BoS
   and Spell.CanCast(SB["Blessing of Sacrifice"], Target)
@@ -61,6 +63,7 @@ end
 
 function PHTyrsDeliverance()
   local TargetUnits = Unit.GetUnitsInRadius(PlayerUnit, 15, "friendly")
+
   if TyrsDeliverance
   and Spell.CanCast(SB["Tyr's Deliverance"]) then
     if GetNumGroupMembers() ~= 1
@@ -73,6 +76,7 @@ end
 
 function PHHolyShock()
   local Target = Group.UnitToHeal()
+
   if Target ~= nil
   and Unit.PercentHealth(Target) <= HSHealth
   and Spell.CanCast(SB["Holy Shock"], Target, 0, MaxMana * 0.1)
@@ -83,6 +87,7 @@ end
 
 function PHHolyLight()
   local Target = Group.UnitToHeal()
+
   if Target ~= nil
   and Unit.PercentHealth(Target) <= HLHealth
   and Spell.CanCast(SB["Holy Light"], Target, 0, MaxMana * 0.12)
@@ -93,6 +98,7 @@ end
 
 function PHLotM()
   local Target = Group.UnitToHeal()
+
   if Target ~= nil
   and LotM
   and Unit.IsMoving(PlayerUnit)
@@ -112,6 +118,7 @@ end
 
 function PHBoL()
   local Target = Group.TankToHeal()
+
   if Target ~= nil
   and BoL
   and not Player.HasTalent(7, 3)
@@ -124,6 +131,7 @@ end
 
 function PHBoF()
   local Target = Group.UnitToHeal()
+
   if Target ~= nil
   and BoF
   and Spell.CanCast(SB["Beacon of Faith"], Target, 0, MaxMana * 0.03125)
@@ -136,6 +144,7 @@ end
 
 function PHBestowFaith()
   local Target = Group.TankToHeal()
+
   if Target ~= nil
   and Spell.CanCast(SB["Bestow Faith"], Target, 0, MaxMana * 0.06)
   and Unit.IsInLOS(Target)
@@ -156,12 +165,14 @@ function PHInfusionProc()
 end
 
 function PHJudgment()
+  local Target = PlayerTarget()
+
   if Judgment
-  and PlayerTarget ~= nil
+  and Target ~= nil
   and IsSpellKnown(183778) -- TODO: change to Player.HasTalent()
-  and Spell.CanCast(SB["Judgment"], PlayerTarget, 0, MaxMana * 0.03)
-  and Unit.IsInLOS(PlayerTarget) then
-    return Spell.Cast(SB["Judgment"], PlayerTarget)
+  and Spell.CanCast(SB["Judgment"], Target, 0, MaxMana * 0.03)
+  and Unit.IsInLOS(Target) then
+    return Spell.Cast(SB["Judgment"], Target)
   end
 end
 
@@ -171,6 +182,7 @@ end
 
 function PHLightsHammer()
   local x, y, z = PHLightsHammerPos()
+
   if x ~= nil and y ~= nil and z ~= nil
   and GetTotemInfo(1) == false
   and LightsHammer
@@ -222,6 +234,7 @@ end
 
 function PHHolyPrism()
   local Target = PHHolyPrismTarget()
+
   if Target ~= nil
   and UseHolyPrism
   and Spell.CanCast(SB["Holy Prism"], Target, 0, MaxMana * 0.17) then
@@ -231,6 +244,7 @@ end
 
 function PHBoV()
   local Target = Unit.FindBestToHeal(30, BoVUnits, BoVHealth, 40)
+
   if Target ~= nil
   and BeaconOfVirtue
   and Spell.CanCast(SB["Beacon of Virtue"], Target, 0, MaxMana * 0.1)
@@ -241,6 +255,7 @@ end
 
 function PHFlashOfLight()
   local Target = Group.UnitToHeal()
+
   if Target ~= nil
   and Unit.PercentHealth(Target) <= FoLHealth
   and Spell.CanCast(SB["Flash of Light"], Target, 0, MaxMana * 0.12)

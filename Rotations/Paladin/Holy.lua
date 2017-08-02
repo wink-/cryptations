@@ -70,7 +70,6 @@ function Pulse()
 
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
 
     PHAvengingWrath()
     PHHolyAvenger()

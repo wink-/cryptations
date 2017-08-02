@@ -52,7 +52,6 @@ function Pulse()
 
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
 
     -- call interrupt engine
     if Interrupt then
@@ -89,17 +88,32 @@ function Pulse()
 end
 
 -- Taunt spells are handled here
-function Taunt(unit)
-  PlayerTarget = unit
-  PPHoR()
-  PPAvengersShield()
-  PPJudgment()
+function Taunt(Target)
+  if Target ~= nil
+  and Spell.CanCast(62124, Target)
+  and Unit.IsInLOS(Target) then
+    -- Here it is necessary to let the queue cast the spell
+    return Spell.AddToQueue(62124, Target)
+  end
+
+  if Target ~= nil
+  and Unit.IsInLOS(Target)
+  and Spell.CanCast(31935, Target)
+  and Unit.IsFacing(Target, MeleeAngle) then
+    return Spell.Cast(31935, Target)
+  end
+
+  if Target ~= nil
+  and Unit.IsInLOS(Target)
+  and Spell.CanCast(20271, Target)
+  and Unit.IsFacing(Target, MeleeAngle) then
+    return Spell.Cast(20271, Target)
+  end
 end
 
 -- Interrupt spells are handled here
-function Interrupt(unit)
-  PlayerTarget = unit
-  PRebuke()
-  PBlindingLight()
-  PHammerOfJustice()
+function Interrupt(Target)
+  PRebuke(Target)
+  PBlindingLight(Target)
+  PHammerOfJustice(Target)
 end

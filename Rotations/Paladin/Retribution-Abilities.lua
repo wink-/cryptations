@@ -12,10 +12,12 @@ local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 
 function PRAvengingWrathJudgment()
+  local Target = PlayerTarget()
+
   if Spell.CanCast(31884)
   and AvengingWrath
-  and Debuff.Has(PlayerTarget, 197277)
-  and Unit.IsInAttackRange(85256, PlayerTarget) then
+  and Debuff.Has(Target, 197277)
+  and Unit.IsInAttackRange(85256, Target) then
     return Spell.Cast(31884)
   end
 end
@@ -54,45 +56,55 @@ function PRConsecration()
 end
 
 function PRWakeOfAshes()
+  local Target = PlayerTarget()
+
   if HolyPower <= 1
   and Player.ArtifactTraitRank(179546) ~= 0
   and Spell.CanCast(205273)
-  and Unit.IsFacing(PlayerTarget, 90) then
+  and Unit.IsFacing(Target, 90) then
     return Spell.Cast(205273)
   end
 end
 
 -- TODO: add Righteous Verdict support if useful
 function PRBladeOfJustice()
-  if PlayerTarget ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and not Player.HasTalent(4, 3)
-  and Spell.CanCast(184575, PlayerTarget) then
-    Spell.Cast(184575, PlayerTarget)
+  and Spell.CanCast(184575, Target) then
+    Spell.Cast(184575, Target)
   end
 end
 
 -- TODO: add Righteous Verdict support if useful
 function PRDivineHammer()
-  if PlayerTarget ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Player.HasTalent(4, 3)
-  and Spell.CanCast(198034, PlayerTarget) then
-    Spell.Cast(198034, PlayerTarget)
+  and Spell.CanCast(198034, Target) then
+    Spell.Cast(198034, Target)
   end
 end
 
 function PRZeal()
-  if PlayerTarget ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Player.HasTalent(2, 2)
-  and Spell.CanCast(217020, PlayerTarget) then
-    Spell.Cast(217020, PlayerTarget)
+  and Spell.CanCast(217020, Target) then
+    Spell.Cast(217020, Target)
   end
 end
 
 function PRCrusaderStrike()
-  if PlayerTarget ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and not Player.HasTalent(2, 2)
-  and Spell.CanCast(35395, PlayerTarget) then
-    Spell.Cast(35395, PlayerTarget)
+  and Spell.CanCast(35395, Target) then
+    Spell.Cast(35395, Target)
   end
 end
 
@@ -121,31 +133,37 @@ function PRWordOfGlory()
 end
 
 function PRJudgment_Debuff()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(20271, PlayerTarget)
-  and Unit.IsInAttackRange(85256, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(20271, Target)
+  and Unit.IsInAttackRange(85256, Target)
+  and Unit.IsInLOS(Target)
   and TTD >= JudgmentTTD
   and (HolyPower >= 3
   or (HolyPower >= 2
   and Player.HasTalent(2, 1))) then
-    return Spell.Cast(20271, PlayerTarget)
+    return Spell.Cast(20271, Target)
   end
 end
 
 function PRExecutionSentence()
-  if PlayerTarget ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Player.HasTalent(1, 2)
-  and Spell.CanCast(213757, PlayerTarget, 9, 3) then
-      return Spell.Cast(213757, PlayerTarget)
+  and Spell.CanCast(213757, Target, 9, 3) then
+      return Spell.Cast(213757, Target)
   end
 end
 
 function PRDivineStorm_AOE()
-  if PlayerTarget~= nil
+  local Target = PlayerTarget()
+
+  if Target~= nil
   -- and Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3
   and Spell.CanCast(53385, nil, 9, 3) then
-    if Debuff.Has(PlayerTarget, 197277)
+    if Debuff.Has(Target, 197277)
     -- or Spell.GetRemainingCooldown(20271) >= 1
     -- or TTD < JudgmentTTD
     then
@@ -155,9 +173,11 @@ function PRDivineStorm_AOE()
 end
 
 function PRDivineStorm_ST()
-  if PlayerTarget~= nil
+  local Target = PlayerTarget()
+
+  if Target~= nil
   and Spell.CanCast(53385, nil, 9, 3) then
-    if Buff.Has(PlayerTarget, 151813)
+    if Buff.Has(Target, 151813)
     and Stacks >= 25 then
     -- or Spell.GetRemainingCooldown(20271) >= 1
     -- or TTD < JudgmentTTD
@@ -167,13 +187,15 @@ function PRDivineStorm_ST()
 end
 
 function PRTemplarsVerdict()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(85256, PlayerTarget, 9, 3) then
-    if Debuff.Has(PlayerTarget, 197277, true)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(85256, Target, 9, 3) then
+    if Debuff.Has(Target, 197277, true)
     -- or Spell.GetRemainingCooldown(20271) >= 1
     -- or TTD < JudgmentTTD
     then
-      return Spell.Cast(85256, PlayerTarget)
+      return Spell.Cast(85256, Target)
     end
   end
 end
