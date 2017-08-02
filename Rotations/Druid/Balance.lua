@@ -16,6 +16,27 @@ end
 
 local Settings = json.decode(content)
 
+Interrupt   = Settings.Interrupt
+Incarnation = Settings.Incarnation
+CA          = Settings.CA
+FoN         = Settings.FoN
+WoE         = Settings.WoE
+MoonkinForm = Settings.MoonkinForm
+BotA        = Settings.BotA
+BoE         = Settings.BoE
+BoA         = Settings.BoA
+StFMD       = Settings.StFMD
+MFMD        = Settings.MFMD
+SFMD        = Settings.SFMD
+StFMDCount  = Settings.StFMDCount
+MFMDCount   = Settings.MFMDCount
+SFMDCount   = Settings.SFMDCount
+
+KeyCallbacks = {
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
+}
+
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
 local Rotation    = LibStub("Rotation")
@@ -23,11 +44,6 @@ local Player      = LibStub("Player")
 local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
-
-KeyCallbacks = {
-  ["CTRL,P"] = Rotation.TogglePause,
-  ["CTRL,A"] = Rotation.ToggleAoE
-}
 
 function EmeraldDreamcatcher()
   DBStarsurgeV4()

@@ -1,3 +1,17 @@
 {
-  
+  "Interrupt": true,
+  "Incarnation": true,
+  "CA": true,
+  "FoN": true,
+  "WoE": true,
+  "MoonkinForm": true,
+  "BotA": true,
+  "BoE": true,
+  "BoA": false,
+  "StFMD": true,
+  "MFMD": true,
+  "SFMD": true,
+  "StFMDCount": 2,
+  "MFMDCount": 10,
+  "SFMDCount": 10,
 }
