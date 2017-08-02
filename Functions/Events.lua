@@ -1,4 +1,5 @@
-local Unit = LibStub("Unit")
+local Unit    = LibStub("Unit")
+local Events  = LibStub("Events")
 
 UNIT_TRACKER = {}
 TTD_TABLE = {}
@@ -52,8 +53,8 @@ Keys = {
 -- If there is a Callback function assigned for a certain "HotKey" it will be executed
 -- Every class must have a table called "KeyCallbacks" where this function can access to
 function KeyListener()
-  for k, v in pairs(KeyCallbacks) do
-    local KeysToCheck = strsplit(",", k)
-  end
+  --for k, v in pairs(KeyCallbacks) do
+    --local KeysToCheck = strsplit(",", k)
+  --end
 end
 AddTimerCallback(0.05, Events.KeyListener)

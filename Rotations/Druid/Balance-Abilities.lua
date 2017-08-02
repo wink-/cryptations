@@ -81,13 +81,13 @@ end
 
 function DBStarsurgeV1()
   local GCD = Player.GetGCDDuration()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Starsurge"], PlayerTarget, 8, 40)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Starsurge"], PlayerTarget(), 8, 40)
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and Buff.Has(PlayerUnit, AB["The Emerald Dreamcatcher"])
   and Buff.RemainingTime(PlayerUnit, AB["The Emerald Dreamcatcher"]) < GCD then
-    return Spell.Cast(SB["Starsurge"], PlayerTarget)
+    return Spell.Cast(SB["Starsurge"], PlayerTarget())
   end
 end
 
@@ -102,56 +102,56 @@ function DBFoE()
 end
 
 function DBNewMoonV1()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["New Moon"], PlayerTarget)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["New Moon"], PlayerTarget())
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and Spell.GetRemainingChargeTime(SB["New Moon"]) == 0
   and (not Buff.Has(PlayerUnit, AB["The Emerald Dreamcatcher"])
   or Buff.RemainingTime(PlayerUnit, AB["The Emerald Dreamcatcher"]) > DBNewMoonCastTime()) then
-     return Spell.Cast(SB["New Moon"], PlayerTarget)
+     return Spell.Cast(SB["New Moon"], PlayerTarget())
   end
 end
 
 function DBMoonfireV1()
 
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Moonfire"], PlayerTarget, 0, MaxMana * 0.06)
-  and Unit.IsInLOS(PlayerTarget)
-  and (not Debuff.Has(PlayerTarget, AB["Moonfire"], true)
-  or Debuff.RemainingTime(PlayerTarget, AB["Moonfire"], true) < 3) then
-    return Spell.Cast(SB["Moonfire"], PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Moonfire"], PlayerTarget(), 0, MaxMana * 0.06)
+  and Unit.IsInLOS(PlayerTarget())
+  and (not Debuff.Has(PlayerTarget(), AB["Moonfire"], true)
+  or Debuff.RemainingTime(PlayerTarget(), AB["Moonfire"], true) < 3) then
+    return Spell.Cast(SB["Moonfire"], PlayerTarget())
   end
 end
 
 function DBSunfireV1()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Sunfire"], PlayerTarget, 0, MaxMana * 0.12)
-  and Unit.IsInLOS(PlayerTarget)
-  and (not Debuff.Has(PlayerTarget, AB["Sunfire"], true)
-  or Debuff.RemainingTime(PlayerTarget, AB["Sunfire"], true) < 3) then
-    return Spell.Cast(SB["Sunfire"], PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Sunfire"], PlayerTarget(), 0, MaxMana * 0.12)
+  and Unit.IsInLOS(PlayerTarget())
+  and (not Debuff.Has(PlayerTarget(), AB["Sunfire"], true)
+  or Debuff.RemainingTime(PlayerTarget(), AB["Sunfire"], true) < 3) then
+    return Spell.Cast(SB["Sunfire"], PlayerTarget())
   end
 end
 
 function DBStellarFlareV1()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Stellar Flare"], PlayerTarget, 8, 10)
-  and Unit.IsInLOS(PlayerTarget)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and (not Debuff.Has(PlayerTarget, AB["Stellar Flare"], true)
-  or Debuff.RemainingTime(PlayerTarget, AB["Stellar Flare"], true) < 3) then
-    return Spell.Cast(SB["Stellar Flare"], PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Stellar Flare"], PlayerTarget(), 8, 10)
+  and Unit.IsInLOS(PlayerTarget())
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and (not Debuff.Has(PlayerTarget(), AB["Stellar Flare"], true)
+  or Debuff.RemainingTime(PlayerTarget(), AB["Stellar Flare"], true) < 3) then
+    return Spell.Cast(SB["Stellar Flare"], PlayerTarget())
   end
 end
 
 function DBStarfallV1()
-  if PlayerTarget ~= nil
+  if PlayerTarget() ~= nil
   and Spell.CanCast(SB["Starfall"], nil, 8, 60)
-  and Unit.IsInLOS(PlayerTarget)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
+  and Unit.IsInLOS(PlayerTarget())
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
   and Buff.Has(PlayerUnit, AB["Oneth's Intuition"]) then
-    local x, y, z = ObjectPosition(PlayerTarget)
+    local x, y, z = ObjectPosition(PlayerTarget())
     return Spell.CastGroundSpell(SB["Starfall"], x, y, z)
   end
 end
@@ -160,12 +160,12 @@ function DBNewMoonV2()
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
   local SpellState    = DBArtifactState()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["New Moon"], PlayerTarget)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["New Moon"], PlayerTarget())
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and LunarPower < LunarPowerMax - 10 * (1 + SpellState) then
-    return Spell.Cast(SB["New Moon"], PlayerTarget)
+    return Spell.Cast(SB["New Moon"], PlayerTarget())
   end
 end
 
@@ -199,7 +199,7 @@ function DBSunfireV2()
   local Target = Group.FindDoTTarget(SB["Sunfire"], SB["Sunfire"], 10)
   if Target == nil or not ObjectExists(Target) then return end
   if Spell.CanCast(SB["Sunfire"], Target, 0, MaxMana * 0.12)
-  and Unit.IsInLOS(PlayerTarget)
+  and Unit.IsInLOS(PlayerTarget())
   and (not Debuff.Has(Target, AB["Sunfire"], true)
   or Debuff.RemainingTime(Target, AB["Sunfire"], true) < 5)
   and (not Player.HasTalent(7, 3)
@@ -212,7 +212,7 @@ function DBMoonfireV2()
   local Target = Group.FindDoTTarget(SB["Moonfire"], SB["Moonfire"], 10)
   if Target == nil or not ObjectExists(Target) then return end
   if Spell.CanCast(SB["Moonfire"], Target, 0, MaxMana * 0.06)
-  and Unit.IsInLOS(PlayerTarget)
+  and Unit.IsInLOS(PlayerTarget())
   and (not Debuff.Has(Target, AB["Moonfire"], true)
   or Debuff.RemainingTime(Target, AB["Moonfire"], true) < 5)
   and (not Player.HasTalent(7, 3)
@@ -222,20 +222,20 @@ function DBMoonfireV2()
 end
 
 function DBStarsurgeV2()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Starsurge"], PlayerTarget, 8, 40)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Starsurge"], PlayerTarget(), 8, 40)
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and Buff.Has(PlayerUnit, AB["Oneth's Intuition"]) then
-    return Spell.Cast(SB["Starsurge"], PlayerTarget)
+    return Spell.Cast(SB["Starsurge"], PlayerTarget())
   end
 end
 
 function DBStarsurgeV3()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Starsurge"], PlayerTarget, 8, 40)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Starsurge"], PlayerTarget(), 8, 40)
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and not IsEquippedItem(137062)
   and #Unit.GetUnitsInRadius(PlayerUnit, DBStarfallRadius(), "hostile", true) < 2
   and Buff.Stacks(PlayerUnit, AB["Solar Empowerment"]) < 3
@@ -243,46 +243,46 @@ function DBStarsurgeV3()
   and (not Player.HasTalent(7, 1)
   or (not Spell.CanCast(SB["Fury of Elune"], nil, 8, 6)
   and not Buff.Has(PlayerUnit, AB["Fury of Elune"]))) then
-    return Spell.Cast(SB["Starsurge"], PlayerTarget)
+    return Spell.Cast(SB["Starsurge"], PlayerTarget())
   end
 end
 
 function DBSolarWrathV1()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Solar Wrath"], PlayerTarget)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Solar Wrath"], PlayerTarget())
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and Buff.Has(PlayerUnit, AB["Solar Empowerment"]) then
-    return Spell.Cast(SB["Solar Wrath"], PlayerTarget)
+    return Spell.Cast(SB["Solar Wrath"], PlayerTarget())
   end
 end
 
 function DBLunarStrikeV1()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Lunar Strike"], PlayerTarget)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Lunar Strike"], PlayerTarget())
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and Buff.Has(PlayerUnit, AB["Lunar Empowerment"]) then
-    return Spell.Cast(SB["Lunar Strike"], PlayerTarget)
+    return Spell.Cast(SB["Lunar Strike"], PlayerTarget())
   end
 end
 
 function DBLunarStrikeV2()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Lunar Strike"], PlayerTarget)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Lunar Strike"], PlayerTarget())
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and Buff.Has(PlayerUnit, AB["Warrior of Elune"]) then
-    return Spell.Cast(SB["Lunar Strike"], PlayerTarget)
+    return Spell.Cast(SB["Lunar Strike"], PlayerTarget())
   end
 end
 
 function DBSolarWrathV2()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Solar Wrath"], PlayerTarget)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget) then
-    return Spell.Cast(SB["Solar Wrath"], PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Solar Wrath"], PlayerTarget())
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget()) then
+    return Spell.Cast(SB["Solar Wrath"], PlayerTarget())
   end
 end
 
@@ -312,22 +312,22 @@ end
 
 function DBIncarnation()
   local StarfallIsValid = DBStarfallV2Pos() ~= nil
-  if PlayerTarget ~= nil
+  if PlayerTarget() ~= nil
   and Spell.CanCast(SB["Incarnation: Chosen of Elune"])
   and Spell.CanCast(SB["Starfall"], nil, 8, 60)
   and StarfallIsValid
-  or (Spell.CanCast(SB["Starsurge"], PlayerTarget, 8, 40) and not StarfallIsValid) then
+  or (Spell.CanCast(SB["Starsurge"], PlayerTarget(), 8, 40) and not StarfallIsValid) then
     return Spell.Cast(SB["Incarnation: Chosen of Elune"])
   end
 end
 
 function DBCA()
   local StarfallIsValid = DBStarfallV2Pos() ~= nil
-  if PlayerTarget ~= nil
+  if PlayerTarget() ~= nil
   and Spell.CanCast(SB["Celestial Alignment"])
   and Spell.CanCast(SB["Starfall"], nil, 8, 60)
   and StarfallIsValid
-  or (Spell.CanCast(SB["Starsurge"], PlayerTarget, 8, 40) and not StarfallIsValid) then
+  or (Spell.CanCast(SB["Starsurge"], PlayerTarget(), 8, 40) and not StarfallIsValid) then
     return Spell.Cast(SB["Celestial Alignment"])
   end
 end
@@ -335,15 +335,15 @@ end
 function DBStarsurgeV4()
   local LunarPower = UnitPower("player", 8)
   local GCD = Player.GetGCDDuration()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Starsurge"], PlayerTarget, 8, 40)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Starsurge"], PlayerTarget(), 8, 40)
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and (Buff.Has(PlayerUnit, AB["Incarnation: Chosen of Elune"])
   and Buff.RemainingTime(PlayerUnit, AB["Incarnation: Chosen of Elune"]) <= math.floor(LunarPower / 40) * GCD)
   or (Buff.Has(PlayerUnit, AB["Celestial Alignment"])
   and Buff.RemainingTime(PlayerUnit, AB["Celestial Alignment"]) <= math.floor(LunarPower / 40) * GCD) then
-    return Spell.Cast(SB["Starsurge"], PlayerTarget)
+    return Spell.Cast(SB["Starsurge"], PlayerTarget())
   end
 end
 
@@ -352,10 +352,10 @@ function DBSolarWrathV3()
   local LunarPowerMax = UnitPowerMax("player", 8)
   local SWCastTime    = 1.5 / (GetHaste() / 100 + 1)
   local LSCastTime    = 2.5 / (GetHaste() / 100 + 1)
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Solar Wrath"], PlayerTarget)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Solar Wrath"], PlayerTarget())
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and Buff.Stack(PlayerUnit, AB["Solar Empowerment"]) > 1
   and LunarPowerMax - LunarPower >= DBPowerGainSolarWrath()
   and Buff.RemainingTime(PlayerUnit, AB["The Emerald Dreamcatcher"]) > math.max(0.75, SWCastTime) * 2
@@ -368,38 +368,38 @@ function DBLunarStrikeV3()
   local LSCastTime    = 2.5 / (GetHaste() / 100 + 1)
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
-  if PlayerTarget     ~= nil
-  and Spell.CanCast(SB["Lunar Strike"], PlayerTarget)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget()     ~= nil
+  and Spell.CanCast(SB["Lunar Strike"], PlayerTarget())
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and Buff.Has(PlayerUnit, AB["Lunar Empowerment"])
   and Buff.RemainingTime(PlayerUnit, AB["The Emerald Dreamcatcher"]) > LSCastTime
   and LunarPowerMax - LunarPower >= DBPowerGainLunarStrike() then
-    return Spell.Cast(SB["Lunar Strike"], PlayerTarget)
+    return Spell.Cast(SB["Lunar Strike"], PlayerTarget())
   end
 end
 
 function DBSolarWrathV4()
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Solar Wrath"], PlayerTarget)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Solar Wrath"], PlayerTarget())
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and Buff.Has(PlayerUnit, AB["Solar Empowerment"])
   and LunarPowerMax - LunarPower >= DBPowerGainSolarWrath() then
-    return Spell.Cast(SB["Solar Wrath"], PlayerTarget)
+    return Spell.Cast(SB["Solar Wrath"], PlayerTarget())
   end
 end
 
 function DBStarsurgeV5()
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
-  if PlayerTarget ~= nil
-  and Spell.CanCast(SB["Starsurge"], PlayerTarget, 8, 40)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
+  if PlayerTarget() ~= nil
+  and Spell.CanCast(SB["Starsurge"], PlayerTarget(), 8, 40)
+  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and Unit.IsInLOS(PlayerTarget())
   and LunarPowerMax - LunarPower <= DBPowerGainLunarStrike() then
-    return Spell.Cast(SB["Starsurge"], PlayerTarget)
+    return Spell.Cast(SB["Starsurge"], PlayerTarget())
   end
 end

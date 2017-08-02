@@ -24,6 +24,11 @@ local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 
+KeyCallbacks = {
+  ["CTRL,P"] = PauseRotation,
+  ["CTRL,A"] = ToggleAoE
+}
+
 function EmeraldDreamcatcher()
   DBStarsurgeV4()
   DBSolarWrathV3()
@@ -50,7 +55,6 @@ function Pulse()
   and Unit.IsHostile("target")) and UnitHealth("target") ~= 0 then
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
 
     -- call interrupt engine
     if Interrupt then

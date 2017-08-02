@@ -11,10 +11,10 @@ local BossManager = LibStub("BossManager")
 -- also returns true when the sum of damage taken within 2 seconds is higher than 20% of the player's max health
 function BossManager.IsDefCooldownNeeded()
   -- Check if target is boss and is casting dangerous spell
-  if PlayerTarget ~= nil
-  and Unit.IsBoss(PlayerTarget)
-  and UnitCastingInfo(PlayerTarget) ~= nil then
-    local SpellID = Spell.GetID(UnitCastingInfo(PlayerTarget))
+  if PlayerTarget() ~= nil
+  and Unit.IsBoss(PlayerTarget())
+  and UnitCastingInfo(PlayerTarget()) ~= nil then
+    local SpellID = Spell.GetID(UnitCastingInfo(PlayerTarget()))
     for i = 1, #SpellsToCounterWithDefCD do
       if SpellsToCounterWithDefCD[i] == SpellID then
         return true

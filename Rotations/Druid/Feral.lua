@@ -64,8 +64,7 @@ function Pulse()
 
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
-    TTD = Unit.ComputeTTD(PlayerTarget)
+    TTD = Unit.ComputeTTD(PlayerTarget())
 
     -- call interrupt engine
     if Interrupt then

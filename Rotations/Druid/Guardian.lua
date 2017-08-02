@@ -54,7 +54,6 @@ function Pulse()
 
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
 
     -- call interrupt engine
     if Interrupt then
@@ -78,10 +77,21 @@ function Pulse()
 end
 
 function Taunt(unit)
-  PlayerTarget = unit
-  DGGrowl()
-  DGMoonfire()
+  if unit ~= nil
+  and Spell.CanCast(SB["Growl"], unit)
+  and Unit.IsHostile(unit)
+  and Unit.IsInLOS(unit) then
+    return Spell.Cast(SB["Growl"], unit)
+  end
+
+  if unit ~= nil
+  and Spell.CanCast(SB["Moonfire"], unit)
+  and Moonfire
+  and Unit.IsInLOS(unit) then
+    return Spell.Cast(SB["Moonfire"], unit)
+  end
 end
 
 function Interrupt()
+  
 end
