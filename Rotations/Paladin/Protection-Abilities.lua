@@ -140,9 +140,9 @@ function PPConsecration()
   local Target = PlayerTarget()
 
   if not Unit.IsMoving(PlayerUnit)
-  and Spell.CanCast(SB["Consecration"])
+  and Spell.CanCast(SB["Consecration Protection"])
   and Unit.IsInRange(PlayerUnit, Target, 8) then
-    return Spell.Cast(SB["Consecration"])
+    return Spell.Cast(SB["Consecration Protection"])
   end
 end
 
@@ -162,9 +162,9 @@ function PPJudgment()
 
   if Target ~= nil
   and Unit.IsInLOS(Target)
-  and Spell.CanCast(SB["Judgment"], Target)
+  and Spell.CanCast(SB["Judgment Protection"], Target)
   and Unit.IsFacing(Target, CastAngle) then
-    return Spell.Cast(SB["Judgment"])
+    return Spell.Cast(SB["Judgment Protection"])
   end
 end
 

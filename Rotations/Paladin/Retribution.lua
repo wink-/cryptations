@@ -80,7 +80,7 @@ function Pulse()
     PRAvengingWrathJudgment()
     PRShieldOfVengeance()
 
-    if Debuff.Has(197277, PlayerTarget, true)
+    if Debuff.Has(AB["Judgment Retribution"], PlayerTarget, true)
     and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3 then
       PRDivineStorm_AOE()
     else
@@ -99,9 +99,8 @@ function Pulse()
   end
 end
 
-function Interrupt(unit)
-  PlayerTarget = unit
-  PRebuke()
-  PBlindingLight()
-  PHammerOfJustice()
+function Interrupt(Target)
+  PRebuke(Target)
+  PBlindingLight(Target)
+  PHammerOfJustice(Target)
 end

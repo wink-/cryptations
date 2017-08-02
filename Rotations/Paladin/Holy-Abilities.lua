@@ -170,9 +170,9 @@ function PHJudgment()
   if Judgment
   and Target ~= nil
   and IsSpellKnown(183778) -- TODO: change to Player.HasTalent()
-  and Spell.CanCast(SB["Judgment"], Target, 0, MaxMana * 0.03)
+  and Spell.CanCast(SB["Judgment Holy"], Target, 0, MaxMana * 0.03)
   and Unit.IsInLOS(Target) then
-    return Spell.Cast(SB["Judgment"], Target)
+    return Spell.Cast(SB["Judgment Holy"], Target)
   end
 end
 
