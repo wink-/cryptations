@@ -60,24 +60,29 @@ function IsRakeEnhanced()
 end
 
 function DFProwl()
-  local Target = GetObjectWithGUID(UnitGUID("target"))
-  if Target ~= nil
-  and UnitHealth(Target) ~= 0
-  and not Buff.Has(PlayerUnit, AB["Prowl"])
-  and Unit.IsHostile(Target)
+  local Target = Target
+
+  if Prowl
+  and Target ~= nil
   and Spell.CanCast(SB["Prowl"])
-  and Unit.IsInRange(PlayerUnit, Target, 20) then
+  and not Buff.Has(PlayerUnit, AB["Prowl"])
+  and (UnitHealth(Target) ~= 0
+  and Unit.IsHostile(Target)
+  and Unit.IsInRange(PlayerUnit, Target, 30)
+  or ProwlMode == "Always") then
     return Spell.Cast(SB["Prowl"])
   end
 end
 
 function DFRakeV1()
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Rake"], PlayerTarget(), 3, 35) then
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Rake"], Target, 3, 35) then
     if Buff.Has(PlayerUnit, AB["Prowl"])
     or Buff.Has(PlayerUnit, AB["Shadowmeld"]) then
       IsRakeEnhanced()
-      return Spell.Cast(SB["Rake"], PlayerTarget())
+      return Spell.Cast(SB["Rake"], Target)
     end
   end
 end
@@ -85,6 +90,7 @@ end
 function DFTigersFury()
   local Energy    = UnitPower("player", 3)
   local MaxEnergy = UnitPowerMax("player", 3)
+
   if Spell.CanCast(SB["Tiger's Fury"])
   and Buff.Has(PlayerUnit, AB["Clearcasting"])
   and MaxEnergy - Energy >= 60
@@ -94,14 +100,16 @@ function DFTigersFury()
 end
 
 function DFIKotJ()
-  if Spell.CanCast(SB["Incarnation: King of the Jungle"])
+  if Incarnation
+  and Spell.CanCast(SB["Incarnation: King of the Jungle"])
   and Buff.Has(PlayerUnit, AB["Tiger's Fury"]) then
     return Spell.Cast(SB["Incarnation: King of the Jungle"])
   end
 end
 
 function DFBerserk()
-  if Spell.CanCast(SB["Berserk"])
+  if Berserk
+  and Spell.CanCast(SB["Berserk"])
   and Buff.Has(PlayerUnit, SB["Tiger's Fury"]) then
     return Spell.Cast(SB["Berserk"])
   end
@@ -110,6 +118,7 @@ end
 function DFElunesGuidance()
   local Energy      = UnitPower("player", 3)
   local ComboPoints = UnitPower("player", 4)
+
   if Spell.CanCast(SB["Elune's Guidance"])
   and ComboPoints <= 1
   and Energy >= DFFerociousBiteMaxEnergy() then
@@ -118,19 +127,22 @@ function DFElunesGuidance()
 end
 
 function DFFerociousBiteV1()
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Ferocious Bite"], PlayerTarget(), 3, 25)
-  and Debuff.Has(PlayerTarget(), AB["Rip"])
-  and Debuff.RemainingTime(PlayerTarget(), AB["Rip"]) < 1
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Ferocious Bite"], Target, 3, 25)
+  and Debuff.Has(Target, AB["Rip"])
+  and Debuff.RemainingTime(Target, AB["Rip"]) < 1
   and TTD > 3
-  and (Unit.PercentHealth(PlayerTarget()) < 25 or Player.HasTalent(6, 1)) then
-    return Spell.Cast(SB["Ferocious Bite"], PlayerTarget())
+  and (Unit.PercentHealth(Target) < 25 or Player.HasTalent(6, 1)) then
+    return Spell.Cast(SB["Ferocious Bite"], Target)
   end
 end
 
 function DFRegrowthV1()
   local GCD          = Player.GetGCDDuration()
   local ComboPoints  = UnitPower("player", 4)
+
   if Spell.CanCast(SB["Regrowth"])
   and Player.HasTalent(7, 2)
   and Buff.Has(PlayerUnit, AB["Predatory Swiftness"])
@@ -152,103 +164,135 @@ function DFRegrowthV2()
 end
 
 function DFArtifact()
-  local ComboPoints    = UnitPower("player", 4)
-  local MaxComboPoints = UnitPowerMax("player", 4)
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Ashamane's Frenzy"], PlayerTarget())
+  local ComboPoints     = UnitPower("player", 4)
+  local MaxComboPoints  = UnitPowerMax("player", 4)
+  local Target          = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Ashamane's Frenzy"], Target)
   and MaxComboPoints - ComboPoints >= 3
-  and not Buff.Has(PlayerTarget(), AB["Elune's Guidance"]) -- Elune's Guidance
+  and not Buff.Has(Target, AB["Elune's Guidance"])
   and (Buff.Has(PlayerUnit, AB["Bloodtalons"]) or not Player.HasTalent(7, 2))
   and (Buff.Has(PlayerUnit, AB["Savage Roar"]) or not Player.HasTalent(5, 3)) then
-    return Spell.Cast(SB["Ashamane's Frenzy"], PlayerTarget())
+    return Spell.Cast(SB["Ashamane's Frenzy"], Target)
   end
 end
 
 function DFRipV1()
   local ComboPoints = UnitPower("player", 4)
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Rip"], PlayerTarget(), 3, 30)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Rip"], Target, 3, 30)
   and (RipCPSpent == 0 or ComboPoints > RipCPSpent
-  or Debuff.Has(PlayerTarget(), AB["Rip"]) ~= true)
+  or Debuff.Has(Target, AB["Rip"]) ~= true)
   and (Buff.Has(PlayerUnit, AB["Savage Roar"]) or not Player.HasTalent(5, 3)) then
     RipCPSpent = ComboPoints
-    return Spell.Cast(SB["Rip"], PlayerTarget())
+    return Spell.Cast(SB["Rip"], Target)
   end
 end
 
 function DFFerociousBiteV2()
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Ferocious Bite"], PlayerTarget(), 3, 25)
-  and Debuff.Has(AB["Rip"], PlayerTarget())
-  and (Player.HasTalent(7, 2) or Unit.PercentHealth(PlayerTarget()) < 25)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Ferocious Bite"], Target, 3, 25)
+  and Debuff.Has(AB["Rip"], Target)
+  and (Player.HasTalent(7, 2) or Unit.PercentHealth(Target) < 25)
   and (Buff.Has(PlayerUnit, AB["Savage Roar"]) or not Player.HasTalent(5, 3)) then
-    return Spell.Cast(SB["Ferocious Bite"], PlayerTarget())
+    return Spell.Cast(SB["Ferocious Bite"], Target)
   end
 end
 
 function DFRipV2()
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Rip"], PlayerTarget(), 3, 30)
-  and (Debuff.Has(PlayerTarget(), AB["Rip"]) ~= true
-  or Debuff.RemainingTime(PlayerTarget(), AB["Rip"]) < 7)
+  if RipMD then
+    local Target = Group.FindDoTTarget(SB["Rip"], AB["Rip"], RipMDCount)
+  else
+    local Target = PlayerTarget()
+  end
+
+  local ComboPoints = UnitPower("player", 4)
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Rip"], Target, 3, 30)
+  and Unit.IsFacing(Target, MeleeAngle)
+  and (Debuff.Has(Target, AB["Rip"]) ~= true
+  or Debuff.RemainingTime(Target, AB["Rip"]) < 7)
   and (Buff.Has(PlayerUnit, AB["Savage Roar"]) or not Player.HasTalent(5, 3))
   and not Player.HasTalent(6, 1) then
-    return Spell.Cast(SB["Rip"], PlayerTarget())
+    RipCPSpent = ComboPoints
+    return Spell.Cast(SB["Rip"], Target)
   end
 end
 
 function DFSavageRoar()
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(AB["Savage Roar"], PlayerTarget(), 3, 40)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(AB["Savage Roar"], Target, 3, 40)
   and (Buff.Has(PlayerUnit, AB["Savage Roar"]) ~= true
   or Buff.RemainingTime(PlayerUnit, AB["Savage Roar"]) <= 12) then
-    return Spell.Cast(SB["Savage Roar"], PlayerTarget())
+    return Spell.Cast(SB["Savage Roar"], Target)
   end
 end
 
 function DFMaim()
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Maim"], PlayerTarget(), 3, 35)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Maim"], Target, 3, 35)
   and Buff.Has(PlayerUnit, AB["Fiery Red Maimers"]) then
-    return Spell.Cast(SB["Maim"], PlayerTarget())
+    return Spell.Cast(SB["Maim"], Target)
   end
 end
 
 function DFFerociousBiteV3()
   local Energy    = UnitPower("player", 3)
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Ferocious Bite"], PlayerTarget(), 3, 25)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Ferocious Bite"], Target, 3, 25)
   and Energy >= DFFerociousBiteMaxEnergy()
-  and Debuff.Has(PlayerTarget(), AB["Rip"])
-  and (Debuff.RemainingTime(PlayerTarget(), AB["Rip"]) >= 8
+  and Debuff.Has(Target, AB["Rip"])
+  and (Debuff.RemainingTime(Target, AB["Rip"]) >= 8
   or not Player.HasTalent(5, 3)) then
-    return Spell.Cast(SB["Ferocious Bite"], PlayerTarget())
+    return Spell.Cast(SB["Ferocious Bite"], Target)
   end
 end
 
 function DFShadowmeld()
-  if PlayerTarget() ~= nil
-  and not Unit.IsTanking(PlayerUnit, PlayerTarget())
+  local Target = PlayerTarget()
+
+  if Shadowmeld
+  and Target ~= nil
+  and not Unit.IsTanking(PlayerUnit, Target)
   and Spell.CanCast(SB["Shadowmeld"])
   and Buff.Has(PlayerUnit, AB["Tiger's Fury"])
   and (Buff.Has(PlayerUnit, AB["Savage Roar"]) or not Player.HasTalent(5, 3))
   and (Buff.Has(PlayerUnit, AB["Bloodtalons"]) or not Player.HasTalent(7, 2))
-  and Spell.CanCast(SB["Rake"], PlayerTarget()) then
+  and Spell.CanCast(SB["Rake"], Target) then
     return Spell.Cast(SB["Shadowmeld"])
   end
 end
 
 function DFRakeV2()
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Rake"], PlayerTarget(), 3, 35)
-  and not Debuff.Has(PlayerTarget(), AB["Rake"]) then
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Rake"], Target, 3, 35)
+  and not Debuff.Has(Target, AB["Rake"]) then
     IsRakeEnhanced()
-    return Spell.Cast(SB["Rake"], PlayerTarget())
+    return Spell.Cast(SB["Rake"], Target)
   end
 end
 
 function DFRakeV3()
-  local Target = Group.FindDoTTarget(SB["Rake"], AB["Rake"], 3)
+  if RakeMD then
+    local Target = Group.FindDoTTarget(SB["Rake"], AB["Rake"], RakeMDCount)
+  else
+    local Target = PlayerTarget()
+  end
+
   if Target ~= nil
   and Spell.CanCast(SB["Rake"], Target, 3, 35)
   and Unit.IsFacing(Target, MeleeAngle)
@@ -261,22 +305,28 @@ function DFRakeV3()
 end
 
 function DFRakeV4()
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Rake"], PlayerTarget(), 3, 35)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Rake"], Target, 3, 35)
   and Player.HasTalent(7, 2)
   and Buff.Has(PlayerUnit, AB["Bloodtalons"])
-  and Debuff.RemainingTime(PlayerTarget(), AB["Rake"]) <= 5
+  and Debuff.RemainingTime(Target, AB["Rake"]) <= 5
   and TTD > (DFRakeDebuffDuration() / 2)
   and (not RakeEnhanced or (RakeEnhanced
   and Buff.Has(PlayerUnit, AB["Incarnation: King of the Jungle"]))) then
     IsRakeEnhanced()
-    return Spell.Cast(SB["Rake"], PlayerTarget())
+    return Spell.Cast(SB["Rake"], Target)
   end
 end
 
--- same as above but with multidot support
 function DFRakeV5()
-  local Target = Group.FindDoTTarget(SB["Rake"], AB["Rake"], 3)
+  if RakeMD then
+    local Target = Group.FindDoTTarget(SB["Rake"], AB["Rake"], RakeMDCount)
+  else
+    local Target = PlayerTarget()
+  end
+
   if Target ~= nil
   and Spell.CanCast(SB["Rake"], Target, 3, 35)
   and Unit.IsFacing(Target, MeleeAngle)
@@ -297,9 +347,11 @@ function DFBrutalSlashV1()
   local BSCharges   = Spell.GetCharges(SB["Brutal Slash"])
   local ChargeTime  = Spell.GetRemainingChargeTime(SB["Brutal Slash"])
   local GCD         = Player.GetGCDDuration()
-  if PlayerTarget() ~= nil
+  local Target      = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(SB["Brutal Slash"], nil, 3, 20)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  and ObjectIsFacing(PlayerUnit, Target)
   and Energy >= 35
   and ((BSCharges >= 2 and ChargeTime <= GCD)
   or #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") > 1) then -- TODO: add TTD
@@ -308,9 +360,18 @@ function DFBrutalSlashV1()
 end
 
 function DFMoonfire()
-  local Target = Group.FindDoTTarget(SB["Moonfire"], AB["Moonfire"], 5)
-  if Target == nil or not ObjectExists(Target) then return end
-  if Spell.CanCast(SB["Moonfire"], Target)
+  if MoonfireMD
+  and Moonfire then
+    local Target = Group.FindDoTTarget(SB["Moonfire"], AB["Moonfire"], MFMDCount)
+  elseif Moonfire then
+    local Target = PlayerTarget()
+  else
+    return
+  end
+
+  if Moonfire
+  and Target ~= nil
+  and Spell.CanCast(SB["Moonfire"], Target)
   and (not Debuff.Has(Target, AB["Moonfire"])
   or Debuff.RemainingTime(Target, AB["Moonfire"]) < 4)
   and Debuff.Has(Target, AB["Rake"]) then -- TODO: add TTD
@@ -319,20 +380,24 @@ function DFMoonfire()
 end
 
 function DFThrashV1()
-  if PlayerTarget() ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(SB["Thrash Cat"], nil, 3, 50)
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3
-  and (not Debuff.Has(PlayerTarget(), AB["Thrash Cat"]) or RemainingTime < 4) then
+  and (not Debuff.Has(Target, AB["Thrash Cat"]) or RemainingTime < 4) then
     return Spell.Cast(SB["Thrash Cat"])
   end
 end
 
 function DFSwipeV1()
-  if PlayerTarget() ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(SB["Swipe Cat"], nil, 3, 45)
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3
-  and (Debuff.Has(PlayerTarget(), AB["Thrash Cat"])
-  and Debuff.RemainingTime(PlayerTarget(), AB["Thrash Cat"]) >= 4) then
+  and (Debuff.Has(Target, AB["Thrash Cat"])
+  and Debuff.RemainingTime(Target, AB["Thrash Cat"]) >= 4) then
     return Spell.Cast(SB["Swipe Cat"])
   end
 end
@@ -341,11 +406,13 @@ end
 function DFThrashV2()
   local HasT19Bonus2 = Player.HasSetPiece(2)
   local TCRank       = Player.ArtifactTraitRank(238048)
-  if PlayerTarget() ~= nil
+  local Target       = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(SB["Thrash Cat"], nil, 3, 50)
   and (HasT19Bonus2 or TCRank >= 4)
-  and (not Debuff.Has(PlayerTarget(), AB["Thrash Cat"])
-  or Debuff.RemainingTime(PlayerTarget(), AB["Thrash Cat"]) < 4)
+  and (not Debuff.Has(Target, AB["Thrash Cat"])
+  or Debuff.RemainingTime(Target, AB["Thrash Cat"]) < 4)
   and IsEquippedItem(137056) then
     return Spell.Cast(SB["Thrash Cat"])
   end
@@ -353,11 +420,13 @@ end
 
 function DFThrashV3()
   local HasT19Bonus4 = Player.HasSetPiece(4)
-  if PlayerTarget() ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(SB["Thrash Cat"], nil, 3, 50)
   and (HasT19Bonus4)
-  and (not Debuff.Has(PlayerTarget(), AB["Thrash Cat"])
-  or Debuff.RemainingTime(PlayerTarget(), AB["Thrash Cat"]) < 4)
+  and (not Debuff.Has(Target, AB["Thrash Cat"])
+  or Debuff.RemainingTime(Target, AB["Thrash Cat"]) < 4)
   and Buff.Has(PlayerUnit, AB["Clearcasting"])
   and not Buff.Has(PlayerUnit, AB["Bloodtalons"]) then
     return Spell.Cast(SB["Thrash Cat"])
@@ -367,40 +436,48 @@ end
 function DFShred()
   local Energy    = UnitPower("player", 3)
   local MaxEnergy = UnitPowerMax("player", 3)
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Shred"], PlayerTarget(), 3, 40)
-  and ObjectIsFacing(PlayerUnit, PlayerTarget())
+  local Target    = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Shred"], Target, 3, 40)
+  and ObjectIsFacing(PlayerUnit, Target)
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") < 3
-  and ((Debuff.Has(PlayerTarget(), AB["Rake"])
-  and Debuff.RemainingTime(PlayerTarget(), AB["Rake"]) > DFRakeIntervalSec())
+  and ((Debuff.Has(Target, AB["Rake"])
+  and Debuff.RemainingTime(Target, AB["Rake"]) > DFRakeIntervalSec())
   or (MaxEnergy - Energy) < 1) then
-    return Spell.Cast(SB["Shred"], PlayerTarget())
+    return Spell.Cast(SB["Shred"], Target)
   end
 end
 
 function DFThrashV4()
-  local HasT19Bonus2 = Player.HasSetPiece(2)
-  if PlayerTarget() ~= nil
+  local HasT19Bonus2  = Player.HasSetPiece(2)
+  local Target        = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(AB["Thrash Cat"], nil, 3, 50)
   and (HasT19Bonus2)
-  and (not Debuff.Has(PlayerTarget(), AB["Thrash Cat"])
-  or Debuff.RemainingTime(PlayerTarget(), AB["Thrash Cat"]) < 4) then
+  and (not Debuff.Has(Target, AB["Thrash Cat"])
+  or Debuff.RemainingTime(Target, AB["Thrash Cat"]) < 4) then
     return Spell.Cast(SB["Thrash Cat"])
   end
 end
 
 function DFBrutalSlashV2()
-  local HasT19Bonus2 = Player.HasSetPiece(2)
-  if PlayerTarget() ~= nil
+  local HasT19Bonus2  = Player.HasSetPiece(2)
+  local Target        = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(SB["Brutal Slash"], nil, 3, 20)
-  and (not HasT19Bonus2 or (Debuff.Has(PlayerTarget(), AB["Thrash Cat"])
-  and Debuff.RemainingTime(PlayerTarget(), AB["Thrash Cat"]) >= 4)) then
+  and (not HasT19Bonus2 or (Debuff.Has(Target, AB["Thrash Cat"])
+  and Debuff.RemainingTime(Target, AB["Thrash Cat"]) >= 4)) then
     return Spell.Cast(SB["Brutal Slash"])
   end
 end
 
 function DFThrashV5()
-  if PlayerTarget() ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(SB["Thrash Cat"], nil, 3, 50)
   and IsEquippedItem(137056) then
     return Spell.Cast(SB["Thrash Cat"])
@@ -408,11 +485,13 @@ function DFThrashV5()
 end
 
 function DFSwipeV2()
-  local HasT19Bonus2 = Player.HasSetPiece(2)
-  if PlayerTarget() ~= nil
+  local HasT19Bonus2  = Player.HasSetPiece(2)
+  local Target        = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(SB["Swipe Cat"], nil, 3, 45)
-  and (not HasT19Bonus2 or (Debuff.Has(PlayerTarget(), AB["Thrash Cat"])
-  and Debuff.RemainingTime(PlayerTarget(), AB["Thrash Cat"]) >= 4)) then
+  and (not HasT19Bonus2 or (Debuff.Has(Target, AB["Thrash Cat"])
+  and Debuff.RemainingTime(Target, AB["Thrash Cat"]) >= 4)) then
     return Spell.Cast(SB["Swipe Cat"])
   end
 end
