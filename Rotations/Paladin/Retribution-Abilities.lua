@@ -31,6 +31,8 @@ function PRShieldOfVengeance()
 end
 
 function PRCrusade()
+  local HolyPower = UnitPower("player", 9)
+
   if Crusade
   and Spell.CanCast(SB["Crusade"])
   and HolyPower == 5 then
@@ -56,7 +58,8 @@ function PRConsecration()
 end
 
 function PRWakeOfAshes()
-  local Target = PlayerTarget()
+  local Target    = PlayerTarget()
+  local HolyPower = UnitPower("player", 9)
 
   if HolyPower <= 1
   and Player.ArtifactTraitRank(179546) ~= 0
@@ -109,6 +112,8 @@ function PRCrusaderStrike()
 end
 
 function PRJusticarsVengeance()
+  local HolyPower = UnitPower("player", 9)
+
   if HolyPower == 5
   and Unit.PercentHealth(PlayerUnit) <= JVHealth
   and Spell.CanCast(SB["Justicar's Vengeance"]) then
@@ -133,13 +138,14 @@ function PRWordOfGlory()
 end
 
 function PRJudgment_Debuff()
-  local Target = PlayerTarget()
+  local Target    = PlayerTarget()
+  local HolyPower = UnitPower("player", 9)
 
   if Target ~= nil
   and Spell.CanCast(SB["Judgment Retribution"], Target)
   and Unit.IsInAttackRange(SB["Templar's Verdict"], Target)
   and Unit.IsInLOS(Target)
-  and TTD >= JudgmentTTD
+  and TTD_TABLE[Target] >= JudgmentTTD
   and (HolyPower >= 3
   or (HolyPower >= 2
   and Player.HasTalent(2, 1))) then
@@ -161,14 +167,9 @@ function PRDivineStorm_AOE()
   local Target = PlayerTarget()
 
   if Target~= nil
-  -- and Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3
-  and Spell.CanCast(SB["Divine Storm"], nil, 9, 3) then
-    if Debuff.Has(Target, AB["Judgment Retribution"])
-    -- or Spell.GetRemainingCooldown(20271) >= 1
-    -- or TTD < JudgmentTTD
-    then
-      return Spell.Cast(SB["Divine Storm"])
-    end
+  and Spell.CanCast(SB["Divine Storm"], nil, 9, 3)
+  and  Debuff.Has(Target, AB["Judgment Retribution"]) then
+    return Spell.Cast(SB["Divine Storm"])
   end
 end
 
@@ -176,12 +177,9 @@ function PRDivineStorm_ST()
   local Target = PlayerTarget()
 
   if Target~= nil
-  and Spell.CanCast(SB["Divine Storm"], nil, 9, 3) then
-    if Buff.Stacks(Target, AB["Scarlet Inquisitor's Expurgation"]) >= 25 then
-    -- or Spell.GetRemainingCooldown(20271) >= 1
-    -- or TTD < JudgmentTTD
-      return Spell.Cast(SB["Divine Storm"])
-    end
+  and Spell.CanCast(SB["Divine Storm"], nil, 9, 3)
+  and Buff.Stacks(Target, AB["Scarlet Inquisitor's Expurgation"]) >= 25 then
+    return Spell.Cast(SB["Divine Storm"])
   end
 end
 
@@ -189,12 +187,8 @@ function PRTemplarsVerdict()
   local Target = PlayerTarget()
 
   if Target ~= nil
-  and Spell.CanCast(SB["Templar's Verdict"], Target, 9, 3) then
-    if Debuff.Has(Target, AB["Judgment Retribution"], true)
-    -- or Spell.GetRemainingCooldown(20271) >= 1
-    -- or TTD < JudgmentTTD
-    then
-      return Spell.Cast(SB["Templar's Verdict"], Target)
-    end
+  and Spell.CanCast(SB["Templar's Verdict"], Target, 9, 3)
+  and Debuff.Has(Target, AB["Judgment Retribution"], true) then
+    return Spell.Cast(SB["Templar's Verdict"], Target)
   end
 end
