@@ -30,6 +30,7 @@ AB = {
   ["Dark Shadow"] = 245687,
   ["Nightblade"] = 195452,
   ["Sprint"] = 2983,
+  ["Shield of the Righteous"] = 53600,
   ["Stealth"] = 1784,
   ["Vanish"] = 1856,
   ["Subterfuge"] = 108208,
