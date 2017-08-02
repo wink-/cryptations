@@ -1,3 +1,15 @@
 {
   "Interrupt": true,
+  "Prowl": true,
+  "ProwlMode": "Near",
+  "Incarnation": true,
+  "Berserk": true,
+  "Shadowmeld": true,
+  "Moonfire": false,
+  "MoonfireMD": false,
+  "RakeMD": true,
+  "RipMD": true,
+  "RakeMDCount": 3,
+  "MFMDCount": 5,
+  "RipMDCount": 5,
 }

@@ -17,6 +17,18 @@ end
 local Settings = json.decode(content)
 
 Interrupt   = Settings.Interrupt
+Prowl       = Settings.Prowl
+ProwlMode   = Settings.ProwlMode
+Incarnation = Settings.Incarnation
+Berserk     = Settings.Berserk
+Shadowmeld  = Settings.Shadowmeld
+Moonfire    = Settings.Moonfire
+MoonfireMD  = Settings.MoonfireMD
+RakeMD      = Settings.RakeMD
+RipMD       = Settings.RipMD
+RakeMDCount = Settings.RakeMDCount
+MFMDCount   = Settings.MFMDCount
+RipMDCount  = Settings.RipMDCount
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
