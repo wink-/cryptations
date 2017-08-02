@@ -44,7 +44,6 @@ function Events.GetUnits()
     end
   end
 end
-AddTimerCallback(0.1, Events.GetUnits)
 
 Keys = {
 
@@ -52,9 +51,8 @@ Keys = {
 -- This function "listens" to any key input
 -- If there is a Callback function assigned for a certain "HotKey" it will be executed
 -- Every class must have a table called "KeyCallbacks" where this function can access to
-function KeyListener()
+function Events.KeyListener()
   --for k, v in pairs(KeyCallbacks) do
     --local KeysToCheck = strsplit(",", k)
   --end
 end
-AddTimerCallback(0.05, Events.KeyListener)

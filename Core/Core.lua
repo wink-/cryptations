@@ -3,6 +3,7 @@ local Rotation  = LibStub("Rotation")
 local Spell     = LibStub("Spell")
 local Group     = LibStub("Group")
 local Player    = LibStub("Player")
+local Events    = LibStub("Events")
 
 -- GLOBAL SETTINGS
 
@@ -80,12 +81,11 @@ function Initialize()
     end
   end
 
+  -- Set Frame Scripts
   frame:SetScript("OnEvent", eventHandler)
   spellframe:SetScript("OnUpdate", Spell.DetectionHandler)
-end
 
-if GetFireHackVersion() ~= nil then
-  Initialize()
-else
-  message("No unlocker attached. Please attach unlocker and reload.")
+  -- Create Timers
+  AddTimerCallback(0.05, Events.KeyListener)
+  AddTimerCallback(0.1, Events.GetUnits)
 end

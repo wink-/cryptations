@@ -25,8 +25,8 @@ local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 
 KeyCallbacks = {
-  ["CTRL,P"] = PauseRotation,
-  ["CTRL,A"] = ToggleAoE
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
 }
 
 function EmeraldDreamcatcher()
