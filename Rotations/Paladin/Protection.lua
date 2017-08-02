@@ -90,24 +90,24 @@ end
 -- Taunt spells are handled here
 function Taunt(Target)
   if Target ~= nil
-  and Spell.CanCast(62124, Target)
+  and Spell.CanCast(SB["Hand of Reckoning"], Target)
   and Unit.IsInLOS(Target) then
     -- Here it is necessary to let the queue cast the spell
-    return Spell.AddToQueue(62124, Target)
+    return Spell.AddToQueue(SB["Hand of Reckoning"], Target)
   end
 
   if Target ~= nil
   and Unit.IsInLOS(Target)
-  and Spell.CanCast(31935, Target)
+  and Spell.CanCast(SB["Avenger's Shield"], Target)
   and Unit.IsFacing(Target, MeleeAngle) then
-    return Spell.Cast(31935, Target)
+    return Spell.Cast(SB["Avenger's Shield"], Target)
   end
 
   if Target ~= nil
   and Unit.IsInLOS(Target)
-  and Spell.CanCast(20271, Target)
+  and Spell.CanCast(SB["Judgment"], Target)
   and Unit.IsFacing(Target, MeleeAngle) then
-    return Spell.Cast(20271, Target)
+    return Spell.Cast(SB["Judgment"], Target)
   end
 end
 
