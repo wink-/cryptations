@@ -119,14 +119,16 @@ function Rotation.Interrupt()
     end
     -- interrupt target
   else
-    local _, _, _, _, _, _, _, _, NotInterruptible = UnitCastingInfo(PlayerTarget())
-    if PlayerTarget() ~= nil
-    and NotInterruptible == false
-    and Unit.IsHostile(PlayerTarget()) then
-      local PercentCasted = Unit.CastedPercent(PlayerTarget())
+    local Target = PlayerTarget()
+    if Target == nil then return end
+    local _, _, _, _, _, _, _, _, NotInterruptible = UnitCastingInfo(Target)
+
+    if NotInterruptible == false
+    and Unit.IsHostile(Target) then
+      local PercentCasted = Unit.CastedPercent(Target)
       if InterruptMinPercent < PercentCasted
       and PercentCasted < InterruptMaxPercent and Interrupt ~= nil then
-        Interrupt(PlayerTarget())
+        Interrupt(Target)
       end
     end
   end

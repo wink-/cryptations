@@ -10,7 +10,7 @@ CurrentSpell              = nil          -- SpellID of the spell currently being
 CastAngle                 =  90           -- Facing angle for casted spells
 MeleeAngle                = 180           -- Facing angle for melee spells
 ConeAngle                 =  45           -- Facing angle for cone logic
-PreCastTime               = 0.2
+PreCastTime               = 0.04
 
 -- This is used to bypass some silly bugs related to CastSpellByID
 -- Same functionality but adds instant casts to the spell history

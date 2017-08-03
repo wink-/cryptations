@@ -187,7 +187,8 @@ function DBNewMoonV2()
 end
 
 function DBStarfallV2Pos()
-  return ObjectPosition(Unit.FindBestToAOE(DBStarfallRadius(), 2, 40))
+  local StarfallRadius = DBStarfallRadius()
+  return ObjectPosition(Unit.FindBestToAOE(StarfallRadius, 2, 40))
 end
 
 function DBStarfallV2()
@@ -458,7 +459,7 @@ function DBStarsurgeV5()
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
   local Target        = PlayerTarget()
-  
+
   if Target ~= nil
   and Spell.CanCast(SB["Starsurge"], Target, 8, 40)
   and ObjectIsFacing(PlayerUnit, Target)
