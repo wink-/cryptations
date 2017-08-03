@@ -45,6 +45,11 @@ MaxMana           = UnitPowerMax("player" , 0)
 local Unit        = LibStub("Unit")
 local Rotation    = LibStub("Rotation")
 
+KeyCallbacks = {
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
+}
+
 function Pulse()
   -- Call Taunt engine
   if UseTauntEngine then

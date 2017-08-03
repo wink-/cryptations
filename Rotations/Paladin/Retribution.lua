@@ -45,6 +45,11 @@ local Unit        = LibStub("Unit")
 local Rotation    = LibStub("Rotation")
 local Debuff      = LibStub("Debuff")
 
+KeyCallbacks = {
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
+}
+
 function SingleTargetSpenders()
   PRExecutionSentence()
   -- Justicars Vengeance

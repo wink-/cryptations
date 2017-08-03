@@ -64,6 +64,11 @@ local Player      = LibStub("Player")
 local BossManager = LibStub("BossManager")
 local Utils       = LibStub("Utils")
 
+KeyCallbacks = {
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
+}
+
 function Pulse()
   if UnitAffectingCombat(PlayerUnit) then
     -- Dispell engine

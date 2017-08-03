@@ -42,6 +42,11 @@ local Rotation    = LibStub("Rotation")
 local Player      = LibStub("Player")
 local BossManager = LibStub("BossManager")
 
+KeyCallbacks = {
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
+}
+
 function Finishers()
   DFRipV1()
   DFFerociousBiteV2()
