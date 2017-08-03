@@ -1,5 +1,11 @@
 {
   "Interrupt": true,
+  "InterruptAny": false,
+  "InterruptMin": 20,
+  "InterruptMax": 80,
+  "AutoEngage": true,
+  "AutoTarget": true,
+  "TargetMode": 0,
   "Prowl": true,
   "ProwlMode": "Near",
   "Incarnation": true,

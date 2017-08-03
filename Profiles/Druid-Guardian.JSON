@@ -1,6 +1,12 @@
 {
   "Taunt": true,
   "Interrupt": true,
+  "InterruptAny": false,
+  "InterruptMin": 20,
+  "InterruptMax": 80,
+  "AutoEngage": true,
+  "AutoTarget": true,
+  "TargetMode": 0,
   "SurvInstincts": true,
   "Barkskin": true,
   "Ironfur": true,
