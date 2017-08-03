@@ -7,6 +7,7 @@ Libs\JSON\json.lua
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 Libs\LibArtifactData-1.0\LibArtifactData-1.0.lua
+Libs\ChatOverlay.lua
 Core\LibLoader.lua
 
 # Functions
@@ -65,10 +66,10 @@ Rotations\Paladin\Common-Abilities.lua
 Rotations\Paladin\Holy-Abilities.lua
 Rotations\Paladin\Holy.lua
 Rotations\Paladin\Protection-Abilities.lua
-Rotations\Paladin\Protection.lua
+Rotations\Paladin\Protection.Slua
 Rotations\Paladin\Retribution-Abilities.lua
 Rotations\Paladin\Retribution.lua
-Rotations\Paladin\SpellBool.lua
+Rotations\Paladin\SpellBook.lua
 
 Rotations\Priest\Discipline.lua
 Rotations\Priest\Holy.lua
