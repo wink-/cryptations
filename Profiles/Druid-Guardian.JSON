@@ -10,7 +10,7 @@
   "SurvInstincts": true,
   "Barkskin": true,
   "Ironfur": true,
-  "FRegen": true,
+  "FRegen": false,
   "Moonfire": true,
   "Maul": true,
   "RotS": true,
