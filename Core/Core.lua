@@ -5,21 +5,6 @@ local Group     = LibStub("Group")
 local Player    = LibStub("Player")
 local Events    = LibStub("Events")
 
--- GLOBAL SETTINGS
-
--- Targeting behavior : Only one can be true
-ReTargetNearestUnit      = true
-ReTargetHighestUnit      = false
-ReTargetLowestUnit       = false
-
--- Combat behavior
-AllowOutOfCombatRoutine  = true
-
--- Interrupt behavior
-InterruptAnyUnit         = false
-InterruptMinPercent      = 20
-InterruptMaxPercent      = 80
-
 function Initialize()
 
   -- Setup event frame
