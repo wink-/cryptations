@@ -68,7 +68,7 @@ function Rotation.Target(mode)
         end
       end
     end
-    
+
     StartAttack()
   end
 end

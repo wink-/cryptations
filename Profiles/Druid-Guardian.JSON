@@ -1,9 +1,9 @@
 {
   "Taunt": true,
   "Interrupt": true,
-  "InterruptAny": false,
-  "InterruptMin": 20,
-  "InterruptMax": 80,
+  "InterruptAny": true,
+  "InterruptMin": 20.0,
+  "InterruptMax": 80.0,
   "AutoEngage": true,
   "AutoTarget": true,
   "TargetMode": 0,
@@ -15,11 +15,11 @@
   "Maul": true,
   "RotS": true,
   "AutoSwitchForm": true,
-  "SIHealth": 70,
-  "BSHealth": 70,
-  "IFHealth": 85,
-  "FRHealth": 20,
-  "MaulHealth": 95,
-  "MaulRage": 95,
-  "RotSHealth": 80
+  "SIHealth": 70.0,
+  "BSHealth": 70.0,
+  "IFHealth": 85.0,
+  "FRHealth": 20.0,
+  "MaulHealth": 95.0,
+  "MaulRage": 95.0,
+  "RotSHealth": 80.0
 }
