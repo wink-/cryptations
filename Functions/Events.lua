@@ -8,39 +8,39 @@ TTD_TABLE = {}
 function Events.GetUnits()
   -- cache new units
   if UnitAffectingCombat("player") then
-    for i = 1, GetObjectCount() do
-      local Object = GetObjectWithIndex(i)
-      if ObjectIsType(Object, ObjectTypes.Unit)
-      and ObjectExists(Object)
-      and Object ~= ObjectPointer("player")
-      and not UNIT_TRACKER[Object]
-      and (UnitAffectingCombat(Object) or Unit.IsDummy(Object)) then
-        UNIT_TRACKER[Object] = GetTime()
-        if TTD_TABLE[Object] == nil then
-          TTD_TABLE[Object] = -1
+    local Units = GetObjectsOfType(ObjectTypes.Unit)
+    for i = 1, #Units do
+      local Unit = Units[i]
+      if Unit ~= ObjectPointer("player")
+      and not UNIT_TRACKER[Unit]
+      and (UnitAffectingCombat(Unit) or Unit.IsDummy(Unit)) then
+        UNIT_TRACKER[Unit] = GetTime()
+        if TTD_TABLE[Unit] == nil then
+          TTD_TABLE[Unit] = -1
         end
       end
     end
 
     -- update unit variables
-    for Object, _ in pairs(UNIT_TRACKER) do
-      local duration = GetTime() - UNIT_TRACKER[Object]
-      local health = UnitHealth(Object)
-      local diff = UnitHealthMax(Object) - health
+    for Unit, _ in pairs(UNIT_TRACKER) do
+      local duration = GetTime() - UNIT_TRACKER[Unit]
+      local health = UnitHealth(Unit)
+      local diff = UnitHealthMax(Unit) - health
       local dps = diff / duration
       local ttd = health / dps
       if ttd ~= math.huge and ttd >= 1 then
-        TTD_TABLE[Object] = ttd
+        TTD_TABLE[Unit] = ttd
       end
     end
   end
+
   -- remove not existing units
-  -- TODO: test if table.wipe(UNIT_TRACKER), table.wipe(TTD_TABLE) is faster
-  for Object,_ in pairs(UNIT_TRACKER) do
-    if not ObjectExists(Object)
-    or UnitHealth(Object) <= 1 then
-      UNIT_TRACKER[Object] = nil
-      TTD_TABLE[Object] = nil
+  -- TODO: test if table.wipe(UNIT_TRACKER) is faster
+  for Unit,_ in pairs(UNIT_TRACKER) do
+    if not ObjectExists(Unit)
+    or UnitHealth(Unit) <= 1 then
+      UNIT_TRACKER[Unit] = nil
+      TTD_TABLE[Unit] = nil
     end
   end
 end
