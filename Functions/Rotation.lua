@@ -57,17 +57,18 @@ function Rotation.Target(mode)
   if UnitAffectingCombat("player") then
     -- re targeting logic
     if UnitGUID("target") == nil then
-      if ReTargetHighestUnit then
+      if TargetMode == 1 then
         TargetUnit(Unit.FindHighest(mode, true))
-      elseif ReTargetLowestUnit then
+      elseif TargetMode == 2 then
         TargetUnit(Unit.FindLowest(mode, true))
-      elseif ReTargetNearestUnit then
+      elseif TargetMode == 0 then
         local NearestUnit = Unit.FindNearest(mode, true)
         if NearestUnit ~= nil then
           TargetUnit(NearestUnit)
         end
       end
     end
+    
     StartAttack()
   end
 end
@@ -77,12 +78,8 @@ end
 function Rotation.Taunt()
   local IsOtherTankTanking = false
 
-  local ObjectCount = GetObjectCount()
-  local Object = nil
-
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
-    if ObjectIsType(Object, ObjectTypes.Unit) and Unit.IsHostile(Object) then
+  for Object, _ in pairs(UNIT_TRACKER) do
+    if Unit.IsHostile(Object) then
       local IsTanking = UnitDetailedThreatSituation(PlayerUnit, Object)
 
       -- check if other tank is tanking the object
@@ -108,7 +105,7 @@ end
 -- Handles Interrupting
 function Rotation.Interrupt()
   -- interrupt any unit
-  if InterruptAnyUnit then
+  if InterruptAny then
     for Object, _ in pairs(UNIT_TRACKER) do
       local _, _, _, _, _, _, _, _, NotInterruptible = UnitCastingInfo(Object)
       if NotInterruptible == 1
