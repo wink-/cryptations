@@ -151,12 +151,23 @@ end
 
 function Rotation.Pause()
   Paused = true
+  ChatOverlay("Pausing Rotation", 2, "RED")
 end
 
 function Rotation.TogglePause()
   Paused = not Paused
+  if Paused then
+    ChatOverlay("Pausing Rotation", 2, "RED")
+  else
+    ChatOverlay("Resuming Rotation", 2, "GREEN")
+  end
 end
 
 function Rotation.ToggleAoE()
   AllowAoE = not AllowAoE
+  if AllowAoE then
+    ChatOverlay("AoE Enabled", 2, "GREEN")
+  else
+    ChatOverlay("AoE Disabled", 2, "RED")
+  end
 end
