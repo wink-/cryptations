@@ -17,6 +17,12 @@ end
 local Settings = json.decode(content)
 
 Interrupt     = Settings.Interrupt
+InterruptAny  = Settings.InterruptAny
+InterruptMin  = Settings.InterruptMin
+InterruptMax  = Settings.InterruptMax
+AutoEngage    = Settings.AutoEngage
+AutoTarget    = Settings.AutoTarget
+TargetMode    = Settings.TargetMode
 AvengingWrath = Settings.AvengingWrath
 SoV           = Settings.SoV
 Crusade       = Settings.Crusade

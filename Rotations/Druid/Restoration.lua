@@ -17,6 +17,9 @@ end
 local Settings = json.decode(content)
 
 Dispell         = Settings.Dispell
+AutoEngage      = Settings.AutoEngage
+AutoTarget      = Settings.AutoTarget
+TargetMode      = Settings.TargetMode
 Tranquility     = Settings.Tranquility
 Innervate       = Settings.Innervate
 Ironbark        = Settings.Ironbark

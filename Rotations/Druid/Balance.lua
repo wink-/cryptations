@@ -16,21 +16,27 @@ end
 
 local Settings = json.decode(content)
 
-Interrupt   = Settings.Interrupt
-Incarnation = Settings.Incarnation
-CA          = Settings.CA
-FoN         = Settings.FoN
-WoE         = Settings.WoE
-MoonkinForm = Settings.MoonkinForm
-BotA        = Settings.BotA
-BoE         = Settings.BoE
-BoA         = Settings.BoA
-StFMD       = Settings.StFMD
-MFMD        = Settings.MFMD
-SFMD        = Settings.SFMD
-StFMDCount  = Settings.StFMDCount
-MFMDCount   = Settings.MFMDCount
-SFMDCount   = Settings.SFMDCount
+Interrupt     = Settings.Interrupt
+InterruptAny  = Settings.InterruptAny
+InterruptMin  = Settings.InterruptMin
+InterruptMax  = Settings.InterruptMax
+AutoEngage    = Settings.AutoEngage
+AutoTarget    = Settings.AutoTarget
+TargetMode    = Settings.TargetMode
+Incarnation   = Settings.Incarnation
+CA            = Settings.CA
+FoN           = Settings.FoN
+WoE           = Settings.WoE
+MoonkinForm   = Settings.MoonkinForm
+BotA          = Settings.BotA
+BoE           = Settings.BoE
+BoA           = Settings.BoA
+StFMD         = Settings.StFMD
+MFMD          = Settings.MFMD
+SFMD          = Settings.SFMD
+StFMDCount    = Settings.StFMDCount
+MFMDCount     = Settings.MFMDCount
+SFMDCount     = Settings.SFMDCount
 
 KeyCallbacks = {
   ["CTRL,P"] = Rotation.TogglePause,

@@ -18,6 +18,12 @@ local Settings = json.decode(content)
 
 Taunt             = Settings.Taunt
 Interrupt         = Settings.Interrupt
+InterruptAny      = Settings.InterruptAny
+InterruptMin      = Settings.InterruptMin
+InterruptMax      = Settings.InterruptMax
+AutoEngage        = Settings.AutoEngage
+AutoTarget        = Settings.AutoTarget
+TargetMode        = Settings.TargetMode
 AvengingWrath     = Settings.AvengingWrath
 GotaK             = Settings.GotaK
 ArdentDefender    = Settings.ArdentDefender

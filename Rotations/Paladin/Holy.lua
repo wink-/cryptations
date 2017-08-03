@@ -18,6 +18,9 @@ local Settings = json.decode(content)
 
 -- Apply settings from config file
 Dispell                 = Settings.Dispell
+AutoEngage              = Settings.AutoEngage
+AutoTarget              = Settings.AutoTarget
+TargetMode              = Settings.TargetMode
 AvengingWrath           = Settings.AvengingWrath
 HolyAvenger             = Settings.HolyAvenger
 LayOnHands              = Settings.LayOnHands
