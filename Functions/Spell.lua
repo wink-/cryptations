@@ -4,9 +4,9 @@ local Unit  = LibStub("Unit")
 SPELL_QUEUE = {}
 SPELL_HISTORY = {}
 
-SpellUniqueIdentifier     = 0            -- Every spell will have this value (like a primary key in a database)
-CurrentUniqueIdentifier   = nil          -- This is the primary key of the spell that is currently being casted
-CurrentSpell              = nil          -- SpellID of the spell currently being casted
+SpellUniqueIdentifier     = 0             -- Every spell will have this value (like a primary key in a database)
+CurrentUniqueIdentifier   = nil           -- This is the primary key of the spell that is currently being casted
+CurrentSpell              = nil           -- SpellID of the spell currently being casted
 CastAngle                 =  90           -- Facing angle for casted spells
 MeleeAngle                = 180           -- Facing angle for melee spells
 ConeAngle                 =  45           -- Facing angle for cone logic
@@ -166,17 +166,21 @@ end
 -- The rotation tries to cast spells with as little delay as possible
 -- and therefore using the "succeeded" event would not be fast enough
 function Spell.DetectionHandler()
-  -- add spell to the history (no matter if it was on the queue or not)
-  if not Unit.IsCasting(PlayerUnit) and CurrentSpell ~= nil then
+  -- add spell to the history if it was not in the queue before
+  if not Unit.IsCasting(PlayerUnit)
+  and CurrentSpell ~= nil
+  and #SPELL_QUEUE == 0 then
     Spell.AddToHistory(CurrentSpell)
     CurrentSpell = nil
   end
 
   -- remove them from the queue
-  if not Unit.IsCasting(PlayerUnit) and Unit.CastedPercent(PlayerUnit) ~= nil
+  if not Unit.IsCasting(PlayerUnit)
+  and Unit.CastedPercent(PlayerUnit) ~= nil
   and SPELL_QUEUE[1] ~= nil
   and CurrentUniqueIdentifier == SPELL_QUEUE[1].key then
     Spell.DeQueue(CurrentSpell)
+    Spell.AddToHistory(CurrentSpell)
     CurrentSpell = nil
   end
 end
