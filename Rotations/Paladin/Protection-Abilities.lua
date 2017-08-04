@@ -162,9 +162,9 @@ function PPJudgment()
 
   if Target ~= nil
   and Unit.IsInLOS(Target)
-  and Spell.CanCast(SB["Judgment Protection"], Target)
+  and Spell.CanCast(SB["Judgment"], Target)
   and Unit.IsFacing(Target, CastAngle) then
-    return Spell.Cast(SB["Judgment Protection"])
+    return Spell.Cast(SB["Judgment"])
   end
 end
 

@@ -142,14 +142,14 @@ function PRJudgment_Debuff()
   local HolyPower = UnitPower("player", 9)
 
   if Target ~= nil
-  and Spell.CanCast(SB["Judgment Retribution"], Target)
+  and Spell.CanCast(SB["Judgment"], Target)
   and Unit.IsInAttackRange(SB["Templar's Verdict"], Target)
   and Unit.IsInLOS(Target)
-  and TTD_TABLE[Target] >= JudgmentTTD
+  -- TODO: and TTD_TABLE[Target] >= JudgmentTTD
   and (HolyPower >= 3
   or (HolyPower >= 2
   and Player.HasTalent(2, 1))) then
-    return Spell.Cast(SB["Judgment Retribution"], Target)
+    return Spell.Cast(SB["Judgment"], Target)
   end
 end
 
