@@ -14,12 +14,10 @@ local LowestTank  = nil
 function Group.UpdateTanks()
   table.wipe(GROUP_TANKS)
 
-  local ObjectCount = GetObjectCount()
-  local Object = nil
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
+  local Units = GetObjectsOfType(ObjectTypes.Unit)
+  for i = 1, #Units do
+    local Object = Units[i]
     if ObjectExists(Object)
-    and ObjectIsType(Object, ObjectTypes.Unit)
     and (UnitInParty(Object) or UnitInRaid(Object))
     and (UnitGroupRolesAssigned(Object) == "TANK" or ObjectID(Object) == 72218) then -- ObjectID refers to Oto the Protector
       table.insert(GROUP_TANKS, Object)
@@ -31,11 +29,11 @@ end
 function Group.UpdateMembers()
   table.wipe(GROUP_MEMBERS)
 
-  local ObjectCount = GetObjectCount()
-  local Object = nil
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
-    if ObjectExists(Object) and (UnitInRaid(Object) or UnitInParty(Object)) then
+  local Units = GetObjectsOfType(ObjectTypes.Unit)
+  for i = 1, #Units do
+    local Object = Units[i]
+    if ObjectExists(Object)
+    and (UnitInRaid(Object) or UnitInParty(Object)) then
       table.insert(GROUP_MEMBERS, Object)
     end
   end
