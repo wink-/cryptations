@@ -66,8 +66,9 @@ function Group.AverageHealthCustom(units)
 end
 
 -- updates the heal priority list
+local NextGroupRefresh = GetTime()
 function Group.HealPriority()
-  if NextGroupRefresh ~= nil and NextGroupRefresh > GetTime() then return end
+  if NextGroupRefresh > GetTime() then return end
 
   -- function for sorting heal priority list
   function compare(a, b)
