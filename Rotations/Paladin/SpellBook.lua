@@ -1,5 +1,4 @@
 local _, _, ClassID = UnitClass("player")
-local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
 if FireHack == nil then return end
@@ -24,7 +23,7 @@ SB = {
   ["Crusader Strike"] = 35395,
   ["Divine Hammer"] = 198034,
   ["Divine Protection"] = 498,
-  ["Divine Strom"] = 53385,
+  ["Divine Storm"] = 53385,
   ["Execution Sentence"] = 213757,
   ["Eye for an Eye"] = 205191,
   ["Eye of Tyr"] = 209202,
