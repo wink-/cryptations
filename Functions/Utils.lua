@@ -7,7 +7,7 @@ end
 
 -- returns the z coordinate that is just above the ground at given position
 function Utils.FindGroundAt(x, y, z)
-  local hx, hy, hz = TraceLine(x, y, z, x, y, z - 100, {0x100, 0x10, 0x20})
+  local hx, hy, hz = TraceLine(x, y, z, x, y, (z - 100), bit.bor(0x10, 0x20, 0x100))
   return hx, hy, hz
 end
 
