@@ -390,10 +390,7 @@ function Unit.IsDummy(unit)
   end
 
   local Name = ObjectName(unit)
-  if Name == "Training Dummy"
-  or Name == "Raider's Training Dummy"
-  or Name == "PvP Training Dummy"
-  or Name == "Dungeoneer's Training Dummy" then
+  if strfind(strlower(Name), "dummy") ~= nil then
     return true
   end
 
