@@ -32,6 +32,7 @@ end
 function DGBarkskin()
   if Spell.CanCast(SB["Barkskin"])
   and Barkskin
+  and not Buff.Has(PlayerUnit, AB["Survival Instincts"])
   and (Unit.PercentHealth(PlayerUnit) <= BSHealth
   or BossManager.IsDefCooldownNeeded()) then
     return Spell.Cast(SB["Barkskin"])
@@ -50,6 +51,7 @@ end
 function DGIronfur()
   if Spell.CanCast(SB["Ironfur"])
   and Ironfur
+  and not Buff.Has(PlayerUnit, AB["Survival Instincts"])
   and (Unit.PercentHealth(PlayerUnit) <= IFHealth
   or BossManager.IsDefCooldownNeeded()) then
     return Spell.Cast(SB["Ironfur"])
