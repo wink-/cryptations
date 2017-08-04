@@ -20,6 +20,7 @@ Dispell         = Settings.Dispell
 AutoEngage      = Settings.AutoEngage
 AutoTarget      = Settings.AutoTarget
 TargetMode      = Settings.TargetMode
+Incarnation     = Settings.Incarnation
 Tranquility     = Settings.Tranquility
 Innervate       = Settings.Innervate
 Ironbark        = Settings.Ironbark
@@ -27,7 +28,9 @@ EoG             = Settings.EoG
 Flourish        = Settings.Flourish
 CenarionWard    = Settings.CenarionWard
 Efflorescence   = Settings.Efflorescence
+Renewal         = Settings.Renewal
 MaxRejuv        = Settings.MaxRejuv
+IncarHealth     = Settings.IncarHealth
 LBTime          = Settings.LBTime
 RejuvHealth     = Settings.RejuvHealth
 RegrowthHealth  = Settings.RegrowthHealth
@@ -66,23 +69,25 @@ function Pulse()
     -- pulse target engine and remember target
     Rotation.Target("hostile")
 
+    DRIronbark()
+    DRLifebloom()
+    DRIncarnation()
+    DRSwiftmend()
     DRTranquility()
     DRInnervate()
-    DRIronbark()
     DREoG()
     DRFlourish()
     DREfflorescence()
-    DRLifebloom()
     DRRegrowthClearcast()
     DRCenarionWard()
+    DRRenewal()
     DRRejuvenation()
     DRWildGrowth()
-    DRSwiftmend()
     DRRegrowth()
     DRHealingTouch()
-  -- Out Of Combat Rotation
+    DRSolarWrath()
   else
-
+    -- Out Of Combat Rotation
   end
 end
 
