@@ -71,6 +71,6 @@ function Initialize()
   spellframe:SetScript("OnUpdate", Spell.DetectionHandler)
 
   -- Create Timers
-  AddTimerCallback(0.05, Events.KeyListener)
+  --AddTimerCallback(0.05, Events.KeyListener)
   AddTimerCallback(0.1, Events.GetUnits)
 end

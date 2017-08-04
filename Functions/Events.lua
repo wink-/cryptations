@@ -7,11 +7,12 @@ TTD_TABLE = {}
 -- This keeps track of all of the valid units and their ttd
 function Events.GetUnits()
   -- cache new units
-  if UnitAffectingCombat("player") then
+  if UnitAffectingCombat("player") or true then
     local Units = GetObjectsOfType(ObjectTypes.Unit)
     for i = 1, #Units do
       local Object = Units[i]
       if Object ~= ObjectPointer("player")
+      and Unit.IsHostile(Object)
       and not UNIT_TRACKER[Object]
       and (UnitAffectingCombat(Object) or Unit.IsDummy(Object)) then
         UNIT_TRACKER[Object] = GetTime()
@@ -19,28 +20,25 @@ function Events.GetUnits()
           TTD_TABLE[Object] = -1
         end
       end
-    end
 
-    -- update unit variables
-    for Object, _ in pairs(UNIT_TRACKER) do
-      local duration = GetTime() - UNIT_TRACKER[Object]
-      local health = UnitHealth(Object)
-      local diff = UnitHealthMax(Object) - health
-      local dps = diff / duration
-      local ttd = health / dps
-      if ttd ~= math.huge and ttd >= 1 then
+      -- update unit variables
+      for Object, _ in pairs(UNIT_TRACKER) do
+        local duration = GetTime() - UNIT_TRACKER[Object]
+        local health = UnitHealth(Object)
+        local diff = UnitHealthMax(Object) - health
+        local dps = diff / duration
+        local ttd = health / dps
         TTD_TABLE[Object] = ttd
       end
     end
-  end
 
-  -- remove not existing units
-  -- TODO: test if table.wipe(UNIT_TRACKER) is faster
-  for Object,_ in pairs(UNIT_TRACKER) do
-    if not ObjectExists(Object)
-    or UnitHealth(Object) <= 1 then
-      UNIT_TRACKER[Object] = nil
-      TTD_TABLE[Object] = nil
+    -- remove not existing units and their ttd
+    for Object,_ in pairs(UNIT_TRACKER) do
+      if not ObjectExists(Object)
+      or UnitHealth(Object) <= 1 then
+        UNIT_TRACKER[Object] = nil
+        TTD_TABLE[Object] = nil
+      end
     end
   end
 end
