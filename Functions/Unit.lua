@@ -342,8 +342,8 @@ function Unit.CastedPercent(unit)
 
   local _, _, _, _, StartTime, EndTime = UnitCastingInfo(unit)
   if StartTime ~= nil then
-    CastTime = EndTime - StartTime
-    PercentCasted = math.floor((1 - EndTime - GetTime() * 1000) / CastTime) * 100
+    local CastTime = EndTime - StartTime
+    PercentCasted = math.floor((1 - (EndTime - GetTime() * 1000) / CastTime) * 100)
   end
 
   return PercentCasted
