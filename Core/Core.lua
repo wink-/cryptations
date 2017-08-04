@@ -4,6 +4,7 @@ local Spell     = LibStub("Spell")
 local Group     = LibStub("Group")
 local Player    = LibStub("Player")
 local Events    = LibStub("Events")
+local Utils     = LibStub("Utils")
 
 function Initialize()
 
@@ -47,10 +48,11 @@ function Initialize()
       table.insert(PLAYER_DAMAGE, Entry)
     end
 
-    if event == "GROUP_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD"
-    and GetFireHackVersion() ~= nil then
-      Group.UpdateMembers()
-      Group.UpdateTanks()
+    if event == "GROUP_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
+      -- This is needed because UnitInRaid or UnitInParty
+      -- does not recognize if Units are in the group right after the roster has updated
+      Utils.Wait(1, Group.UpdateMembers)
+      Utils.Wait(1, Group.UpdateTanks)
     end
 
     if event == "ACTIVE_TALENT_GROUP_CHANGED" and IsInGroup() then
