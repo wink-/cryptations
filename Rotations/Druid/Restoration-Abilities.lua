@@ -111,7 +111,7 @@ function DRRegrowthClearcast()
   and Spell.CanCast(SB["Regrowth"], Target)
   and Buff.Has(PlayerUnit, AB["Clearcasting"])
   and Unit.IsInLOS(Target) then
-    return Spell.Cast(SB["Regrowth"], Target)
+    return Spell.AddToQueue(SB["Regrowth"], Target)
   end
 end
 
