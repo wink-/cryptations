@@ -23,8 +23,11 @@ function Initialize()
   frame:RegisterEvent("PLAYER_TARGET_CHANGED")
 
   local function eventHandler(self, event, arg1, arg2, arg3, arg4, arg5, arg6)
-    if event == "UNIT_SPELLCAST_START" and arg1 == "player" and getn(SPELL_QUEUE) ~= 0 then
-      CurrentUniqueIdentifier = SPELL_QUEUE[1].key
+    if event == "UNIT_SPELLCAST_START" and arg1 == "player" then
+      if #SPELL_QUEUE ~= 0 then
+        CurrentUniqueIdentifier = SPELL_QUEUE[1].key
+      end
+
       CurrentSpell = Spell.GetID(arg2)
     end
 
