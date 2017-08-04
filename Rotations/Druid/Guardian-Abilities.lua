@@ -65,53 +65,88 @@ function DGFrenziedRegeneration()
 end
 
 function DGMoonfire()
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Moonfire"], PlayerTarget())
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Moonfire"], Target)
   and Moonfire
-  and Unit.IsInLOS(PlayerTarget())
+  and Unit.IsInLOS(Target)
   and (Buff.Has(PlayerUnit, AB["Galactic Guardian"])
-  or not Debuff.Has(PlayerTarget(), AB["Moonfire"])) then
-    return Spell.Cast(SB["Moonfire"], PlayerTarget())
+  or not Debuff.Has(Target, AB["Moonfire"])) then
+    return Spell.Cast(SB["Moonfire"], Target)
   end
 end
 
 function DGMangle()
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Mangle"], PlayerTarget()) then
-    return Spell.Cast(SB["Mangle"], PlayerTarget())
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Mangle"], Target) then
+    return Spell.Cast(SB["Mangle"], Target)
   end
 end
 
 function DGThrash()
-  if PlayerTarget() ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(SB["Thrash Bear"], nil, nil, nil, false)
-  and Unit.IsInRange(PlayerUnit, PlayerTarget(), 8) then
+  and Unit.IsInRange(PlayerUnit, Target, 8) then
     return Spell.Cast(SB["Thrash Bear"])
   end
 end
 
 function DGPulverize()
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Pulverize"], PlayerTarget())
-  and Debuff.Stacks(PlayerTarget(), AB["Thrash Bear"]) >= 2 then
-    return Spell.Cast(SB["Pulverize"], PlayerTarget())
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Pulverize"], Target)
+  and Debuff.Stacks(Target, AB["Thrash Bear"]) >= 2 then
+    return Spell.Cast(SB["Pulverize"], Target)
   end
 end
 
 function DGMaul()
+  local Target = PlayerTarget()
+
   local Rage = UnitPower("player", 1)
-  if PlayerTarget() ~= nil
-  and Spell.CanCast(SB["Maul"], PlayerTarget(), 1, 45)
+  if Target ~= nil
+  and Spell.CanCast(SB["Maul"], Target, 1, 45)
   and Rage >= MaulRage
   and Unit.PercentHealth(PlayerUnit) >= MaulHealth then
-    return Spell.Cast(SB["Maul"], PlayerTarget())
+    return Spell.Cast(SB["Maul"], Target)
   end
 end
 
 function DGSwipe()
-  if PlayerTarget() ~= nil
+  local Target = PlayerTarget()
+
+  if Target ~= nil
   and Spell.CanCast(SB["Swipe Bear"])
-  and Unit.IsInRange(PlayerUnit, PlayerTarget(), 8) then
+  and Unit.IsInRange(PlayerUnit, Target, 8) then
     return Spell.Cast(SB["Swipe Bear"])
+  end
+end
+
+function DGLunarBeam()
+  if Spell.CanCast(SB["Lunar Beam"]) then
+    return Spell.Cast(SB["Lunar Beam"])
+  end
+end
+
+function DGIncarnation()
+  if Incarnation
+  and Spell.CanCast(SB["Incarnation: Guardian of Ursoc"]) then
+    return Spell.Cast(SB["Incarnation: Guardian of Ursoc"])
+  end
+end
+
+function DGBristlingFur()
+  if BristlinFur
+  and Spell.CanCast(SB["Bristling Fur"])
+  and BossManager.IsDefCooldownNeeded()
+  and not Buff.Has(PlayerUnit, AB["Survival Instincts"])
+  and not Buff.Has(PlayerUnit, AB["Barkskin"]) then
+    return Spell.Cast(SB["Bristling Fur"])
   end
 end

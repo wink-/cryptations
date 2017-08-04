@@ -5,10 +5,15 @@ if FireHack == nil then return end
 
 SB = {
   ["Ashamane's Frenzy"] = 210722,
+  ["Bristling Fur"] = 155835,
+  ["Lunar Beam"] = 204066,
+  ["Incarnation: Guardian of Ursoc"] = 102558,
   ["Astral Communion"] = 202359,
   ["Barkskin"] = 22812,
   ["Bear Form"] = 5487,
   ["Berserk"] = 106951,
+  ["Incapacitating Roar"] = 99,
+  ["Skull Bash"] = 106839,
   ["Blessing of the Ancients"] = 202360,
   ["Brutal Slash"] = 202028,
   ["Celestial Alignment"] = 194223,

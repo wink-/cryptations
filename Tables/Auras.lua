@@ -27,6 +27,9 @@ LossOfControlAuras = {
 -- This is the aurabook and it contains all debuff / buff auras that are relevant
 -- If a spell's buff / debuff is the same as its ID it is still listed here
 AB = {
+  ["Bristling Fur"] = 155835,
+  ["Incapacitating Roar"] = 99,
+  ["Incarnation: Guardian of Ursoc"] = 102558,
   ["Dark Shadow"] = 245687,
   ["Nightblade"] = 195452,
   ["Sprint"] = 2983,
