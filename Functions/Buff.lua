@@ -81,14 +81,17 @@ function Buff.Stacks(unit, buffID, onlyPlayer)
 end
 
 -- returns table containing every unit that has the given buff
--- onlyPlayer (optional): if this is checked, only units that got the buff from the player will be returned
-function Buff.FindUnitsWith(buffID, onlyPlayer)
+-- onlyPlayer (optional): if this is set to true, only units that got the buff from the player will be returned
+-- onlyFriends (optional): if this is set to true, only units from GROUP_MEMBERS will be checked
+function Buff.FindUnitsWith(buffID, onlyPlayer, onlyFriends)
   local Units = {}
 
   -- for enemy units
-  for Object, _ in pairs(UNIT_TRACKER) do
-    if Buff.Has(Object, buffID, onlyPlayer) then
-      table.insert(Units, Object)
+  if onlyFriends ~= true then
+    for Object, _ in pairs(UNIT_TRACKER) do
+      if Buff.Has(Object, buffID, onlyPlayer) then
+        table.insert(Units, Object)
+      end
     end
   end
 

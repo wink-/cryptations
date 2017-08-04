@@ -82,16 +82,18 @@ end
 
 -- returns table containing every unit that has the given Debuff
 -- onlyPlayer (optional): if this is checked, only units that got the Debuff from the player will be returned
-function Debuff.FindUnitsWith(debuffID, onlyPlayer)
+-- onlyFriends (optional): if this is set to true, only units from GROUP_MEMBERS will be checked
+function Debuff.FindUnitsWith(debuffID, onlyPlayer, onlyFriends)
   local Units = {}
 
   -- for enemy units
-  for Object, _ in pairs(UNIT_TRACKER) do
-    if Debuff.Has(Object, debuffID, onlyPlayer) then
-      table.insert(Units, Object)
+  if onlyFriends ~= true then
+    for Object, _ in pairs(UNIT_TRACKER) do
+      if Debuff.Has(Object, debuffID, onlyPlayer) then
+        table.insert(Units, Object)
+      end
     end
   end
-
   -- for group units
   for i = 1, #GROUP_MEMBERS do
     if Debuff.Has(GROUP_MEMBERS[i], debuffID, onlyPlayer) then
