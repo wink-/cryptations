@@ -59,8 +59,15 @@ function IsRakeEnhanced()
   end
 end
 
+function DBCat()
+  if Spell.CanCast(SB["Cat Form"])
+  and not Player.IsInShapeshift() then
+    return Spell.Cast(SB["Cat Form"])
+  end
+end
+
 function DFProwl()
-  local Target = Target
+  local Target = PlayerTarget()
 
   if Prowl
   and Target ~= nil
@@ -116,10 +123,13 @@ function DFBerserk()
 end
 
 function DFElunesGuidance()
+  local Target      = PlayerTarget()
   local Energy      = UnitPower("player", 3)
   local ComboPoints = UnitPower("player", 4)
 
-  if Spell.CanCast(SB["Elune's Guidance"])
+  if Target ~= nil
+  and Spell.CanCast(SB["Rip"], Target) -- Dummy for range check
+  and Spell.CanCast(SB["Elune's Guidance"])
   and ComboPoints <= 1
   and Energy >= DFFerociousBiteMaxEnergy() then
     return Spell.Cast(SB["Elune's Guidance"])
@@ -133,7 +143,7 @@ function DFFerociousBiteV1()
   and Spell.CanCast(SB["Ferocious Bite"], Target, 3, 25)
   and Debuff.Has(Target, AB["Rip"])
   and Debuff.RemainingTime(Target, AB["Rip"]) < 1
-  and TTD > 3
+  and TTD_TABLE[Target] > 3
   and (Unit.PercentHealth(Target) < 25 or Player.HasTalent(6, 1)) then
     return Spell.Cast(SB["Ferocious Bite"], Target)
   end
@@ -229,7 +239,7 @@ function DFSavageRoar()
   local Target = PlayerTarget()
 
   if Target ~= nil
-  and Spell.CanCast(AB["Savage Roar"], Target, 3, 40)
+  and Spell.CanCast(SB["Savage Roar"], Target, 3, 40)
   and (Buff.Has(PlayerUnit, AB["Savage Roar"]) ~= true
   or Buff.RemainingTime(PlayerUnit, AB["Savage Roar"]) <= 12) then
     return Spell.Cast(SB["Savage Roar"], Target)
@@ -312,7 +322,7 @@ function DFRakeV4()
   and Player.HasTalent(7, 2)
   and Buff.Has(PlayerUnit, AB["Bloodtalons"])
   and Debuff.RemainingTime(Target, AB["Rake"]) <= 5
-  and TTD > (DFRakeDebuffDuration() / 2)
+  and TTD_TABLE[Target] > (DFRakeDebuffDuration() / 2)
   and (not RakeEnhanced or (RakeEnhanced
   and Buff.Has(PlayerUnit, AB["Incarnation: King of the Jungle"]))) then
     IsRakeEnhanced()

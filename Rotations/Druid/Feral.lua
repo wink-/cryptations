@@ -87,13 +87,15 @@ function Pulse()
 
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    TTD = Unit.ComputeTTD(PlayerTarget())
+
+    local ComboPoints = UnitPower("player", 4)
 
     -- call interrupt engine
     if Interrupt then
       Rotation.Interrupt()
     end
 
+    DFProwl()
     DFRakeV1()
     DFTigersFury()
     DFIKotJ()
@@ -117,6 +119,7 @@ function Pulse()
     end
   else
     -- out of combat
+    DBCat()
     DFProwl()
   end
 end
