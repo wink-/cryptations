@@ -7,7 +7,7 @@ TTD_TABLE = {}
 -- This keeps track of all of the valid units and their ttd
 function Events.GetUnits()
   -- cache new units
-  if UnitAffectingCombat("player") or true then
+  if UnitAffectingCombat("player") then
     local Units = GetObjectsOfType(ObjectTypes.Unit)
     for i = 1, #Units do
       local Object = Units[i]
