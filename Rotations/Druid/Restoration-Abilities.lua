@@ -17,6 +17,7 @@ EFx, EFy, EFz = nil
 function DRTranquility()
   if Spell.CanCast(SB["Tranquility"], nil, 0, MaxMana * 0.184)
   and Tranquility
+  and not Unit.IsMoving(PlayerUnit)
   and Group.AverageHealth() <= TQHealth then
     return Spell.Cast(SB["Tranquility"])
   end
@@ -77,7 +78,7 @@ function EfflorescenceReplace()
 end
 
 function DREfflorescence()
-  local x, y, z = EfflorescencePos()
+  local x, y, z = ObjectPosition(Unit.FindBestToHeal(10, EFUnits, EFHealth, 40))
 
   if x ~= nil and y ~= nil and z ~= nil
   and GetTotemInfo(1) == false
@@ -160,7 +161,7 @@ function RejuvenationTarget()
   for i = 1, #GROUP_MEMBERS do
     if (not Buff.Has(GROUP_MEMBERS[i], AB["Rejuvenation (Germination)"], true)
     or Buff.RemainingTime(GROUP_MEMBERS[i], AB["Rejuvenation (Germination)"], true) <= 5)
-    and Unit.PercentHealth(GROUP_MEMBERS[i]) <= RejuvHealth then
+    and Unit.PercentHealth(GROUP_MEMBERS[i]) <= GermHealth then
       return GROUP_MEMBERS[i]
     end
   end
@@ -213,6 +214,7 @@ end
 function DRIncarnation()
   if Spell.CanCast(SB["Incarnation: Tree of Life"])
   and Incarnation
+  and not Buff.Has(PlayerUnit, AB["Incarnation: Tree of Life"])
   and Group.AverageHealth() <= IncarHealth then
     Spell.Cast(SB["Incarnation: Tree of Life"])
   end
@@ -230,8 +232,8 @@ function DRSolarWrath()
 
   if Target ~= nil
   and DPS
-  and Spell.CanCast(SB["Solar Wrath"]) then
-    Spell.Cast(SB["Solar Wrath"])
+  and Spell.CanCast(SB["Solar Wrath"], Target) then
+    Spell.Cast(SB["Solar Wrath"], Target)
   end
 end
 

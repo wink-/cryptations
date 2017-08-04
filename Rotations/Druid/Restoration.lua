@@ -29,10 +29,12 @@ Flourish        = Settings.Flourish
 CenarionWard    = Settings.CenarionWard
 Efflorescence   = Settings.Efflorescence
 Renewal         = Settings.Renewal
+DPS             = Settings.DPS
 MaxRejuv        = Settings.MaxRejuv
 IncarHealth     = Settings.IncarHealth
 LBTime          = Settings.LBTime
 RejuvHealth     = Settings.RejuvHealth
+GermHealth      = Settings.GermHealth
 RegrowthHealth  = Settings.RegrowthHealth
 HTHealth        = Settings.HTHealth
 CWHealth        = Settings.CWHealth
@@ -81,9 +83,9 @@ function Pulse()
     DRRegrowthClearcast()
     DRCenarionWard()
     DRRenewal()
-    DRRejuvenation()
-    DRWildGrowth()
     DRRegrowth()
+    DRWildGrowth()
+    DRRejuvenation()
     DRHealingTouch()
     DRSolarWrath()
   else
