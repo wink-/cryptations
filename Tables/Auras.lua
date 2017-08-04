@@ -27,12 +27,16 @@ LossOfControlAuras = {
 -- This is the aurabook and it contains all debuff / buff auras that are relevant
 -- If a spell's buff / debuff is the same as its ID it is still listed here
 AB = {
+  ["Rejuvenation (Germination)"] = 155777,
+  ["Incarnation: Tree of Life"] = 33891,
   ["Bristling Fur"] = 155835,
+  ["Regrowth"] = 8936,
   ["Incapacitating Roar"] = 99,
   ["Incarnation: Guardian of Ursoc"] = 102558,
   ["Dark Shadow"] = 245687,
   ["Nightblade"] = 195452,
   ["Sprint"] = 2983,
+  ["Living Seed"] = 48500,
   ["Shield of the Righteous"] = 53600,
   ["Stealth"] = 1784,
   ["Vanish"] = 1856,
