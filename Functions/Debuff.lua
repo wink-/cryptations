@@ -94,6 +94,7 @@ function Debuff.FindUnitsWith(debuffID, onlyPlayer, onlyFriends)
       end
     end
   end
+
   -- for group units
   for i = 1, #GROUP_MEMBERS do
     if Debuff.Has(GROUP_MEMBERS[i], debuffID, onlyPlayer) then
