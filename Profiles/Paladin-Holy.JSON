@@ -1,5 +1,8 @@
 {
   "Dispell": true,
+  "AutoEngage": true,
+  "AutoTarget": true,
+  "TargetMode": 0,
   "AvengingWrath": true,
   "HolyAvenger": true,
   "LayOnHands": true,

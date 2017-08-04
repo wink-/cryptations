@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
@@ -12,165 +12,183 @@ local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 
 function PRAvengingWrathJudgment()
-  if Spell.CanCast(31884)
+  local Target = PlayerTarget()
+
+  if Spell.CanCast(SB["Avenging Wrath"])
   and AvengingWrath
-  and Debuff.Has(PlayerTarget, 197277)
-  and Unit.IsInAttackRange(85256, PlayerTarget) then
-    return Spell.Cast(31884)
+  and Debuff.Has(Target, AB["Judgment Retribution"])
+  and Unit.IsInAttackRange(SB["Tempar's Verdict"], Target) then
+    return Spell.Cast(SB["Avenging Wrath"])
   end
 end
 
 function PRShieldOfVengeance()
-  if Spell.CanCast(184662)
+  if Spell.CanCast(SB["Shield of Vengeance"])
   and SoV
   and Unit.PercentHealth(PlayerUnit) ~= 100 then
-    return Spell.Cast(184662)
+    return Spell.Cast(SB["Shield of Vengeance"])
   end
 end
 
 function PRCrusade()
+  local HolyPower = UnitPower("player", 9)
+
   if Crusade
-  and Spell.CanCast(231895)
+  and Spell.CanCast(SB["Crusade"])
   and HolyPower == 5 then
-    return Spell.Cast(231895)
+    return Spell.Cast(SB["Crusade"])
   end
 end
 
 function PRHolyWrath()
   if HolyWrath
-  and Spell.CanCast(210220)
+  and Spell.CanCast(SB["Holy Wrath"])
   and Unit.PercentHealth(PlayerUnit) <= HWHealth
-  and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= HWUnits then
-    return Spell.Cast(210220)
+  and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true) >= HWUnits then
+    return Spell.Cast(SB["Holy Wrath"])
   end
 end
 
 function PRConsecration()
-  if Spell.CanCast(205228)
+  if Spell.CanCast(SB["Consecration Retribution"])
   and not Unit.IsMoving(PlayerUnit)
-  and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= 2 then
-    return Spell.Cast(205228)
+  and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true) >= 2 then
+    return Spell.Cast(SB["Consecration Retribution"])
   end
 end
 
 function PRWakeOfAshes()
+  local Target    = PlayerTarget()
+  local HolyPower = UnitPower("player", 9)
+
   if HolyPower <= 1
   and Player.ArtifactTraitRank(179546) ~= 0
-  and Spell.CanCast(205273)
-  and Unit.IsFacing(PlayerTarget, 90) then
-    return Spell.Cast(205273)
+  and Spell.CanCast(SB["Wake of Ashes"])
+  and Unit.IsFacing(Target, 90) then
+    return Spell.Cast(SB["Wake of Ashes"])
   end
 end
 
 -- TODO: add Righteous Verdict support if useful
 function PRBladeOfJustice()
-  if PlayerTarget ~= nil
-  and not select(4, GetTalentInfo(4, 3, 1))
-  and Spell.CanCast(184575, PlayerTarget) then
-    Spell.Cast(184575, PlayerTarget)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and not Player.HasTalent(4, 3)
+  and Spell.CanCast(SB["Blade of Justice"], Target) then
+    Spell.Cast(SB["Blade of Justice"], Target)
   end
 end
 
 -- TODO: add Righteous Verdict support if useful
 function PRDivineHammer()
-  if PlayerTarget ~= nil
-  and select(4, GetTalentInfo(4, 3, 1))
-  and Spell.CanCast(198034, PlayerTarget) then
-    Spell.Cast(198034, PlayerTarget)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Player.HasTalent(4, 3)
+  and Spell.CanCast(SB["Divine Hammer"], Target) then
+    Spell.Cast(SB["Divine Hammer"], Target)
   end
 end
 
 function PRZeal()
-  if PlayerTarget ~= nil
-  and select(4, GetTalentInfo(2, 2, 1))
-  and Spell.CanCast(217020, PlayerTarget) then
-    Spell.Cast(217020, PlayerTarget)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Player.HasTalent(2, 2)
+  and Spell.CanCast(SB["Zeal"], Target) then
+    Spell.Cast(SB["Zeal"], Target)
   end
 end
 
 function PRCrusaderStrike()
-  if PlayerTarget ~= nil
-  and not select(4, GetTalentInfo(2, 2, 1))
-  and Spell.CanCast(35395, PlayerTarget) then
-    Spell.Cast(35395, PlayerTarget)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and not Player.HasTalent(2, 2)
+  and Spell.CanCast(SB["Crusader Strike"], Target) then
+    Spell.Cast(SB["Crusader Strike"], Target)
   end
 end
 
 function PRJusticarsVengeance()
+  local HolyPower = UnitPower("player", 9)
+
   if HolyPower == 5
   and Unit.PercentHealth(PlayerUnit) <= JVHealth
-  and Spell.CanCast(215661) then
-    return Spell.Cast(215661)
+  and Spell.CanCast(SB["Justicar's Vengeance"]) then
+    return Spell.Cast(SB["Justicar's Vengeance"])
   end
 end
 
 function PREyeForAnEye()
   if EfaE
   and Unit.PercentHealth(PlayerUnit) <= EfaEHealth
-  and Spell.CanCast(205191) then
-    Spell.Cast(205191)
+  and Spell.CanCast(SB["Eye for an Eye"]) then
+    Spell.Cast(SB["Eye for an Eye"])
   end
 end
 
 function PRWordOfGlory()
   if WoG
-  and getn(Unit.GetUnitsBelowHealth(WoGHealth, "friendly", true, PlayerUnit, 15)) >= WoGUnits
-  and Spell.CanCast(210191) then
-    Spell.Cast(210191)
+  and #Unit.GetUnitsBelowHealth(WoGHealth, "friendly", true, PlayerUnit, 15) >= WoGUnits
+  and Spell.CanCast(SB["Word of Glory"]) then
+    Spell.Cast(SB["Word of Glory"])
   end
 end
 
 function PRJudgment_Debuff()
-  if HolyPower >= 3 or (HolyPower >= 2
-  and select(4, GetTalentInfo(2, 1, 1)))
-  and TTD >= JudgmentTTD
-  and Unit.IsInAttackRange(85256, PlayerTarget)
-  and Spell.CanCast(20271, PlayerTarget) and Unit.IsInLOS(PlayerTarget) then
-    return Spell.Cast(20271, PlayerTarget)
+  local Target    = PlayerTarget()
+  local HolyPower = UnitPower("player", 9)
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Judgment Retribution"], Target)
+  and Unit.IsInAttackRange(SB["Templar's Verdict"], Target)
+  and Unit.IsInLOS(Target)
+  and TTD_TABLE[Target] >= JudgmentTTD
+  and (HolyPower >= 3
+  or (HolyPower >= 2
+  and Player.HasTalent(2, 1))) then
+    return Spell.Cast(SB["Judgment Retribution"], Target)
   end
 end
 
 function PRExecutionSentence()
-  if PlayerTarget ~= nil
-  and select(4, GetTalentInfo(1, 2, 1))
-  and Spell.CanCast(213757, PlayerTarget, 9, 3) then
-      return Spell.Cast(213757, PlayerTarget)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Player.HasTalent(1, 2)
+  and Spell.CanCast(SB["Execution Sentence"], Target, 9, 3) then
+      return Spell.Cast(SB["Execution Sentence"], Target)
   end
 end
 
 function PRDivineStorm_AOE()
-  if PlayerTarget~= nil
-  -- and Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3
-  and Spell.CanCast(53385, nil, 9, 3) then
-    if Debuff.Has(PlayerTarget, 197277)
-    -- or Spell.GetRemainingCooldown(20271) >= 1
-    -- or TTD < JudgmentTTD
-    then
-      return Spell.Cast(53385)
-    end
+  local Target = PlayerTarget()
+
+  if Target~= nil
+  and Spell.CanCast(SB["Divine Storm"], nil, 9, 3)
+  and  Debuff.Has(Target, AB["Judgment Retribution"]) then
+    return Spell.Cast(SB["Divine Storm"])
   end
 end
 
 function PRDivineStorm_ST()
-  if PlayerTarget~= nil
-  and Spell.CanCast(53385, nil, 9, 3) then
-    if Buff.Has(PlayerTarget, 151813)
-    and Stacks >= 25 then
-    -- or Spell.GetRemainingCooldown(20271) >= 1
-    -- or TTD < JudgmentTTD
-      return Spell.Cast(53385)
-    end
+  local Target = PlayerTarget()
+
+  if Target~= nil
+  and Spell.CanCast(SB["Divine Storm"], nil, 9, 3)
+  and Buff.Stacks(Target, AB["Scarlet Inquisitor's Expurgation"]) >= 25 then
+    return Spell.Cast(SB["Divine Storm"])
   end
 end
 
 function PRTemplarsVerdict()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(85256, PlayerTarget, 9, 3) then
-    if Debuff.Has(PlayerTarget, 197277, true)
-    -- or Spell.GetRemainingCooldown(20271) >= 1
-    -- or TTD < JudgmentTTD
-    then
-      return Spell.Cast(85256, PlayerTarget)
-    end
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Templar's Verdict"], Target, 9, 3)
+  and Debuff.Has(Target, AB["Judgment Retribution"], true) then
+    return Spell.Cast(SB["Templar's Verdict"], Target)
   end
 end

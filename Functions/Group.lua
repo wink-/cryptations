@@ -18,9 +18,10 @@ function Group.UpdateTanks()
   local Object = nil
   for i = 1, ObjectCount do
     Object = GetObjectWithIndex(i)
-    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
+    if ObjectExists(Object)
+    and ObjectIsType(Object, ObjectTypes.Unit)
     and (UnitInParty(Object) or UnitInRaid(Object))
-    and (UnitGroupRolesAssigned(Object) == "TANK" or ObjectID(Object) == 72218) then
+    and (UnitGroupRolesAssigned(Object) == "TANK" or ObjectID(Object) == 72218) then -- ObjectID refers to Oto the Protector
       table.insert(GROUP_TANKS, Object)
     end
   end
@@ -44,7 +45,7 @@ end
 function Group.AverageHealth()
   local Health = 0
   local Count  = 0
-  for i = 1, getn(GROUP_MEMBERS) do
+  for i = 1, #GROUP_MEMBERS do
     Health = Health + Unit.PercentHealth(GROUP_MEMBERS[i])
     Count = Count + 1
   end
@@ -56,7 +57,7 @@ end
 function Group.AverageHealthCustom(units)
   local Health = 0
   local Count   = 0
-  for i = 1, getn(units) do
+  for i = 1, #units do
     Health = Health + Unit.PercentHealth(units[i])
     Count = Count + 1
   end
@@ -97,13 +98,13 @@ end
 -- count: units to keep the buff up on
 function Group.FindDoTTarget(spellID, debuffID, count)
   -- first check if the player's current target is suitable for a dot
-  if PlayerTarget ~= nil
+  if PlayerTarget() ~= nil
   and #Debuff.FindUnitsWith(debuffID, true) <= count
-  and Unit.IsHostile(PlayerTarget)
-  and (UnitAffectingCombat(PlayerTarget) or Unit.IsDummy(PlayerTarget))
-  and Unit.IsInAttackRange(spellID, PlayerTarget)
-  and not Debuff.Has(PlayerTarget, debuffID) then
-    return PlayerTarget
+  and Unit.IsHostile(PlayerTarget())
+  and (UnitAffectingCombat(PlayerTarget()) or Unit.IsDummy(PlayerTarget()))
+  and Unit.IsInAttackRange(spellID, PlayerTarget())
+  and not Debuff.Has(PlayerTarget(), debuffID) then
+    return PlayerTarget()
   end
 
   -- check if any other unit is suitable for a dot

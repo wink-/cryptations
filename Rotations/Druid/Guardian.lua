@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
@@ -16,29 +16,41 @@ end
 
 local Settings = json.decode(content)
 
-Taunt           = Settings.UseTaunt
-Interrupt       = Settings.UseInterruptEngine
-SurvInstincts   = Settings.UseSurvivalInstincts
-Barkskin        = Settings.UseBarkskin
-Ironfur         = Settings.UseIronfur
-FRegen          = Settings.UseFrenziedRegeneration
-Moonfire        = Settings.UseMoonfire
-Maul            = Settings.UseMaul
-RotS            = Settings.UseRotS
+Taunt           = Settings.Taunt
+Interrupt       = Settings.Interrupt
+InterruptAny    = Settings.InterruptAny
+InterruptMin    = Settings.InterruptMin
+InterruptMax    = Settings.InterruptMax
+AutoEngage      = Settings.AutoEngage
+AutoTarget      = Settings.AutoTarget
+TargetMode      = Settings.TargetMode
+Incarnation     = Settings.Incarnation
+BristlinFur     = Settings.BristlinFur
+SurvInstincts   = Settings.SurvInstincts
+Barkskin        = Settings.Barkskin
+Ironfur         = Settings.Ironfur
+FRegen          = Settings.FRegen
+Moonfire        = Settings.Moonfire
+Maul            = Settings.Maul
+RotS            = Settings.RotS
 AutoSwitchForm  = Settings.AutoSwitchForm
-SIHealth        = Settings.SurvivalInstincsHealth
-BSHealth        = Settings.BarkskinHealth
-IFHealth        = Settings.IronFurHealth
-FRHealth        = Settings.FrenziedRegenerationHealth
+SIHealth        = Settings.SIHealth
+BSHealth        = Settings.BSHealth
+IFHealth        = Settings.IFHealth
+FRHealth        = Settings.FRHealth
 MaulHealth      = Settings.MaulHealth
 MaulRage        = Settings.MaulRage
 RotSHealth      = Settings.RotSHealth
 MaxMana         = UnitPowerMax("player" , 0)
 MaxHealth       = UnitHealthMax("player")
-Rage            = UnitPower("player", 1)
 
 local Unit        = LibStub("Unit")
 local Rotation    = LibStub("Rotation")
+
+KeyCallbacks = {
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
+}
 
 function Pulse()
   -- Call Taunt engine
@@ -47,42 +59,71 @@ function Pulse()
   end
 
   -- combat rotation
-  if UnitAffectingCombat(PlayerUnit)
-  or (AllowOutOfCombatRoutine and UnitGUID("target") ~= nil
-  and Unit.IsHostile("target")) and UnitHealth("target") ~= 0 then
-
-    SwitchToBearForm()
+  if (UnitAffectingCombat(PlayerUnit) or AutoEngage)
+  and UnitGUID("target") ~= nil
+  and Unit.IsHostile("target") and UnitHealth("target") ~= 0 then
 
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
 
     -- call interrupt engine
     if Interrupt then
       Rotation.Interrupt()
     end
 
+    SwitchToBearForm()
+    DGIncarnation()
     DGSurvivalInstincts()
     DGBarkskin()
     DGRotS()
     DGIronfur()
+    DGBristlingFur()
     DGFrenziedRegeneration()
+    DGLunarBeam()
+    DGPulverize()
     DGMoonfire()
     DGMangle()
     DGThrash()
-    DGPulverize()
     DGMaul()
     DGSwipe()
   else
     -- out of combat rotation
+    SwitchToBearForm()
   end
 end
 
-function Taunt(unit)
-  PlayerTarget = unit
-  DGGrowl()
-  DGMoonfire()
+function Taunt(Target)
+  if Target ~= nil
+  and Spell.CanCast(SB["Growl"], Target)
+  and Unit.IsInLOS(Target) then
+    return Spell.Cast(SB["Growl"], Target)
+  end
+
+  if Target ~= nil
+  and Moonfire
+  and Spell.CanCast(SB["Moonfire"], Target)
+  and Unit.IsInLOS(Target) then
+    return Spell.Cast(SB["Moonfire"], Target)
+  end
 end
 
-function Interrupt()
+function Interrupt(Target)
+  if Target ~= nil
+  and Spell.CanCast(SB["Skull Bash"], Target)
+  and Unit.IsInLOS(Target) then
+    return Spell.Cast(SB["Skull Bash"], Target)
+  end
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Mighty Bash"], Target)
+  and Unit.IsInLOS(Target)
+  and not Unit.IsBoss(Target) then
+    return Spell.Cast(SB["Mighty Bash"], Target)
+  end
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Incapacitating Roar"], Target)
+  and Unit.IsInRange(PlayerUnit, Target, 10) then
+    return Spell.Cast(SB["Incapacitating Roar"], Target)
+  end
 end

@@ -1,7 +1,7 @@
-local BossManager = LibStub:NewLibrary("BossManager", 1)
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
 local Player      = LibStub("Player")
+local BossManager = LibStub("BossManager")
 
 -- The bossmanager provides the rotation with useful information
 -- e.g. the rotation can ask the bossmanager if it should cast a deff cd in order to counter boss mechanics
@@ -11,10 +11,11 @@ local Player      = LibStub("Player")
 -- also returns true when the sum of damage taken within 2 seconds is higher than 20% of the player's max health
 function BossManager.IsDefCooldownNeeded()
   -- Check if target is boss and is casting dangerous spell
-  if PlayerTarget ~= nil and Unit.IsBoss(PlayerTarget)
-  and UnitCastingInfo(PlayerTarget) ~= nil then
-    local SpellID = Spell.GetID(select(1, UnitCastingInfo(PlayerTarget)))
-    for i = 1, getn(SpellsToCounterWithDefCD) do
+  if PlayerTarget() ~= nil
+  and Unit.IsBoss(PlayerTarget())
+  and UnitCastingInfo(PlayerTarget()) ~= nil then
+    local SpellID = Spell.GetID(UnitCastingInfo(PlayerTarget()))
+    for i = 1, #SpellsToCounterWithDefCD do
       if SpellsToCounterWithDefCD[i] == SpellID then
         return true
       end

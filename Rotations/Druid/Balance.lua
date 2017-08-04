@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
@@ -16,6 +16,28 @@ end
 
 local Settings = json.decode(content)
 
+Interrupt     = Settings.Interrupt
+InterruptAny  = Settings.InterruptAny
+InterruptMin  = Settings.InterruptMin
+InterruptMax  = Settings.InterruptMax
+AutoEngage    = Settings.AutoEngage
+AutoTarget    = Settings.AutoTarget
+TargetMode    = Settings.TargetMode
+Incarnation   = Settings.Incarnation
+CA            = Settings.CA
+FoN           = Settings.FoN
+WoE           = Settings.WoE
+MoonkinForm   = Settings.MoonkinForm
+BotA          = Settings.BotA
+BoE           = Settings.BoE
+BoA           = Settings.BoA
+StFMD         = Settings.StFMD
+MFMD          = Settings.MFMD
+SFMD          = Settings.SFMD
+StFMDCount    = Settings.StFMDCount
+MFMDCount     = Settings.MFMDCount
+SFMDCount     = Settings.SFMDCount
+
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
 local Rotation    = LibStub("Rotation")
@@ -23,6 +45,11 @@ local Player      = LibStub("Player")
 local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
+
+KeyCallbacks = {
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
+}
 
 function EmeraldDreamcatcher()
   DBStarsurgeV4()
@@ -45,12 +72,11 @@ end
 
 function Pulse()
   -- combat rotation
-  if UnitAffectingCombat(PlayerUnit)
-  or (AllowOutOfCombatRoutine and UnitGUID("target") ~= nil
-  and Unit.IsHostile("target")) and UnitHealth("target") ~= 0 then
+  if (UnitAffectingCombat(PlayerUnit) or AutoEngage)
+  and UnitGUID("target") ~= nil
+  and Unit.IsHostile("target") and UnitHealth("target") ~= 0 then
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
 
     -- call interrupt engine
     if Interrupt then

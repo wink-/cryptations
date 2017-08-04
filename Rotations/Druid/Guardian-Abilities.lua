@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
@@ -14,119 +14,141 @@ local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 
 function SwitchToBearForm()
-  if not Buff.Has(PlayerUnit, 5487) then
-    if AutoSwitchForm then
-      return Spell.Cast(5487)
-    else
-      return
-    end
+  if AutoSwitchForm
+  and not Player.IsInShapeshift() then
+    return Spell.Cast(SB["Bear Form"])
   end
 end
 
 function DGSurvivalInstincts()
-  if Spell.CanCast(61336)
-  and SurvInstincts then
-    if Unit.PercentHealth(PlayerUnit) <= SIHealth
-    or BossManager.IsDefCooldownNeeded() then
-      return Spell.Cast(61336)
-    end
+  if Spell.CanCast(SB["Survival Instincts"])
+  and SurvInstincts
+  and (Unit.PercentHealth(PlayerUnit) <= SIHealth
+  or BossManager.IsDefCooldownNeeded()) then
+    return Spell.Cast(SB["Survival Instincts"])
   end
 end
 
 function DGBarkskin()
-  if Spell.CanCast(22812)
-  and Barkskin then
-    if Unit.PercentHealth(PlayerUnit) <= BSHealth
-    or BossManager.IsDefCooldownNeeded() then
-      return Spell.Cast(22812)
-    end
+  if Spell.CanCast(SB["Barkskin"])
+  and Barkskin
+  and not Buff.Has(PlayerUnit, AB["Survival Instincts"])
+  and (Unit.PercentHealth(PlayerUnit) <= BSHealth
+  or BossManager.IsDefCooldownNeeded()) then
+    return Spell.Cast(SB["Barkskin"])
   end
 end
 
 function DGRotS()
-  if Spell.CanCast(200851) and UseRotS then
-    if Unit.PercentHealth(PlayerUnit) <= RotSHealth
-    or BossManager.IsDefCooldownNeeded() then
-      return Spell.Cast(200851)
-    end
+  if Spell.CanCast(SB["Rage of the Sleeper"])
+  and RotS
+  and (Unit.PercentHealth(PlayerUnit) <= RotSHealth
+  or BossManager.IsDefCooldownNeeded()) then
+    return Spell.Cast(SB["Rage of the Sleeper"])
   end
 end
 
 function DGIronfur()
-  if Spell.CanCast(192081) and Ironfur then
-    if Unit.PercentHealth(PlayerUnit) <= IFHealth
-    or BossManager.IsDefCooldownNeeded() then
-      return Spell.Cast(192081)
-    end
+  if Spell.CanCast(SB["Ironfur"])
+  and Ironfur
+  and not Buff.Has(PlayerUnit, AB["Survival Instincts"])
+  and (Unit.PercentHealth(PlayerUnit) <= IFHealth
+  or BossManager.IsDefCooldownNeeded()) then
+    return Spell.Cast(SB["Ironfur"])
   end
 end
 
 function DGFrenziedRegeneration()
-  if Spell.CanCast(22842) and FRegen then
-    if Player.GetDamageOverPeriod(5) >= UnitHealthMax(PlayerUnit) * (FRHealth / 100) then
-      return Spell.Cast(22842)
-    end
+  if Spell.CanCast(SB["Frenzied Regeneration"])
+  and FRegen
+  and Player.GetDamageOverPeriod(5) >= UnitHealthMax(PlayerUnit) * (FRHealth / 100) then
+    return Spell.Cast(SB["Frenzied Regeneration"])
   end
 end
 
 function DGMoonfire()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(8921, PlayerTarget)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Moonfire"], Target)
   and Moonfire
-  and Unit.IsInLOS(PlayerTarget) then
-    if Buff.Has(PlayerUnit, 203964)
-    or not Debuff.Has(PlayerTarget, 164812) then
-      return Spell.Cast(8921, PlayerTarget)
-    end
+  and Unit.IsInLOS(Target)
+  and (Buff.Has(PlayerUnit, AB["Galactic Guardian"])
+  or not Debuff.Has(Target, AB["Moonfire"])) then
+    return Spell.Cast(SB["Moonfire"], Target)
   end
 end
 
 function DGMangle()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(33917, PlayerTarget) then
-    return Spell.Cast(33917, PlayerTarget)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Mangle"], Target) then
+    return Spell.Cast(SB["Mangle"], Target)
   end
 end
 
 function DGThrash()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(77758, nil, nil, nil, false)
-  and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
-    return Spell.Cast(77758)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Thrash Bear"], nil, nil, nil, false)
+  and Unit.IsInRange(PlayerUnit, Target, 8) then
+    return Spell.Cast(SB["Thrash Bear"])
   end
 end
 
 function DGPulverize()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(80313, PlayerTarget)
-  and select(2, Debuff.Has(PlayerTarget, 77758)) >= 2 then
-    return Spell.Cast(80313, PlayerTarget)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Pulverize"], Target)
+  and Debuff.Stacks(Target, AB["Thrash Bear"]) >= 2 then
+    return Spell.Cast(SB["Pulverize"], Target)
   end
 end
 
 function DGMaul()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(6807, PlayerTarget, 1, 45) then
-    if Rage >= MaulRage
-    and Unit.PercentHealth(PlayerUnit) >= MaulHealth then
-      return Spell.Cast(6807, PlayerTarget)
-    end
+  local Target = PlayerTarget()
+
+  local Rage = UnitPower("player", 1)
+  if Target ~= nil
+  and Spell.CanCast(SB["Maul"], Target, 1, 45)
+  and Rage >= MaulRage
+  and Unit.PercentHealth(PlayerUnit) >= MaulHealth then
+    return Spell.Cast(SB["Maul"], Target)
   end
 end
 
 function DGSwipe()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(213764)
-  and Unit.IsInRange(PlayerUnit, PlayerTarget, 8) then
-    return Spell.Cast(213764)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Swipe Bear"])
+  and Unit.IsInRange(PlayerUnit, Target, 8) then
+    return Spell.Cast(SB["Swipe Bear"])
   end
 end
 
-function DGGrowl()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(6795, PlayerTarget)
-  and Unit.IsHostile(PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget) then
-    return Spell.Cast(6795, PlayerTarget)
+function DGLunarBeam()
+  if Spell.CanCast(SB["Lunar Beam"]) then
+    return Spell.Cast(SB["Lunar Beam"])
+  end
+end
+
+function DGIncarnation()
+  if Incarnation
+  and Spell.CanCast(SB["Incarnation: Guardian of Ursoc"]) then
+    return Spell.Cast(SB["Incarnation: Guardian of Ursoc"])
+  end
+end
+
+function DGBristlingFur()
+  if BristlinFur
+  and Spell.CanCast(SB["Bristling Fur"])
+  and BossManager.IsDefCooldownNeeded()
+  and not Buff.Has(PlayerUnit, AB["Survival Instincts"])
+  and not Buff.Has(PlayerUnit, AB["Barkskin"]) then
+    return Spell.Cast(SB["Bristling Fur"])
   end
 end

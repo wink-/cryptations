@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
@@ -7,28 +7,38 @@ if FireHack == nil then return end
 local Spell = LibStub("Spell")
 local Unit  = LibStub("Unit")
 
-function PRebuke()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(96231, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget) then
-    return Spell.Cast(96231, PlayerTarget)
+function PRebuke(Target)
+  if Target == nil then
+    local Target = PlayerTarget()
+  end
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Rebuke"], Target)
+  and Unit.IsInLOS(Target) then
+    return Spell.Cast(SB["Rebuke"], Target)
   end
 end
 
 function PBlindingLight()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(115750)
-  and Unit.IsInLOS(PlayerTarget)
-  and Unit.IsInRange(PlayerUnit, PlayerTarget, 10) then
-    return Spell.Cast(115750, PlayerTarget)
+  local Target = PlayerTarget()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Blinding Light"])
+  and Unit.IsInLOS(Target)
+  and Unit.IsInRange(PlayerUnit, Target, 10) then
+    return Spell.Cast(SB["Blinding Light"], Target)
   end
 end
 
-function PHammerOfJustice()
-  if PlayerTarget ~= nil
-  and Spell.CanCast(853, PlayerTarget)
-  and Unit.IsInLOS(PlayerTarget)
-  and not Unit.IsBoss(PlayerTarget) then
-    return Spell.Cast(853, PlayerTarget)
+function PHammerOfJustice(Target)
+  if Target == nil then
+    local Target = PlayerTarget()
+  end
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Hammer of Justice"], Target)
+  and Unit.IsInLOS(Target)
+  and not Unit.IsBoss(Target) then
+    return Spell.Cast(SB["Hammer of Justice"], Target)
   end
 end

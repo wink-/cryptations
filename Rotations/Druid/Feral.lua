@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
@@ -16,13 +16,36 @@ end
 
 local Settings = json.decode(content)
 
-Interrupt   = Settings.Interrupt
+Interrupt     = Settings.Interrupt
+InterruptAny  = Settings.InterruptAny
+InterruptMin  = Settings.InterruptMin
+InterruptMax  = Settings.InterruptMax
+AutoEngage    = Settings.AutoEngage
+AutoTarget    = Settings.AutoTarget
+TargetMode    = Settings.TargetMode
+Prowl         = Settings.Prowl
+ProwlMode     = Settings.ProwlMode
+Incarnation   = Settings.Incarnation
+Berserk       = Settings.Berserk
+Shadowmeld    = Settings.Shadowmeld
+Moonfire      = Settings.Moonfire
+MoonfireMD    = Settings.MoonfireMD
+RakeMD        = Settings.RakeMD
+RipMD         = Settings.RipMD
+RakeMDCount   = Settings.RakeMDCount
+MFMDCount     = Settings.MFMDCount
+RipMDCount    = Settings.RipMDCount
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
 local Rotation    = LibStub("Rotation")
 local Player      = LibStub("Player")
 local BossManager = LibStub("BossManager")
+
+KeyCallbacks = {
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
+}
 
 function Finishers()
   DFRipV1()
@@ -58,20 +81,21 @@ end
 
 function Pulse()
   -- combat rotation
-  if UnitAffectingCombat(PlayerUnit)
-  or (AllowOutOfCombatRoutine and UnitGUID("target") ~= nil
-  and Unit.IsHostile("target")) and UnitHealth("target") ~= 0 then
+  if (UnitAffectingCombat(PlayerUnit) or AutoEngage)
+  and UnitGUID("target") ~= nil
+  and Unit.IsHostile("target") and UnitHealth("target") ~= 0 then
 
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
-    TTD = Unit.ComputeTTD(PlayerTarget)
+
+    local ComboPoints = UnitPower("player", 4)
 
     -- call interrupt engine
     if Interrupt then
       Rotation.Interrupt()
     end
 
+    DFProwl()
     DFRakeV1()
     DFTigersFury()
     DFIKotJ()
@@ -85,16 +109,17 @@ function Pulse()
       Finishers()
     end
     DFArtifact()
-    if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile")) >= 5
+    if #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 5
     and ComboPoints <= 4 then
       AoE()
     end
     if ComboPoints <= 4
-    and getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile")) < 5 then
+    and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") < 5 then
       Generators()
     end
   else
     -- out of combat
+    DBCat()
     DFProwl()
   end
 end

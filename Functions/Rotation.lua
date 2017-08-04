@@ -5,6 +5,8 @@ local Player    = LibStub("Player")
 local Buff      = LibStub("Buff")
 local Debuff    = LibStub("Debuff")
 
+Paused   = false
+AllowAoE = true
 
 -- The spell queue shall only contain spells that are a 100% required to be casted (rest is done by the rotation itself)
 -- Example use for the spell queue would be a sequence that has to be casted in a certain order
@@ -12,11 +14,11 @@ local Debuff    = LibStub("Debuff")
 function Rotation.PulseQueue()
 
   -- pulse rotation if spellQueue is empty
-  if getn(SPELL_QUEUE) == 0
+  if #SPELL_QUEUE == 0
   and not Unit.IsCasting(PlayerUnit)
   and not Unit.IsChanneling(PlayerUnit) then
     Pulse()
-  elseif getn(SPELL_QUEUE) ~= 0 then
+  elseif #SPELL_QUEUE ~= 0 then
     local SpellID = SPELL_QUEUE[1].spell
     SpellTarget = "target"
 
@@ -33,7 +35,8 @@ function Rotation.PulseQueue()
       Spell.Cast(SpellID, SpellTarget)
 
       -- instantly remove the spell and add it to the history if it is an instant cast
-      if select(4, GetSpellInfo(SpellID)) == 0 then
+      local _, _, _, CastTime = GetSpellInfo(SpellID)
+      if CastTime == 0 then
         Spell.DeQueue(SpellID)
         Spell.AddToHistory(SpellID)
       end
@@ -43,7 +46,7 @@ end
 
 -- removes every entry from the whole queue
 function Rotation.CleanUpQueue()
-  for i = 1, getn(SPELL_QUEUE) do
+  for i = 1, #SPELL_QUEUE do
     table.remove(SPELL_QUEUE, 1)
   end
 end
@@ -54,17 +57,18 @@ function Rotation.Target(mode)
   if UnitAffectingCombat("player") then
     -- re targeting logic
     if UnitGUID("target") == nil then
-      if ReTargetHighestUnit then
+      if TargetMode == 1 then
         TargetUnit(Unit.FindHighest(mode, true))
-      elseif ReTargetLowestUnit then
+      elseif TargetMode == 2 then
         TargetUnit(Unit.FindLowest(mode, true))
-      elseif ReTargetNearestUnit then
+      elseif TargetMode == 0 then
         local NearestUnit = Unit.FindNearest(mode, true)
         if NearestUnit ~= nil then
           TargetUnit(NearestUnit)
         end
       end
     end
+
     StartAttack()
   end
 end
@@ -74,19 +78,15 @@ end
 function Rotation.Taunt()
   local IsOtherTankTanking = false
 
-  local ObjectCount = GetObjectCount()
-  local Object = nil
-
-  for i = 1, ObjectCount do
-    Object = GetObjectWithIndex(i)
-    if ObjectIsType(Object, ObjectTypes.Unit) and Unit.IsHostile(Object) then
-      local IsTanking = select(1, UnitDetailedThreatSituation(PlayerUnit, Object))
+  for Object, _ in pairs(UNIT_TRACKER) do
+    if Unit.IsHostile(Object) then
+      local IsTanking = UnitDetailedThreatSituation(PlayerUnit, Object)
 
       -- check if other tank is tanking the object
-      if getn(GROUP_TANKS) > 1 then
-        for j = 1, getn(GROUP_TANKS) do
+      if #GROUP_TANKS > 1 then
+        for j = 1, #GROUP_TANKS do
           if GROUP_TANKS[i] ~= PlayerUnit
-          and select(1, UnitDetailedThreatSituation(GROUP_TANKS[i], Object)) == true then
+          and UnitDetailedThreatSituation(GROUP_TANKS[i], Object) == true then
             IsOtherTankTanking = true
             print("othertankistanking")
           end
@@ -104,13 +104,12 @@ end
 
 -- Handles Interrupting
 function Rotation.Interrupt()
-  local ObjectCount = GetObjectCount()
-  local Object = nil
   -- interrupt any unit
-  if InterruptAnyUnit then
-    for i = 1, ObjectCount do
-      Object = GetObjectWithIndex(i)
-      if Object ~= nil and select(9, UnitCastingInfo(Object)) == false and Unit.IsHostile(Object) then
+  if InterruptAny then
+    for Object, _ in pairs(UNIT_TRACKER) do
+      local _, _, _, _, _, _, _, _, NotInterruptible = UnitCastingInfo(Object)
+      if NotInterruptible == 1
+      and Unit.IsHostile(Object) then
         local PercentCasted = Unit.CastedPercent(Object)
         if InterruptMinPercent < PercentCasted
         and PercentCasted < InterruptMaxPercent and Interrupt ~= nil then
@@ -120,13 +119,16 @@ function Rotation.Interrupt()
     end
     -- interrupt target
   else
-    if PlayerTarget ~= nil
-    and select(9, UnitCastingInfo(PlayerTarget)) == false
-    and Unit.IsHostile(PlayerTarget) then
-      local PercentCasted = Unit.CastedPercent(PlayerTarget)
+    local Target = PlayerTarget()
+    if Target == nil then return end
+    local _, _, _, _, _, _, _, _, NotInterruptible = UnitCastingInfo(Target)
+
+    if NotInterruptible == false
+    and Unit.IsHostile(Target) then
+      local PercentCasted = Unit.CastedPercent(Target)
       if InterruptMinPercent < PercentCasted
       and PercentCasted < InterruptMaxPercent and Interrupt ~= nil then
-        Interrupt(PlayerTarget)
+        Interrupt(Target)
       end
     end
   end
@@ -135,13 +137,37 @@ end
 -- Handles Disspelling of group members
 function Rotation.Dispell()
   local Unit = nil
-  for i = 1, getn(GROUP_MEMBERS) do
+  for i = 1, #GROUP_MEMBERS do
     Unit = GROUP_MEMBERS[i]
     for j = 1, Debuff.GetCount(Unit) do
-      if select(5, UnitDebuff(Unit, j)) ~= nil
+      local _, _, _, _, DispellType = UnitDebuff(Unit, j)
+      if DispellType ~= nil
       and Dispell ~= nil then
-        Dispell(Unit, select(5, UnitDebuff(Unit, j)))
+        Dispell(Unit, DispellType)
       end
     end
+  end
+end
+
+function Rotation.Pause()
+  Paused = true
+  ChatOverlay("Pausing Rotation", 2, "RED")
+end
+
+function Rotation.TogglePause()
+  Paused = not Paused
+  if Paused then
+    ChatOverlay("Pausing Rotation", 2, "RED")
+  else
+    ChatOverlay("Resuming Rotation", 2, "GREEN")
+  end
+end
+
+function Rotation.ToggleAoE()
+  AllowAoE = not AllowAoE
+  if AllowAoE then
+    ChatOverlay("AoE Enabled", 2, "GREEN")
+  else
+    ChatOverlay("AoE Disabled", 2, "RED")
   end
 end

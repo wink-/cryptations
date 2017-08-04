@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
@@ -18,6 +18,9 @@ local Settings = json.decode(content)
 
 -- Apply settings from config file
 Dispell                 = Settings.Dispell
+AutoEngage              = Settings.AutoEngage
+AutoTarget              = Settings.AutoTarget
+TargetMode              = Settings.TargetMode
 AvengingWrath           = Settings.AvengingWrath
 HolyAvenger             = Settings.HolyAvenger
 LayOnHands              = Settings.LayOnHands
@@ -61,6 +64,11 @@ local Player      = LibStub("Player")
 local BossManager = LibStub("BossManager")
 local Utils       = LibStub("Utils")
 
+KeyCallbacks = {
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
+}
+
 function Pulse()
   if UnitAffectingCombat(PlayerUnit) then
     -- Dispell engine
@@ -70,7 +78,6 @@ function Pulse()
 
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
 
     PHAvengingWrath()
     PHHolyAvenger()

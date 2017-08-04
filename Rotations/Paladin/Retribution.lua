@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
@@ -17,6 +17,12 @@ end
 local Settings = json.decode(content)
 
 Interrupt     = Settings.Interrupt
+InterruptAny  = Settings.InterruptAny
+InterruptMin  = Settings.InterruptMin
+InterruptMax  = Settings.InterruptMax
+AutoEngage    = Settings.AutoEngage
+AutoTarget    = Settings.AutoTarget
+TargetMode    = Settings.TargetMode
 AvengingWrath = Settings.AvengingWrath
 SoV           = Settings.SoV
 Crusade       = Settings.Crusade
@@ -39,6 +45,11 @@ local Unit        = LibStub("Unit")
 local Rotation    = LibStub("Rotation")
 local Debuff      = LibStub("Debuff")
 
+KeyCallbacks = {
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
+}
+
 function SingleTargetSpenders()
   PRExecutionSentence()
   -- Justicars Vengeance
@@ -48,16 +59,12 @@ end
 
 function Pulse()
   -- combat rotation
-  if UnitAffectingCombat(PlayerUnit)
-  or (AllowOutOfCombatRoutine and UnitGUID("target") ~= nil
-  and Unit.IsHostile("target")) and UnitHealth("target") ~= 0 then
+  if (UnitAffectingCombat(PlayerUnit) or AutoEngage)
+  and UnitGUID("target") ~= nil
+  and Unit.IsHostile("target") and UnitHealth("target") ~= 0 then
 
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
-    TTD = Unit.ComputeTTD(PlayerTarget)
-
-    HolyPower = UnitPower("player", 9)
 
     -- call interrupt engine
     if Interrupt then
@@ -80,8 +87,8 @@ function Pulse()
     PRAvengingWrathJudgment()
     PRShieldOfVengeance()
 
-    if Debuff.Has(197277, PlayerTarget, true)
-    and Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3 then
+    if Debuff.Has(AB["Judgment Retribution"], PlayerTarget, true)
+    and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 3 then
       PRDivineStorm_AOE()
     else
       SingleTargetSpenders()
@@ -99,9 +106,8 @@ function Pulse()
   end
 end
 
-function Interrupt(unit)
-  PlayerTarget = unit
-  PRebuke()
-  PBlindingLight()
-  PHammerOfJustice()
+function Interrupt(Target)
+  PRebuke(Target)
+  PBlindingLight(Target)
+  PHammerOfJustice(Target)
 end

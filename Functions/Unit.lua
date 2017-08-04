@@ -1,7 +1,6 @@
 local Unit = LibStub("Unit")
 local Group = LibStub("Group")
 
-PlayerTarget = nil                                 -- The unit which the player is targeting
 Spelltarget  = nil                                 -- The unit on which a spell shall be casted
 TTD_TABLE    = {unit, start, duration, dps, ttd}   -- Holds the values required for calculating the ttd
 
@@ -25,7 +24,7 @@ function Unit.IsFacing(unit, angle)
   end
 
   local MyAngle = ObjectFacing(PlayerUnit)
-  local MyAngleToUnit = select(1, GetAnglesBetweenObjects(PlayerUnit, unit))
+  local MyAngleToUnit = GetAnglesBetweenObjects(PlayerUnit, unit)
   local AnglesDifference = MyAngle > MyAngleToUnit and MyAngle - MyAngleToUnit or MyAngleToUnit - MyAngle
   local AnglesBetweenUnits = AnglesDifference < math.pi and AnglesDifference or math.pi * 2 - AnglesDifference
   local FinalAngle = AnglesBetweenUnits / math.pi * 360
@@ -66,7 +65,8 @@ function Unit.IsInAttackRange(spell, unit)
   end
 
   -- for casted spells
-  if IsSpellInRange(select(1, GetSpellInfo(spell)), unit) == 1 then
+  local Name = GetSpellInfo(spell)
+  if IsSpellInRange(Name, unit) == 1 then
     return true
   end
   -- for melee
@@ -139,14 +139,14 @@ function Unit.IsBoss(unit)
   end
 
   -- Dungeon Bosses
-  for i = 1, getn(DungeonBosses) do
+  for i = 1, #DungeonBosses do
     if Unit.GetCreatureID(unit) == DungeonBosses[i] then
       return true
     end
   end
 
   -- Raid Bosses
-  for i = 1, getn(RaidBosses) do
+  for i = 1, #RaidBosses do
     if Unit.GetCreatureID(unit) == RaidBosses[i] then
       return true
     end
@@ -242,8 +242,10 @@ function Unit.IsCasting(unit)
   if unit == nil then
     return nil
   end
-  if select(6, UnitCastingInfo(unit)) == nil
-  or GetTime() * 1000 >= select(6, UnitCastingInfo(unit)) - (PreCastTime * 1000) then
+
+  local _, _, _, _, _, EndTime = UnitCastingInfo(unit)
+  if EndTime == nil
+  or GetTime() * 1000 >= EndTime - (PreCastTime * 1000) then
     return false
   else
     return true
@@ -256,7 +258,9 @@ function Unit.IsChanneling(unit)
     return nil
   end
 
-  if select(6, UnitChannelInfo(unit)) == nil then
+  local _, _, _, _, _, EndTime = UnitChannelInfo(unit)
+  if EndTime == nil
+  or GetTime() * 1000 >= EndTime - (PreCastTime * 1000) then
     return false
   else
     return true
@@ -334,13 +338,14 @@ function Unit.CastedPercent(unit)
     return nil
   end
 
-  local CastTime = nil
   local PercentCasted = nil
 
-  if select(5, UnitCastingInfo(unit)) ~= nil then
-    CastTime = select(6,  UnitCastingInfo(unit)) - select(5,  UnitCastingInfo(unit))
-    PercentCasted = math.floor((1 - (select(6,  UnitCastingInfo(unit)) - GetTime() * 1000) / CastTime) * 100)
+  local _, _, _, _, StartTime, EndTime = UnitCastingInfo(unit)
+  if StartTime ~= nil then
+    CastTime = EndTime - StartTime
+    PercentCasted = math.floor((1 - EndTime - GetTime() * 1000) / CastTime) * 100
   end
+
   return PercentCasted
 end
 
@@ -352,14 +357,14 @@ function Unit.GetCreatureID(unit)
   end
 
   local guid = UnitGUID(unit)
-  local type = select(1, strsplit("-", guid))
+  local type = strsplit("-", guid)
 
   -- catch invalid units
   if type ~= "Creature" then
     return nil
   end
 
-  local creatureID = select(6, strsplit("-", guid))
+  local _, _, _, _, _, creatureID = strsplit("-", guid)
   return tonumber(creatureID)
 end
 
@@ -368,7 +373,7 @@ end
 function Unit.GetCenterBetweenUnits(units)
   local centerx, centery, centerz = 0, 0, 0
   local count = 0
-  for i = 1, getn(units) do
+  for i = 1, #units do
     unitx, unity, unitz = ObjectPosition(units[i])
     centerx = centerx + unitx
     centery = centery + unity
@@ -408,7 +413,7 @@ function Unit.HasControl(unit)
   end
 
   -- Check if affected by crowdcontrol spell
-  for i = 1, getn(LossOfControlAuras) do
+  for i = 1, #LossOfControlAuras do
     if Debuff.Has(unit, LossOfControlAuras[i]) then
       return false
     end
@@ -420,25 +425,31 @@ end
 -- given a unit, returns table of all of the unit's buff id's
 function Unit.GetBuffs(unit)
   Buffs = {}
-  BuffCount = Buff.GetBuffCount(unit)
-  for i = 1, BuffCount do
-    table.insert(Buffs, select(11, UnitBuff(unit, i)))
+  for i = 1, 50 do
+    local _, _, _, _, _, _, _, _, _, _, ID = UnitBuff(unit, i)
+    if ID ~= nil then
+      table.insert(Buffs, ID)
+    end
   end
+
   return Buffs
 end
 
 -- given a unit, returns table of all of the unit's debuff id's
 function Unit.GetDebuffs(unit)
   Debuffs = {}
-  DebuffCount = Debuff.GetCount(unit)
-  for i = 1, DebuffCount do
-    table.insert(Debuffs, select(11, UnitDebuff(unit, i)))
+  for i = 1, 50 do
+    local _, _, _, _, _, _, _, _, _, _, ID = UnitDebuff(unit, i)
+    if ID ~= nil then
+      table.insert(Debuffs, ID)
+    end
   end
+
   return Debuffs
 end
 
 -- returns the unit that is best to heal for the given parameters
-function Unit.FindBestToHeal(range, minUnits, health)
+function Unit.FindBestToHeal(range, minUnits, health, maxDistance)
   local BestTarget        = nil
   local UnitCountBest     = 0
   local UnitCountCurrent  = 0
@@ -449,7 +460,8 @@ function Unit.FindBestToHeal(range, minUnits, health)
     Units = Unit.GetUnitsBelowHealth(health, "friendly", true, CurrentUnit, range)
     table.insert(Units, CurrentUnit)
     UnitCountCurrent = #Units
-    if UnitCountCurrent >= minUnits
+    if Unit.IsInRange(CurrentUnit, PlayerUnit, maxDistance)
+    and UnitCountCurrent >= minUnits
     and UnitCountCurrent > UnitCountBest
     and Group.AverageHealthCustom(Units) < GroupHealth then
       UnitCountBest = UnitCountCurrent
@@ -462,13 +474,14 @@ function Unit.FindBestToHeal(range, minUnits, health)
 end
 
 -- returns the unit that is best to cast aoe on for the given parameters
-function Unit.FindBestToAOE(range, minUnits)
+function Unit.FindBestToAOE(range, minUnits, maxDistance)
   local BestTarget        = nil
   local UnitCountBest     = 0
   local UnitCountCurrent  = 0
   for Object, _ in pairs(UNIT_TRACKER) do
     if ObjectIsType(Object, ObjectTypes.Unit)
     and ObjectExists(Object)
+    and Unit.IsInRange(Object, PlayerUnit, maxDistance)
     and (UnitAffectingCombat(Object) or Unit.IsDummy(Object))
     and Unit.IsInLOS(Object) then
       UnitCountCurrent = #Unit.GetUnitsInRadius(Object, range, "hostile", true) + 1

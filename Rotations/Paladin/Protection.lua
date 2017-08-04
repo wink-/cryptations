@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
@@ -18,6 +18,12 @@ local Settings = json.decode(content)
 
 Taunt             = Settings.Taunt
 Interrupt         = Settings.Interrupt
+InterruptAny      = Settings.InterruptAny
+InterruptMin      = Settings.InterruptMin
+InterruptMax      = Settings.InterruptMax
+AutoEngage        = Settings.AutoEngage
+AutoTarget        = Settings.AutoTarget
+TargetMode        = Settings.TargetMode
 AvengingWrath     = Settings.AvengingWrath
 GotaK             = Settings.GotaK
 ArdentDefender    = Settings.ArdentDefender
@@ -39,6 +45,11 @@ MaxMana           = UnitPowerMax("player" , 0)
 local Unit        = LibStub("Unit")
 local Rotation    = LibStub("Rotation")
 
+KeyCallbacks = {
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
+}
+
 function Pulse()
   -- Call Taunt engine
   if UseTauntEngine then
@@ -46,13 +57,12 @@ function Pulse()
   end
 
   -- combat rotation
-  if UnitAffectingCombat(PlayerUnit)
-  or (AllowOutOfCombatRoutine and UnitGUID("target") ~= nil
-  and Unit.IsHostile("target")) and UnitHealth("target") ~= 0 then
+  if (UnitAffectingCombat(PlayerUnit) or AutoEngage)
+  and UnitGUID("target") ~= nil
+  and Unit.IsHostile("target") and UnitHealth("target") ~= 0 then
 
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
 
     -- call interrupt engine
     if Interrupt then
@@ -72,7 +82,7 @@ function Pulse()
     PPFlashOfLight()
 
     -- AOE ROTATION
-    if getn(Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true)) >= 3 then
+    if #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true) >= 3 then
       PPConsecration()
       PPAvengersShield()
       PPJudgment()
@@ -89,17 +99,32 @@ function Pulse()
 end
 
 -- Taunt spells are handled here
-function Taunt(unit)
-  PlayerTarget = unit
-  PPHoR()
-  PPAvengersShield()
-  PPJudgment()
+function Taunt(Target)
+  if Target ~= nil
+  and Spell.CanCast(SB["Hand of Reckoning"], Target)
+  and Unit.IsInLOS(Target) then
+    -- Here it is necessary to let the queue cast the spell
+    return Spell.AddToQueue(SB["Hand of Reckoning"], Target)
+  end
+
+  if Target ~= nil
+  and Unit.IsInLOS(Target)
+  and Spell.CanCast(SB["Avenger's Shield"], Target)
+  and Unit.IsFacing(Target, MeleeAngle) then
+    return Spell.Cast(SB["Avenger's Shield"], Target)
+  end
+
+  if Target ~= nil
+  and Unit.IsInLOS(Target)
+  and Spell.CanCast(SB["Judgment"], Target)
+  and Unit.IsFacing(Target, MeleeAngle) then
+    return Spell.Cast(SB["Judgment"], Target)
+  end
 end
 
 -- Interrupt spells are handled here
-function Interrupt(unit)
-  PlayerTarget = unit
-  PRebuke()
-  PBlindingLight()
-  PHammerOfJustice()
+function Interrupt(Target)
+  PRebuke(Target)
+  PBlindingLight(Target)
+  PHammerOfJustice(Target)
 end

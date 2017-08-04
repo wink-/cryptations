@@ -3,28 +3,9 @@ local Rotation  = LibStub("Rotation")
 local Spell     = LibStub("Spell")
 local Group     = LibStub("Group")
 local Player    = LibStub("Player")
-
--- GLOBAL SETTINGS
-
--- Targeting behavior : Only one can be true
-ReTargetNearestUnit      = true
-ReTargetHighestUnit      = false
-ReTargetLowestUnit       = false
-
--- Combat behavior
-AllowOutOfCombatRoutine  = true
-
--- Interrupt behavior
-InterruptAnyUnit         = false
-InterruptMinPercent      = 20
-InterruptMaxPercent      = 80
+local Events    = LibStub("Events")
 
 function Initialize()
-  if FireHack then
-    if PlayerUnit == nil or not ObjectExists(PlayerUnit) then
-      PlayerUnit = GetObjectWithGUID(UnitGUID("player"))
-    end
-  end
 
   -- Setup event frame
   local frame = CreateFrame("FRAME", "EventFrame")
@@ -45,12 +26,15 @@ function Initialize()
       CurrentUniqueIdentifier = SPELL_QUEUE[1].key
       CurrentSpell = Spell.GetID(arg2)
     end
+
     if event == "PLAYER_REGEN_ENABLED" then
       Rotation.CleanUpQueue()
     end
+
     if event == "PLAYER_REGEN_DISABLED" then
       -- TODO: manually place player in combat
     end
+
     if event == "UNIT_COMBAT" and arg1 == "player" and arg2 == "WOUND"
     and arg4 ~= nil then
       -- the player damage table is limited to 100 entries
@@ -62,28 +46,31 @@ function Initialize()
       local Entry = {damage = arg4, damageTakenTime = GetTime()}
       table.insert(PLAYER_DAMAGE, Entry)
     end
-    if event == "GROUP_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
-      if FireHack ~= nil then
-        Group.UpdateMembers()
-        Group.UpdateTanks()
-      end
+
+    if event == "GROUP_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD"
+    and GetFireHackVersion() ~= nil then
+      Group.UpdateMembers()
+      Group.UpdateTanks()
     end
+
     if event == "ACTIVE_TALENT_GROUP_CHANGED" and IsInGroup() then
       Group.UpdateTanks()
     end
+
     if event == "PLAYER_EQUIPMENT_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
       Player.GetSetPieceLatestTier()
     end
-    if event == "PLAYER_TARGET_CHANGED" then
-      if OnTargetSwitch ~= nil then
-        OnTargetSwitch()
-      end
-    end
-    if event == "PLAYER_ENTERING_WORLD" and FireHack == nil then
-      return message("No unlocker attatched.")
+
+    if event == "PLAYER_TARGET_CHANGED" and OnTargetSwitch ~= nil then
+      OnTargetSwitch()
     end
   end
 
+  -- Set Frame Scripts
   frame:SetScript("OnEvent", eventHandler)
   spellframe:SetScript("OnUpdate", Spell.DetectionHandler)
+
+  -- Create Timers
+  --AddTimerCallback(0.05, Events.KeyListener)
+  AddTimerCallback(0.1, Events.GetUnits)
 end

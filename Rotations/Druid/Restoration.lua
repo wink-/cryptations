@@ -1,4 +1,4 @@
-local ClassID = select(3, UnitClass("player"))
+local _, _, ClassID = UnitClass("player")
 local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
@@ -17,6 +17,9 @@ end
 local Settings = json.decode(content)
 
 Dispell         = Settings.Dispell
+AutoEngage      = Settings.AutoEngage
+AutoTarget      = Settings.AutoTarget
+TargetMode      = Settings.TargetMode
 Tranquility     = Settings.Tranquility
 Innervate       = Settings.Innervate
 Ironbark        = Settings.Ironbark
@@ -47,6 +50,11 @@ local Player      = LibStub("Player")
 local BossManager = LibStub("BossManager")
 local Utils       = LibStub("Utils")
 
+KeyCallbacks = {
+  ["CTRL,P"] = Rotation.TogglePause,
+  ["CTRL,A"] = Rotation.ToggleAoE
+}
+
 function Pulse()
   -- Combat Rotation
   if UnitAffectingCombat(PlayerUnit) then
@@ -57,7 +65,6 @@ function Pulse()
 
     -- pulse target engine and remember target
     Rotation.Target("hostile")
-    PlayerTarget = GetObjectWithGUID(UnitGUID("target"))
 
     DRTranquility()
     DRInnervate()
@@ -80,8 +87,8 @@ function Pulse()
 end
 
 function Dispell(unit, dispellType)
-  if Spell.CanCast(88423, unit, 0, MaxMana * 0.13)
+  if Spell.CanCast(SB["Nature's Cure"], unit, 0, MaxMana * 0.13)
   and dispellType ~= "Disease" then
-    return Spell.Cast(88423, unit)
+    return Spell.Cast(SB["Nature's Cure"], unit)
   end
 end

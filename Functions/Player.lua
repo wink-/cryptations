@@ -12,9 +12,9 @@ local SetPieceBonus = 0
 -- given the spellID of the artifact trait, returns the current rank of this artifact
 -- returns 0 if the player does not have the rank unlocked
 function Player.ArtifactTraitRank(spellID)
-  local traits = select(2, LAD:GetArtifactTraits())
+  local _, traits = LAD:GetArtifactTraits()
 
-  if traits == nil or getn(traits) == 0 then
+  if traits == nil or #traits == 0 then
     return nil
   end
 
@@ -29,12 +29,12 @@ end
 
 -- returns the sum of the damage that the player took over the given period of time (e.g. last 5 seconds)
 function Player.GetDamageOverPeriod(period)
-  if getn(PLAYER_DAMAGE) == 0 then
+  if #PLAYER_DAMAGE == 0 then
     return 0
   end
 
   local Sum = 0
-  for i = 1, getn(PLAYER_DAMAGE) do
+  for i = 1, PLAYER_DAMAGE do
     if GetTime() - PLAYER_DAMAGE[i].damageTakenTime < period then
       Sum = Sum + PLAYER_DAMAGE[i].damage
     end
@@ -45,7 +45,8 @@ end
 
 -- returns true if the player has selected the given talent
 function Player.HasTalent(tier, column)
-  return select(4, GetTalentInfo(tier, column, 1)) == true
+  local _, _, _, HasTalent = GetTalentInfo(tier, column, 1)
+  return HasTalent
 end
 
 -- returns the current gcd duration in seconds
