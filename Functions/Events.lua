@@ -135,7 +135,7 @@ Keys = {
 -- This function "listens" to any key input
 -- If there is a Callback function assigned for a certain "HotKey" it will be executed
 -- Every class must have a table called "KeyCallbacks" where this function can access to
-local KeyDelay = 0.5
+local KeyDelay = 0.25
 local NextExecute = GetTime()
 function Events.KeyListener()
   for k, v in pairs(KeyCallbacks) do

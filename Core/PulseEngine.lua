@@ -23,7 +23,7 @@ function PulseEngine()
     elseif FireHack == nil then
       Messaged = true
       Rotation.Pause()
-      return message("No unlocker attached. Please attach unlocker and reload.")
+      return message("No unlocker attached. Please attach unlocker and type '/cr toggle'.")
     end
 
     if PlayerUnit == nil
