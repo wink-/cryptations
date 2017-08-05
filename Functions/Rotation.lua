@@ -7,6 +7,7 @@ local Debuff    = LibStub("Debuff")
 
 Paused   = false
 AllowAoE = true
+AllowCD  = true
 
 -- The spell queue shall only contain spells that are a 100% required to be casted (rest is done by the rotation itself)
 -- Example use for the spell queue would be a sequence that has to be casted in a certain order
@@ -160,6 +161,15 @@ function Rotation.TogglePause()
     ChatOverlay("Pausing Rotation", 2, "RED")
   else
     ChatOverlay("Resuming Rotation", 2, "GREEN")
+  end
+end
+
+function Rotation.ToggleCD()
+  AllowCD = not AllowCD
+  if AllowCD then
+    ChatOverlay("Cooldown usage Enabled", 2, "GREEN")
+  else
+    ChatOverlay("Cooldown usage Disabled", 2, "RED")
   end
 end
 
