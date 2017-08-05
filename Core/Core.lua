@@ -76,7 +76,9 @@ function Initialize_UnlockerNeeded()
   spellframe:SetScript("OnUpdate", Spell.DetectionHandler)
 
   -- Create Timers
-  --AddTimerCallback(0.05, Events.KeyListener)
+  if GetKeyState ~= nil then
+    AddTimerCallback(0.05, Events.KeyListener)
+  end
   AddTimerCallback(0.1, Events.GetUnits)
 end
 
