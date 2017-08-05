@@ -1,8 +1,9 @@
 local Rotation = LibStub("Rotation")
 
-local UpdateInterval  = 0.1
-local LastUpdate      = GetTime()
-local Initialized     = false
+local UpdateInterval          = 0.1
+local LastUpdate              = GetTime()
+local Initialized_Unlocker    = false
+local Initialized_NoUnlocker  = false
 
 local f = CreateFrame("FRAME", "PulseFrame")
 
@@ -10,10 +11,15 @@ function PulseEngine()
   if LastUpdate < GetTime() + UpdateInterval
   and not Paused then
 
+    if not Initialized_NoUnlocker then
+      Initialized_NoUnlocker = true
+      Initialize_NoUnlockerNeeded()
+    end
+
     if FireHack ~= nil
-    and not Initialized then
-      Initialized = true
-      Initialize()
+    and not Initialized_Unlocker then
+      Initialized_Unlocker = true
+      Initialize_UnlockerNeeded()
     elseif FireHack == nil then
       Messaged = true
       Rotation.Pause()

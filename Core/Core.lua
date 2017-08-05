@@ -6,7 +6,7 @@ local Player    = LibStub("Player")
 local Events    = LibStub("Events")
 local Utils     = LibStub("Utils")
 
-function Initialize()
+function Initialize_UnlockerNeeded()
 
   -- Setup event frame
   local frame = CreateFrame("FRAME", "EventFrame")
@@ -78,4 +78,19 @@ function Initialize()
   -- Create Timers
   --AddTimerCallback(0.05, Events.KeyListener)
   AddTimerCallback(0.1, Events.GetUnits)
+end
+
+function Initialize_NoUnlockerNeeded()
+  local function SlashCommands(msg, editbox)
+    if msg == 'toggle' then
+      Rotation.TogglePause()
+    elseif msg == 'help' then
+      print('"toggle": toggle the rotation')
+    else
+      print('Unknown command. Type "/cr help" for a list of available commands')
+    end
+  end
+
+  SLASH_CR1 = '/cr'
+  SlashCmdList["CR"] = SlashCommands
 end
