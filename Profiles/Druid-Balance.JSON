@@ -1,8 +1,8 @@
 {
   "Interrupt": true,
   "InterruptAny": false,
-  "InterruptMin": 20,
-  "InterruptMax": 80,
+  "InterruptMin": 20.0,
+  "InterruptMax": 80.0,
   "AutoEngage": true,
   "AutoTarget": true,
   "TargetMode": 0,
@@ -17,9 +17,9 @@
   "StFMD": true,
   "MFMD": true,
   "SFMD": true,
-  "StFMDCount": 2,
-  "MFMDCount": 10,
-  "SFMDCount": 10,
+  "StFMDCount": 2.0,
+  "MFMDCount": 10.0,
+  "SFMDCount": 10.0,
   "PauseHotkey": "CTRL,Q",
   "AoEHotkey": "CTRL,A",
   "CDHotkey": "CTRL,C"
