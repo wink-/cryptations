@@ -289,11 +289,11 @@ function DBSolarWrathV1()
   local Target = PlayerTarget()
 
   if Target ~= nil
-  and Spell.CanCast(SB["Solar Wrath"], Target)
+  and Spell.CanCast(SB["Solar Wrath Balance"], Target)
   and ObjectIsFacing(PlayerUnit, Target)
   and Unit.IsInLOS(Target)
   and Buff.Has(PlayerUnit, AB["Solar Empowerment"]) then
-    return Spell.Cast(SB["Solar Wrath"], Target)
+    return Spell.Cast(SB["Solar Wrath Balance"], Target)
   end
 end
 
@@ -325,10 +325,10 @@ function DBSolarWrathV2()
   local Target = PlayerTarget()
 
   if Target ~= nil
-  and Spell.CanCast(SB["Solar Wrath"], Target)
+  and Spell.CanCast(SB["Solar Wrath Balance"], Target)
   and ObjectIsFacing(PlayerUnit, Target)
   and Unit.IsInLOS(Target) then
-    return Spell.Cast(SB["Solar Wrath"], Target)
+    return Spell.Cast(SB["Solar Wrath Balance"], Target)
   end
 end
 
@@ -412,14 +412,14 @@ function DBSolarWrathV3()
   local Target        = PlayerTarget()
 
   if Target ~= nil
-  and Spell.CanCast(SB["Solar Wrath"], Target)
+  and Spell.CanCast(SB["Solar Wrath Balance"], Target)
   and ObjectIsFacing(PlayerUnit, Target)
   and Unit.IsInLOS(Target)
   and Buff.Stack(PlayerUnit, AB["Solar Empowerment"]) > 1
   and LunarPowerMax - LunarPower >= DBPowerGainSolarWrath()
   and Buff.RemainingTime(PlayerUnit, AB["The Emerald Dreamcatcher"]) > math.max(0.75, SWCastTime) * 2
   and Buff.RemainingTime(PlayerUnit, AB["The Emerald Dreamcatcher"]) < LSCastTime + math.max(0.75, SWCastTime) then
-    return Spell.Cast(SB["Solar Wrath"], PlayerUnit)
+    return Spell.Cast(SB["Solar Wrath Balance"], PlayerUnit)
   end
 end
 
@@ -446,12 +446,12 @@ function DBSolarWrathV4()
   local Target        = PlayerTarget()
 
   if Target ~= nil
-  and Spell.CanCast(SB["Solar Wrath"], Target)
+  and Spell.CanCast(SB["Solar Wrath Balance"], Target)
   and ObjectIsFacing(PlayerUnit, Target)
   and Unit.IsInLOS(Target)
   and Buff.Has(PlayerUnit, AB["Solar Empowerment"])
   and LunarPowerMax - LunarPower >= DBPowerGainSolarWrath() then
-    return Spell.Cast(SB["Solar Wrath"], Target)
+    return Spell.Cast(SB["Solar Wrath Balance"], Target)
   end
 end
 
