@@ -7,6 +7,9 @@ PLAYER_DAMAGE = {
   damageTakenTime
 }
 
+GroupInCombat = false -- This updates with the "PLAYER_REGEN_ENABLED" and "PLAYER_REGEN_DISABLED" Events
+                      -- and is used to recognize when group memebers are in combat
+
 local SetPieceBonus = 0
 
 -- given the spellID of the artifact trait, returns the current rank of this artifact

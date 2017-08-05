@@ -33,10 +33,11 @@ function Initialize_UnlockerNeeded()
 
     if event == "PLAYER_REGEN_ENABLED" then
       Rotation.CleanUpQueue()
+      GroupInCombat = false
     end
 
     if event == "PLAYER_REGEN_DISABLED" then
-      -- TODO: manually place player in combat
+      GroupInCombat = true
     end
 
     if event == "UNIT_COMBAT" and arg1 == "player" and arg2 == "WOUND"
