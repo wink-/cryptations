@@ -39,6 +39,9 @@ EfaEHealth    = Settings.EfaEHealth
 WoGHealth     = Settings.WoGHealth
 WoGUnits      = Settings.WoGUnits
 JudgmentTTD   = Settings.JudgmentTTD
+PauseHotkey   = Settings.PauseHotkey
+AoEHotkey     = Settings.AoEHotkey
+CDHotkey      = Settings.CDHotkey
 MaxMana       = UnitPowerMax("player" , 0)
 
 local Unit        = LibStub("Unit")
@@ -46,8 +49,9 @@ local Rotation    = LibStub("Rotation")
 local Debuff      = LibStub("Debuff")
 
 KeyCallbacks = {
-  ["CTRL,P"] = Rotation.TogglePause,
-  ["CTRL,A"] = Rotation.ToggleAoE
+  [PauseHotkey] = Rotation.TogglePause,
+  [AoEHotkey] = Rotation.ToggleAoE,
+  [CDHotkey] = Rotation.ToggleCD
 }
 
 function SingleTargetSpenders()

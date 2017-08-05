@@ -28,5 +28,8 @@
   "SMHealth": 65,
   "EFUnits": 3,
   "EFHealth": 95,
-  "EoGHoTCount": 3
+  "EoGHoTCount": 3,
+  "PauseHotkey": "CTRL,Q",
+  "AoEHotkey": "CTRL,A",
+  "CDHotkey": "CTRL,C"
 }

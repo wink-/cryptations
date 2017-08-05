@@ -55,6 +55,9 @@ FoLHealth               = Settings.FoLHealth
 BestowFaithHealth       = Settings.BestowFaithHealth
 HLHealth                = Settings.HLHealth
 HSHealth                = Settings.HSHealth
+PauseHotkey             = Settings.PauseHotkey
+AoEHotkey               = Settings.AoEHotkey
+CDHotkey                = Settings.CDHotkey
 MaxMana                 = UnitPowerMax("player" , 0)
 
 local Unit        = LibStub("Unit")
@@ -65,8 +68,9 @@ local BossManager = LibStub("BossManager")
 local Utils       = LibStub("Utils")
 
 KeyCallbacks = {
-  ["CTRL,P"] = Rotation.TogglePause,
-  ["CTRL,A"] = Rotation.ToggleAoE
+  [PauseHotkey] = Rotation.TogglePause,
+  [AoEHotkey] = Rotation.ToggleAoE,
+  [CDHotkey] = Rotation.ToggleCD
 }
 
 function Pulse()

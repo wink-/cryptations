@@ -37,6 +37,9 @@ SFMD          = Settings.SFMD
 StFMDCount    = Settings.StFMDCount
 MFMDCount     = Settings.MFMDCount
 SFMDCount     = Settings.SFMDCount
+PauseHotkey   = Settings.PauseHotkey
+AoEHotkey     = Settings.AoEHotkey
+CDHotkey      = Settings.CDHotkey
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
@@ -47,8 +50,9 @@ local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 
 KeyCallbacks = {
-  ["CTRL,P"] = Rotation.TogglePause,
-  ["CTRL,A"] = Rotation.ToggleAoE
+  [PauseHotkey] = Rotation.TogglePause,
+  [AoEHotkey] = Rotation.ToggleAoE,
+  [CDHotkey] = Rotation.ToggleCD
 }
 
 function EmeraldDreamcatcher()

@@ -35,6 +35,9 @@ RipMD         = Settings.RipMD
 RakeMDCount   = Settings.RakeMDCount
 MFMDCount     = Settings.MFMDCount
 RipMDCount    = Settings.RipMDCount
+PauseHotkey   = Settings.PauseHotkey
+AoEHotkey     = Settings.AoEHotkey
+CDHotkey      = Settings.CDHotkey
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
@@ -43,8 +46,9 @@ local Player      = LibStub("Player")
 local BossManager = LibStub("BossManager")
 
 KeyCallbacks = {
-  ["CTRL,P"] = Rotation.TogglePause,
-  ["CTRL,A"] = Rotation.ToggleAoE
+  [PauseHotkey] = Rotation.TogglePause,
+  [AoEHotkey] = Rotation.ToggleAoE,
+  [CDHotkey] = Rotation.ToggleCD
 }
 
 function Finishers()

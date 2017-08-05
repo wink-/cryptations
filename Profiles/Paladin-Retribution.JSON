@@ -19,5 +19,8 @@
   "EfaEHealth": 80.0,
   "WoGHealth": 80.0,
   "WoGUnits": 3.0,
-  "JudgmentTTD": 3.0
+  "JudgmentTTD": 3.0,
+  "PauseHotkey": "CTRL,Q",
+  "AoEHotkey": "CTRL,A",
+  "CDHotkey": "CTRL,C"
 }

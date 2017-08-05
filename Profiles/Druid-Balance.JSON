@@ -20,4 +20,7 @@
   "StFMDCount": 2,
   "MFMDCount": 10,
   "SFMDCount": 10,
+  "PauseHotkey": "CTRL,Q",
+  "AoEHotkey": "CTRL,A",
+  "CDHotkey": "CTRL,C"
 }

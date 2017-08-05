@@ -34,5 +34,8 @@
   "FoLHealth": 50.0,
   "BestowFaithHealth": 80.0,
   "HLHealth": 85.0,
-  "HSHealth": 90.0
+  "HSHealth": 90.0,
+  "PauseHotkey": "CTRL,Q",
+  "AoEHotkey": "CTRL,A",
+  "CDHotkey": "CTRL,C"
 }

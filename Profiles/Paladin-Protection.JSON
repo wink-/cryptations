@@ -22,5 +22,8 @@
   "LoHHealth": 15.0,
   "LotPHealth": 50.0,
   "HotPHealth": 30.0,
-  "FoLHealth": 30.0
+  "FoLHealth": 30.0,
+  "PauseHotkey": "CTRL,Q",
+  "AoEHotkey": "CTRL,A",
+  "CDHotkey": "CTRL,C"
 }
