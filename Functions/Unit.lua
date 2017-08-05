@@ -92,18 +92,29 @@ end
 -- range (optional) : the range which shall be scanned for units
 function Unit.GetUnitsBelowHealth(healthPercent, mode, onlyCombat, unit, range)
   local Units = {}
-  for Object, _ in pairs(UNIT_TRACKER) do
-    if ObjectIsType(Object, ObjectTypes.Unit)
-    and ObjectExists(Object)
-    and (unit == nil or Object ~= unit)
-    and Unit.PercentHealth(Object) < healthPercent
-    and ((range == nil and unit == nil) or Unit.IsInRange(unit, Object, range)) then
-      if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
-      or (UnitInParty(Object) or UnitInRaid(Object)))
-      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+
+  -- for hostile units
+  if mode == "hostile" then
+    for Object, _ in pairs(UNIT_TRACKER) do
+      if ObjectExists(Object)
+      --and (unit == nil or Object ~= unit)
+      and Unit.PercentHealth(Object) < healthPercent
+      and ((range == nil and unit == nil) or Unit.IsInRange(unit, Object, range))
+      and (onlyCombat ~= true or UnitAffectingCombat(Object)) then
         table.insert(Units, Object)
-      elseif mode == "hostile" and Unit.IsHostile(Object)
-      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+      end
+    end
+  end
+
+  -- for group units
+  if mode == "friendly" then
+    for i = 1, #GROUP_MEMBERS do
+      local Object = GROUP_MEMBERS[i]
+      if ObjectExists(Object)
+      --and (unit == nil or Object ~= unit)
+      and Unit.PercentHealth(Object) < healthPercent
+      and ((range == nil and unit == nil) or Unit.IsInRange(unit, Object, range))
+      and (onlyCombat ~= true or UnitAffectingCombat(Object)) then
         table.insert(Units, Object)
       end
     end
@@ -277,19 +288,28 @@ function Unit.GetUnitsInRadius(otherUnit, radius, mode, onlyCombat)
   end
 
   local Units = {}
-  for Object, _ in pairs(UNIT_TRACKER) do
-    if Object ~= otherUnit
-    and Unit.IsInRange(otherUnit, Object, radius)
-    and UnitHealth(Object) > 1 then
-      if mode == "friendly"
-      and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
-      or (UnitInParty(Object) or UnitInRaid(Object)))
-      and (onlyCombat == false or onlyCombat == nil
-      or (UnitAffectingCombat(Object) or Unit.IsDummy(Object))) then
-        table.insert(Units, Object)
-      elseif mode == "hostile" and Unit.IsHostile(Object)
-      and (onlyCombat == false or onlyCombat == nil
-      or (UnitAffectingCombat(Object) or Unit.IsDummy(Object))) then
+
+  -- for hostile units
+  if mode == "hostile" then
+    for Object, _ in pairs(UNIT_TRACKER) do
+      if Object ~= otherUnit
+      and Unit.IsInRange(otherUnit, Object, radius)
+      and UnitHealth(Object) > 1 then
+        if (onlyCombat ~= true or (UnitAffectingCombat(Object) or Unit.IsDummy(Object))) then
+          table.insert(Units, Object)
+        end
+      end
+    end
+  end
+
+  -- for friendly units
+  if mode == "friendly" then
+    for i = 1, #GROUP_MEMBERS do
+      local Object = GROUP_MEMBERS[i]
+      if Object ~= otherUnit
+      and Unit.IsInRange(otherUnit, Object, radius)
+      and UnitHealth(Object) > 1
+      and (onlyCombat ~= true or UnitAffectingCombat(Object)) then
         table.insert(Units, Object)
       end
     end
@@ -309,26 +329,38 @@ function Unit.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat, healt
   end
 
   local Units = {}
-  for Object, _ in pairs(UNIT_TRACKER) do
-    if ObjectExists(Object)
-    and ObjectIsType(Object, ObjectTypes.Unit)
-    and Object ~= otherUnit
-    and Unit.IsFacing(Object, angle)
-    and Unit.IsInRange(otherUnit, Object, distance)
-    and UnitHealth(Object) > 1
-    and (healthPercent == nil or Unit.PercentHealth(Object) <= healthPercent) then
-      if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
-      or (UnitInParty(Object) or UnitInRaid(Object)))
-      and (onlyCombat == false or onlyCombat == nil
-      or (UnitAffectingCombat(Object) or Unit.IsDummy(Object))) then
-        table.insert(Units, Object)
-      elseif mode == "hostile" and Unit.IsHostile(Object)
-      and (onlyCombat == false or onlyCombat == nil
-      or (UnitAffectingCombat(Object) or Unit.IsDummy(Object))) then
+
+  -- for hostile units
+  if mode == "hostile" then
+    for Object, _ in pairs(UNIT_TRACKER) do
+      if ObjectExists(Object)
+      and Object ~= otherUnit
+      and Unit.IsFacing(Object, angle)
+      and Unit.IsInRange(otherUnit, Object, distance)
+      and UnitHealth(Object) > 1
+      and (healthPercent == nil or Unit.PercentHealth(Object) <= healthPercent) then
+        if onlyCombat ~= nil or (UnitAffectingCombat(Object) or Unit.IsDummy(Object)) then
+          table.insert(Units, Object)
+        end
+      end
+    end
+  end
+
+  if mode == "friendly" then
+    for i = 1, #GROUP_MEMBERS do
+      local Object = GROUP_MEMBERS[i]
+      if ObjectExists(Object)
+      and Object ~= otherUnit
+      and Unit.IsFacing(Object, angle)
+      and Unit.IsInRange(otherUnit, Object, distance)
+      and UnitHealth(Object) > 1
+      and (healthPercent == nil or Unit.PercentHealth(Object) <= healthPercent)
+      and (onlyCombat ~= nil or (UnitAffectingCombat(Object))) then
         table.insert(Units, Object)
       end
     end
   end
+
   return Units
 end
 
@@ -455,12 +487,14 @@ function Unit.FindBestToHeal(range, minUnits, health, maxDistance)
   for i = 1, #GROUP_MEMBERS do
     CurrentUnit = GROUP_MEMBERS[i]
     Units = Unit.GetUnitsBelowHealth(health, "friendly", true, CurrentUnit, range)
-    table.insert(Units, CurrentUnit)
+    if Unit.PercentHealth(CurrentUnit) <= health then
+      table.insert(Units, CurrentUnit)
+    end
     UnitCountCurrent = #Units
     if Unit.IsInRange(CurrentUnit, PlayerUnit, maxDistance)
     and UnitCountCurrent >= minUnits
     and UnitCountCurrent > UnitCountBest
-    and Group.AverageHealthCustom(Units) < GroupHealth then
+    and Group.AverageHealthCustom(Units) <= GroupHealth then
       UnitCountBest = UnitCountCurrent
       BestTarget = CurrentUnit
       GroupHealth = Group.AverageHealthCustom(Units)
