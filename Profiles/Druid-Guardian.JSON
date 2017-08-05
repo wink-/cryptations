@@ -8,7 +8,7 @@
   "AutoTarget": true,
   "TargetMode": 0,
   "Incarnation": true,
-  "BristlinFur": true,
+  "BristlingFur": true,
   "SurvInstincts": true,
   "Barkskin": true,
   "Ironfur": true,
@@ -23,5 +23,8 @@
   "FRHealth": 20.0,
   "MaulHealth": 95.0,
   "MaulRage": 95.0,
-  "RotSHealth": 80.0
+  "RotSHealth": 80.0,
+  "PauseHotkey": "CTRL,Q",
+  "AoEHotkey": "CTRL,A",
+  "CDHotkey": "CTRL,C"
 }

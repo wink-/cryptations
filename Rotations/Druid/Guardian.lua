@@ -25,7 +25,7 @@ AutoEngage      = Settings.AutoEngage
 AutoTarget      = Settings.AutoTarget
 TargetMode      = Settings.TargetMode
 Incarnation     = Settings.Incarnation
-BristlinFur     = Settings.BristlinFur
+BristlingFur     = Settings.BristlingFur
 SurvInstincts   = Settings.SurvInstincts
 Barkskin        = Settings.Barkskin
 Ironfur         = Settings.Ironfur
@@ -41,6 +41,9 @@ FRHealth        = Settings.FRHealth
 MaulHealth      = Settings.MaulHealth
 MaulRage        = Settings.MaulRage
 RotSHealth      = Settings.RotSHealth
+PauseHotkey     = Settings.PauseHotkey
+AoEHotkey       = Settings.AoEHotkey
+CDHotkey        = Settings.CDHotkey
 MaxMana         = UnitPowerMax("player" , 0)
 MaxHealth       = UnitHealthMax("player")
 
@@ -48,8 +51,9 @@ local Unit        = LibStub("Unit")
 local Rotation    = LibStub("Rotation")
 
 KeyCallbacks = {
-  ["CTRL,P"] = Rotation.TogglePause,
-  ["CTRL,A"] = Rotation.ToggleAoE
+  [PauseHotkey] = Rotation.TogglePause,
+  [AoEHotkey] = Rotation.ToggleAoE,
+  [CDHotkey] = Rotation.ToggleCD
 }
 
 function Pulse()
