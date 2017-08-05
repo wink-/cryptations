@@ -492,3 +492,9 @@ function Unit.FindBestToAOE(range, minUnits, maxDistance)
 
   return BestTarget
 end
+
+-- returns true when the given unit currently casts the given spellID
+function Unit.IsCastingSpecific(unit, spellID)
+  local _, _, _, _, _, _, _, castID = UnitCastingInfo(unit)
+  return castID == spellID
+end
