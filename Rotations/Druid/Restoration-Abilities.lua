@@ -78,7 +78,7 @@ function EfflorescenceReplace()
 end
 
 function DREfflorescence()
-  local x, y, z = ObjectPosition(Unit.FindBestToHeal(10, EFUnits, EFHealth, 40))
+  local x, y, z = ObjectPosition(Unit.FindBestToHeal(15, EFUnits, EFHealth, 40))
 
   if x ~= nil and y ~= nil and z ~= nil
   and GetTotemInfo(1) == false
@@ -232,8 +232,8 @@ function DRSolarWrath()
 
   if Target ~= nil
   and DPS
-  and Spell.CanCast(SB["Solar Wrath"], Target) then
-    Spell.Cast(SB["Solar Wrath"], Target)
+  and Spell.CanCast(SB["Solar Wrath Restoration"], Target) then
+    Spell.Cast(SB["Solar Wrath Restoration"], Target)
   end
 end
 
