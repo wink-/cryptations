@@ -112,8 +112,8 @@ function Rotation.Interrupt()
       if NotInterruptible == 1
       and Unit.IsHostile(Object) then
         local PercentCasted = Unit.CastedPercent(Object)
-        if InterruptMinPercent < PercentCasted
-        and PercentCasted < InterruptMaxPercent and Interrupt ~= nil then
+        if InterruptMin < PercentCasted
+        and PercentCasted < InterruptMax and Interrupt ~= nil then
           Interrupt(Object)
         end
       end
@@ -127,8 +127,8 @@ function Rotation.Interrupt()
     if NotInterruptible == false
     and Unit.IsHostile(Target) then
       local PercentCasted = Unit.CastedPercent(Target)
-      if InterruptMinPercent < PercentCasted
-      and PercentCasted < InterruptMaxPercent and Interrupt ~= nil then
+      if InterruptMin < PercentCasted
+      and PercentCasted < InterruptMax and Interrupt ~= nil then
         Interrupt(Target)
       end
     end
