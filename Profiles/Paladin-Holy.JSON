@@ -2,7 +2,7 @@
   "Dispell": true,
   "AutoEngage": true,
   "AutoTarget": true,
-  "TargetMode": 0,
+  "TargetMode": 1,
   "AvengingWrath": true,
   "HolyAvenger": true,
   "LayOnHands": true,
