@@ -87,6 +87,7 @@ function Pulse()
       Rotation.Interrupt()
     end
 
+    DBMoonkin()
     Cooldowns()
     DBStarsurgeV1()
     DBFoE()
