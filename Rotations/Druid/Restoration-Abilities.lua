@@ -97,7 +97,7 @@ function DRLifebloom()
   and Spell.CanCast(SB["Lifebloom"], Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(Target) then
     if not Buff.Has(Target, AB["Lifebloom"], true)
-    or Buff.RemainingTime(Target, AB["Lifebloom"], true) <= LBTime then
+    or Buff.RemainingTime(Target, AB["Lifebloom"], true) <= 5 then
       return Spell.Cast(SB["Lifebloom"], Target)
     end
   end

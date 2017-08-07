@@ -32,7 +32,6 @@ Renewal         = Settings.Renewal
 DPS             = Settings.DPS
 MaxRejuv        = Settings.MaxRejuv
 IncarHealth     = Settings.IncarHealth
-LBTime          = Settings.LBTime
 RejuvHealth     = Settings.RejuvHealth
 GermHealth      = Settings.GermHealth
 RegrowthHealth  = Settings.RegrowthHealth
