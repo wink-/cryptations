@@ -95,7 +95,7 @@ function PHHolyShock()
   if Target ~= nil
   and ((not Buff.Has(Target, AB["Beacon of Faith"], true)
   and not Buff.Has(Target, AB["Beacon of Light"], true))
-  or Unit.PercentHealth(Target) <= TankEmergency)
+  or Unit.PercentHealth(Target) <= 60)
   and Unit.PercentHealth(Target) <= HSHealth
   and Spell.CanCast(SB["Holy Shock"], Target, 0, MaxMana * 0.1)
   and Unit.IsInLOS(Target) then
@@ -109,7 +109,7 @@ function PHHolyLight()
   if Target ~= nil
   and ((not Buff.Has(Target, AB["Beacon of Faith"], true)
   and not Buff.Has(Target, AB["Beacon of Light"], true))
-  or Unit.PercentHealth(Target) <= TankEmergency)
+  or Unit.PercentHealth(Target) <= 60)
   and Unit.PercentHealth(Target) <= HLHealth
   and Spell.CanCast(SB["Holy Light"], Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(Target) then
@@ -285,7 +285,7 @@ function PHFlashOfLight()
   if Target ~= nil
   and ((not Buff.Has(Target, AB["Beacon of Faith"], true)
   and not Buff.Has(Target, AB["Beacon of Light"], true))
-  or Unit.PercentHealth(Target) <= TankEmergency)
+  or Unit.PercentHealth(Target) <= 60)
   and Unit.PercentHealth(Target) <= FoLHealth
   and Spell.CanCast(SB["Flash of Light"], Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(Target) then
