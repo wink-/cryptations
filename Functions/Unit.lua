@@ -23,13 +23,7 @@ function Unit.IsFacing(unit, angle)
     return nil
   end
 
-  local MyAngle = ObjectFacing(PlayerUnit)
-  local MyAngleToUnit = GetAnglesBetweenObjects(PlayerUnit, unit)
-  local AnglesDifference = MyAngle > MyAngleToUnit and MyAngle - MyAngleToUnit or MyAngleToUnit - MyAngle
-  local AnglesBetweenUnits = AnglesDifference < math.pi and AnglesDifference or math.pi * 2 - AnglesDifference
-  local FinalAngle = AnglesBetweenUnits / math.pi * 360
-
-  return FinalAngle <= angle
+  return ObjectIsFacing(PlayerUnit, unit, angle)
 end
 
 -- returns true if given unit is in player's los
@@ -339,7 +333,7 @@ function Unit.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat, healt
       and Unit.IsInRange(otherUnit, Object, distance)
       and UnitHealth(Object) > 1
       and (healthPercent == nil or Unit.PercentHealth(Object) <= healthPercent) then
-        if onlyCombat ~= nil or (UnitAffectingCombat(Object) or Unit.IsDummy(Object)) then
+        if onlyCombat ~= true or (UnitAffectingCombat(Object) or Unit.IsDummy(Object)) then
           table.insert(Units, Object)
         end
       end
@@ -355,7 +349,7 @@ function Unit.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat, healt
       and Unit.IsInRange(otherUnit, Object, distance)
       and UnitHealth(Object) > 1
       and (healthPercent == nil or Unit.PercentHealth(Object) <= healthPercent)
-      and (onlyCombat ~= nil or (UnitAffectingCombat(Object))) then
+      and (onlyCombat ~= true or (UnitAffectingCombat(Object))) then
         table.insert(Units, Object)
       end
     end
