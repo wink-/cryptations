@@ -21,9 +21,8 @@ function PHLoDRange()
   if Player.HasTalent(7, 2) then
     Range = Range * 1.3
   end
-  -- LoD is always paired with Rule of Law so we want to know
-  -- if it is possible to cast it, not if it is active
-  if Spell.CanCast(SB["Rule of Law"]) then
+  if Spell.CanCast(SB["Rule of Law"])
+  or Buff.HasTalent(PlayerUnit, AB["Rule of Law"]) then
     Range = Range * 1.5
   end
 
@@ -192,9 +191,9 @@ function PHInfusionProc()
 
   if Buff.Has(PlayerUnit, AB["Infusion of Light"]) then
     if Unit.PercentHealth(Target) <= 60 then -- TODO
-      PHFoLInfusion()
+      PHFoLInfusion(Target)
     else
-      PHHLInfusion()
+      PHHLInfusion(Target)
     end
   end
 end
@@ -295,9 +294,7 @@ function PHFlashOfLight()
   end
 end
 
-function PHHLInfusion()
-  local Target = Group.UnitToHeal()
-
+function PHHLInfusion(Target)
   if Target ~= nil
   and Spell.CanCast(SB["Holy Light"], Target)
   and Unit.IsInLOS(Target) then
@@ -305,9 +302,7 @@ function PHHLInfusion()
   end
 end
 
-function PHFoLInfusion()
-  local Target = Group.UnitToHeal()
-
+function PHFoLInfusion(Target)
   if Target ~= nil
   and Spell.CanCast(SB["Flash of Light"], Target)
   and Unit.IsInLOS(Target) then
