@@ -174,15 +174,24 @@ end
 -- onlyCombat (optional) : true or false
 function Unit.FindHighest(mode, onlyCombat)
   local Highest = nil
-  for Object, _ in pairs(UNIT_TRACKER) do
-    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
-    and (Highest == nil or Unit.PercentHealth(Object) > Unit.PercentHealth(Highest)) then
-      if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
-      or (UnitInParty(Object) or UnitInRaid(Object)))
-      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+
+  if mode == 'hostile' then
+    for Object, _ in pairs(UNIT_TRACKER) do
+      if ObjectExists(Object)
+      and (Highest == nil or Unit.PercentHealth(Object) > Unit.PercentHealth(Highest))
+      and (onlyCombat ~= true or UnitAffectingCombat(Object)) then
         Highest = Object
-      elseif mode == "hostile" and Unit.IsHostile(Object)
-      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+      end
+    end
+  end
+
+  if mode == 'friendly' then
+    for i = 1, #GROUP_MEMBERS do
+      local Object = GROUP_MEMBERS[i]
+
+      if ObjectExists(Object)
+      and (Highest == nil or Unit.PercentHealth(Object) > Unit.PercentHealth(Highest))
+      and (onlyCombat ~= true or UnitAffectingCombat(Object)) then
         Highest = Object
       end
     end
@@ -196,16 +205,26 @@ end
 -- onlyCombat (optional) : true or false
 function Unit.FindLowest(mode, onlyCombat)
   local Lowest = nil
-  for Object, _ in pairs(UNIT_TRACKER) do
-    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
-    and (Lowest == nil or Unit.PercentHealth(Object) < Unit.PercentHealth(Lowest))
-    and UnitHealth(Object) > 1 then
-      if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
-      or (UnitInParty(Object) or UnitInRaid(Object)))
-      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+
+  if mode == 'hostile' then
+    for Object, _ in pairs(UNIT_TRACKER) do
+      if ObjectExists(Object)
+      and (Lowest == nil or Unit.PercentHealth(Object) < Unit.PercentHealth(Lowest))
+      and UnitHealth(Object) > 1
+      and (onlyCombat ~= true or UnitAffectingCombat(Object)) then
         Lowest = Object
-      elseif mode == "hostile" and Unit.IsHostile(Object)
-      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+      end
+    end
+  end
+
+  if mode == 'friendly' then
+    for i = 1, #GROUP_MEMBERS do
+      local Object = GROUP_MEMBERS[i]
+
+      if ObjectExists(Object)
+      and (Lowest == nil or Unit.PercentHealth(Object) < Unit.PercentHealth(Lowest))
+      and UnitHealth(Object) > 1
+      and (onlyCombat ~= true or UnitAffectingCombat(Object)) then
         Lowest = Object
       end
     end
@@ -224,16 +243,30 @@ function Unit.FindNearest(otherUnit, mode, onlyCombat)
   end
 
   local Nearest = nil
-  for Object, _ in pairs(UNIT_TRACKER) do
-    if ObjectExists(Object) and ObjectIsType(Object, ObjectTypes.Unit)
-    and (Nearest == nil or GetDistanceBetweenObjects(otherUnit, Object) < GetDistanceBetweenObjects(otherUnit, Nearest))
-    and UnitHealth(Object) > 1 and Object ~= PlayerUnit then
-      if mode == "friendly" and ((not Unit.IsHostile(Object) and UnitIsPlayer(Object))
-      or (UnitInParty(Object) or UnitInRaid(Object)))
-      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+
+  if mode == 'hostile' then
+    for Object, _ in pairs(UNIT_TRACKER) do
+      if ObjectExists(Object)
+      and Object ~= PlayerUnit
+      and (Nearest == nil
+      or GetDistanceBetweenObjects(otherUnit, Object) < GetDistanceBetweenObjects(otherUnit, Nearest))
+      and UnitHealth(Object) > 1
+      and (onlyCombat ~= true or UnitAffectingCombat(Object)) then
         Nearest = Object
-      elseif mode == "hostile" and Unit.IsHostile(Object)
-      and (onlyCombat == false or onlyCombat == nil or UnitAffectingCombat(Object)) then
+      end
+    end
+  end
+
+  if mode == 'friendly' then
+    for i = 1, #GROUP_MEMBERS do
+      local Object = GROUP_MEMBERS[i]
+
+      if ObjectExists(Object)
+      and Object ~= PlayerUnit
+      and (Nearest == nil
+      or GetDistanceBetweenObjects(otherUnit, Object) < GetDistanceBetweenObjects(otherUnit, Nearest))
+      and UnitHealth(Object) > 1
+      and (onlyCombat ~= true or UnitAffectingCombat(Object)) then
         Nearest = Object
       end
     end
