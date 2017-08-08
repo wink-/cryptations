@@ -28,8 +28,8 @@
   "EFUnits": 3.0,
   "EFHealth": 95.0,
   "EoGHealth": 80.0,
-  "FLHoTCount": 3,
   "RWHealth": 40.0,
+  "FLHoTCount": 3.0,
   "PauseHotkey": "CTRL,Q",
   "AoEHotkey": "CTRL,A",
   "CDHotkey": "CTRL,C"
