@@ -42,7 +42,7 @@ end
 
 function DREoG()
   if EoG
-  and HoTCount() >= EoGHoTCount
+  and Group.AverageHealth() <= EoGHealth
   and Spell.CanCast(SB["Essence of G'Hanir"]) then
     return Spell.Cast(SB["Essence of G'Hanir"])
   end
@@ -57,7 +57,9 @@ function HoTCount()
 end
 
 function DRFlourish()
-  if Spell.CanCast(SB["Flourish"]) and HoTCount() >= 3 then
+  if Flourish
+  and HoTCount() >= FLHoTCount
+  and Spell.CanCast(SB["Flourish"]) then
     return Spell.Cast(SB["Flourish"])
   end
 end
