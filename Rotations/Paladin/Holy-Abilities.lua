@@ -33,7 +33,7 @@ end
 function PHAvengingWrath()
   if AvengingWrath
   and Spell.CanCast(SB["Avenging Wrath"])
-  and GetNumGroupMembers() ~= 1
+  and GetNumGroupMembers() > 1
   and Group.AverageHealth() <= AWHealth then
     return Spell.Cast(SB["Avenging Wrath"])
   end
@@ -42,7 +42,7 @@ end
 function PHHolyAvenger()
   if HolyAvenger
   and Spell.CanCast(SB["Holy Avenger"])
-  and GetNumGroupMembers() ~= 1
+  and GetNumGroupMembers() > 1
   and Group.AverageHealth() <= HAHealth then
     return Spell.Cast(SB["Holy Avenger"])
   end
@@ -95,7 +95,7 @@ function PHHolyShock()
   if Target ~= nil
   and ((not Buff.Has(Target, AB["Beacon of Faith"], true)
   and not Buff.Has(Target, AB["Beacon of Light"], true))
-  or Unit.PercentHealth(Target) <= 60)
+  or Unit.PercentHealth(Target) <= 60) -- TODO: add setting
   and Unit.PercentHealth(Target) <= HSHealth
   and Spell.CanCast(SB["Holy Shock"], Target, 0, MaxMana * 0.1)
   and Unit.IsInLOS(Target) then
@@ -188,11 +188,13 @@ function PHBestowFaith()
 end
 
 function PHInfusionProc()
+  local Target = Group.UnitToHeal()
+
   if Buff.Has(PlayerUnit, AB["Infusion of Light"]) then
-    if InfusionHL then
-      PHHLInfusion()
-    elseif InfusionFoL then
+    if Unit.PercentHealth(Target) <= 60 then -- TODO
       PHFoLInfusion()
+    else
+      PHHLInfusion()
     end
   end
 end
@@ -272,8 +274,8 @@ function PHBoV()
   local Target = Unit.FindBestToHeal(30, BoVUnits, BoVHealth, 40)
 
   if Target ~= nil
-  and BeaconOfVirtue
-  and Spell.CanCast(SB["Beacon of Virtue"], Target, 0, MaxMana * 0.1)
+  and BoV
+  and Spell.CanCast(SB["Beacon of Virtue"], Target, 0, MaxMana * 0.1, false)
   and Unit.IsInLOS(Target) then
     return Spell.Cast(SB["Beacon of Virtue"], Target)
   end
@@ -285,7 +287,7 @@ function PHFlashOfLight()
   if Target ~= nil
   and ((not Buff.Has(Target, AB["Beacon of Faith"], true)
   and not Buff.Has(Target, AB["Beacon of Light"], true))
-  or Unit.PercentHealth(Target) <= 60)
+  or Unit.PercentHealth(Target) <= 60) -- TODO: add setting
   and Unit.PercentHealth(Target) <= FoLHealth
   and Spell.CanCast(SB["Flash of Light"], Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(Target) then
@@ -299,7 +301,7 @@ function PHHLInfusion()
   if Target ~= nil
   and Spell.CanCast(SB["Holy Light"], Target)
   and Unit.IsInLOS(Target) then
-    return Spell.Cast(SB["Holy Light"], Target)
+    return Spell.AddToQueue(SB["Holy Light"], Target)
   end
 end
 
@@ -309,6 +311,6 @@ function PHFoLInfusion()
   if Target ~= nil
   and Spell.CanCast(SB["Flash of Light"], Target)
   and Unit.IsInLOS(Target) then
-    return Spell.Cast(SB["Flash of Light"], Target)
+    return Spell.AddToQueue(SB["Flash of Light"], Target)
   end
 end
