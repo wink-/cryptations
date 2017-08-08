@@ -15,6 +15,21 @@ local BossManager = LibStub("BossManager")
 local Utils       = LibStub("Utils")
 local Group       = LibStub("Group")
 
+function PHLoDRange()
+  local Range = 15
+
+  if Player.HasTalent(7, 2) then
+    Range = Range * 1.3
+  end
+  -- LoD is always paired with Rule of Law so we want to know
+  -- if it is possible to cast it, not if it is active
+  if Spell.CanCast(SB["Rule of Law"]) then
+    Range = Range * 1.5
+  end
+
+  return Range
+end
+
 function PHAvengingWrath()
   if AvengingWrath
   and Spell.CanCast(SB["Avenging Wrath"])
@@ -78,6 +93,9 @@ function PHHolyShock()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
+  and ((not Buff.Has(Target, AB["Beacon of Faith"], true)
+  and not Buff.Has(Target, AB["Beacon of Light"], true))
+  or Unit.PercentHealth(Target) <= TankEmergency)
   and Unit.PercentHealth(Target) <= HSHealth
   and Spell.CanCast(SB["Holy Shock"], Target, 0, MaxMana * 0.1)
   and Unit.IsInLOS(Target) then
@@ -89,6 +107,9 @@ function PHHolyLight()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
+  and ((not Buff.Has(Target, AB["Beacon of Faith"], true)
+  and not Buff.Has(Target, AB["Beacon of Light"], true))
+  or Unit.PercentHealth(Target) <= TankEmergency)
   and Unit.PercentHealth(Target) <= HLHealth
   and Spell.CanCast(SB["Holy Light"], Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(Target) then
@@ -116,32 +137,44 @@ function PHRuleOfLaw()
   end
 end
 
+function PHBeaconTarget()
+  for i = 1, #GROUP_TANKS do
+    local Unit = GROUP_TANKS[i]
+    if not Buff.Has(Unit, AB["Beacon of Faith"], true)
+    and not Buff.Has(Unit, AB["Beacon of Light"], true) then
+      return Unit
+    end
+  end
+
+  return nil
+end
+
 function PHBoL()
-  local Target = Group.TankToHeal()
+  local Target = PHBeaconTarget()
 
   if Target ~= nil
   and BoL
-  and not Player.HasTalent(7, 3)
+  and Player.HasTalent(7, 1)
   and Spell.CanCast(SB["Beacon of Light"], Target, 0, MaxMana * 0.025)
-  and Unit.IsInLOS(Target)
-  and not Buff.Has(Target, AB["Beacon of Light"]) then
+  and Unit.IsInLOS(Target) then
     return Spell.Cast(SB["Beacon of Light"], Target)
   end
 end
 
 function PHBoF()
-  local Target = Group.UnitToHeal()
+  local Target = PHBeaconTarget()
 
   if Target ~= nil
   and BoF
   and Spell.CanCast(SB["Beacon of Faith"], Target, 0, MaxMana * 0.03125)
-  and not Buff.Has(Target, AB["Beacon of Faith"])
-  and Unit.IsInLOS(Target)
-  and not Buff.Has(Target, AB["Beacon of Light"]) then
+  and Unit.IsInLOS(Target) then
     return Spell.Cast(SB["Beacon of Faith"], Target)
   end
 end
 
+-- TODO:
+-- 80-85 on tank,
+-- 75-70 on group member when tanks don't need it
 function PHBestowFaith()
   local Target = Group.TankToHeal()
 
@@ -157,9 +190,9 @@ end
 function PHInfusionProc()
   if Buff.Has(PlayerUnit, AB["Infusion of Light"]) then
     if InfusionHL then
-      PHHolyLight()
+      PHHLInfusion()
     elseif InfusionFoL then
-      PHFlashOfLight()
+      PHFoLInfusion()
     end
   end
 end
@@ -192,20 +225,13 @@ function PHLightsHammer()
 end
 
 function PHLoD()
+  local LoDRange = PHLoDRange()
+
   if LightOfDawn
-  and Spell.CanCast(SB["Light of Dawn"], nil, 0, MaxMana * 0.14) then
-    -- Rule of Law
-    if Buff.Has(PlayerUnit, AB["Rule of Law"])
-    and (#Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 22.5, "friendly", true, LoDHealth) >= LoDUnits) then
-      return Spell.Cast(SB["Light of Dawn"])
-    -- Beacon of the Lightbringer
-  elseif Player.HasTalent(7, 2)
-    and (#Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 19.5, "friendly", true, LoDHealth) >= LoDUnits) then
-      return Spell.Cast(SB["Light of Dawn"])
-    -- Standard
-  elseif (#Unit.GetUnitsInCone(PlayerUnit, ConeAngle, 15, "friendly", true, LoDHealth) >= LoDUnits) then
-      return Spell.Cast(SB["Light of Dawn"])
-    end
+  and Spell.CanCast(SB["Light of Dawn"], nil, 0, MaxMana * 0.14)
+  and #Unit.GetUnitsInCone(PlayerUnit, ConeAngle, LoDRange, "friendly", true, LoDHealth) >= LoDUnits then
+    PHRuleOfLaw()
+    return Spell.Cast(SB["Light of Dawn"])
   end
 end
 
@@ -257,8 +283,31 @@ function PHFlashOfLight()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
+  and ((not Buff.Has(Target, AB["Beacon of Faith"], true)
+  and not Buff.Has(Target, AB["Beacon of Light"], true))
+  or Unit.PercentHealth(Target) <= TankEmergency)
   and Unit.PercentHealth(Target) <= FoLHealth
   and Spell.CanCast(SB["Flash of Light"], Target, 0, MaxMana * 0.12)
+  and Unit.IsInLOS(Target) then
+    return Spell.Cast(SB["Flash of Light"], Target)
+  end
+end
+
+function PHHLInfusion()
+  local Target = Group.UnitToHeal()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Holy Light"], Target)
+  and Unit.IsInLOS(Target) then
+    return Spell.Cast(SB["Holy Light"], Target)
+  end
+end
+
+function PHFoLInfusion()
+  local Target = Group.UnitToHeal()
+
+  if Target ~= nil
+  and Spell.CanCast(SB["Flash of Light"], Target)
   and Unit.IsInLOS(Target) then
     return Spell.Cast(SB["Flash of Light"], Target)
   end

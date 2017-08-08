@@ -36,8 +36,8 @@ LightsHammer            = Settings.Judgment
 LightOfDawn             = Settings.LightOfDawn
 HolyPrism               = Settings.HolyPrism
 BoV                     = Settings.BoV
-LotM                    = Settings.LotM
 
+TankEmergency           = Settings.TankEmergency
 AWHealth                = Settings.AWHealth
 HAHealth                = Settings.HAHealth
 LoHHealth               = Settings.LoHHealth
@@ -76,7 +76,7 @@ KeyCallbacks = {
 function Pulse()
   if UnitAffectingCombat(PlayerUnit) then
     -- Dispell engine
-    if UseDispell then
+    if Dispell then
       Rotation.Dispell()
     end
 
@@ -94,7 +94,7 @@ function Pulse()
     -- Blessing of Freedom (SHOULD BE HANDELED BY BOSS MANAGER)
 
     PHTyrsDeliverance()
-    PHRuleOfLaw()
+    --PHRuleOfLaw()
     PHBoL()
     PHBoF()
     PHBestowFaith()

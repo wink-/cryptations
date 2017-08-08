@@ -18,6 +18,7 @@
   "LightOfDawn": true,
   "HolyPrism": true,
   "BoV": true,
+  "TankEmergency": 50,
   "AWHealth": 60.0,
   "HAHealth": 60.0,
   "LoHHealth": 15.0,
