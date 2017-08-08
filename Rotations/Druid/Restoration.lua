@@ -45,6 +45,7 @@ SMHealth        = Settings.SMHealth
 EFUnits         = Settings.EFUnits
 EFHealth        = Settings.EFHealth
 EoGHoTCount     = Settings.EoGHoTCount
+RWHealth        = Settings.RWHealth
 PauseHotkey     = Settings.PauseHotkey
 AoEHotkey       = Settings.AoEHotkey
 CDHotkey        = Settings.CDHotkey

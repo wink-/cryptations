@@ -222,7 +222,8 @@ end
 
 function DRRenewal()
   if Spell.CanCast(SB["Renewal"])
-  and Renewal then
+  and Renewal
+  and Unit.PercentHealth(PlayerUnit) <= RWHealth then
     return Spell.Cast(SB["Renewal"])
   end
 end
