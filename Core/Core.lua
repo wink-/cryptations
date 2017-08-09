@@ -91,6 +91,13 @@ function Initialize_NoUnlockerNeeded()
   local function SlashCommands(msg, editbox)
     if msg == 'toggle' then
       Rotation.TogglePause()
+    elseif msg == 'reload' then
+      if FireHack ~= nil then
+        Utils.Wait(1, Group.UpdateMembers)
+        Utils.Wait(1, Group.UpdateTanks)
+      else
+        print("You need to have an unlocker attached to do this.")
+      end
     elseif msg == 'dbg' then
       Rotation.ToggleDebug()
     elseif msg == 'help' then
