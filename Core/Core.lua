@@ -7,6 +7,10 @@ local Events    = LibStub("Events")
 local Utils     = LibStub("Utils")
 
 function Initialize_UnlockerNeeded()
+  if FireHack == nil then
+    Rotation.Pause()
+    message("No unlocker attached. Please attach unlocker and type '/cr toggle'.")
+  end
 
   -- Setup event frame
   local frame = CreateFrame("FRAME", "EventFrame")
@@ -81,10 +85,6 @@ function Initialize_UnlockerNeeded()
     AddTimerCallback(0.05, Events.KeyListener)
   end
   AddTimerCallback(0.1, Events.GetUnits)
-
-  -- Update Group Table once the player is in the world
-  Utils.Wait(1, Group.UpdateMembers)
-  Utils.Wait(1, Group.UpdateTanks)
 end
 
 function Initialize_NoUnlockerNeeded()
@@ -110,3 +110,6 @@ function Initialize_NoUnlockerNeeded()
   SLASH_CR1 = '/cr'
   SlashCmdList["CR"] = SlashCommands
 end
+
+Initialize_NoUnlockerNeeded()
+Initialize_UnlockerNeeded()
