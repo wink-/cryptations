@@ -81,12 +81,18 @@ function Initialize_UnlockerNeeded()
     AddTimerCallback(0.05, Events.KeyListener)
   end
   AddTimerCallback(0.1, Events.GetUnits)
+
+  -- Update Group Table once the player is in the world
+  Utils.Wait(1, Group.UpdateMembers)
+  Utils.Wait(1, Group.UpdateTanks)
 end
 
 function Initialize_NoUnlockerNeeded()
   local function SlashCommands(msg, editbox)
     if msg == 'toggle' then
       Rotation.TogglePause()
+    elseif msg == 'dbg' then
+      Rotation.ToggleDebug()
     elseif msg == 'help' then
       print('"toggle": toggle the rotation')
     else

@@ -12,7 +12,7 @@ local LowestTank  = nil
 
 -- updates the tanks table
 function Group.UpdateTanks()
-  print("Updating Tanks ...")
+  if Debug then print("Updating Tanks ...") end
   table.wipe(GROUP_TANKS)
 
   local Units = GetObjectsOfType(ObjectTypes.Unit)
@@ -28,7 +28,7 @@ end
 
 -- updates the group members table
 function Group.UpdateMembers()
-  print("Updating Group Members ...")
+  if Debug then print("Updating Group Members ...") end
   table.wipe(GROUP_MEMBERS)
 
   local Units = GetObjectsOfType(ObjectTypes.Unit)

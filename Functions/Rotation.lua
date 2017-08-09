@@ -6,6 +6,7 @@ local Buff      = LibStub("Buff")
 local Debuff    = LibStub("Debuff")
 
 Paused   = false
+Debug    = true
 AllowAoE = true
 AllowCD  = true
 
@@ -179,5 +180,14 @@ function Rotation.ToggleAoE()
     ChatOverlay("AoE Enabled", 2, "GREEN")
   else
     ChatOverlay("AoE Disabled", 2, "RED")
+  end
+end
+
+function Rotation.ToggleDebug()
+  Debug = not Debug
+  if Debug then
+    ChatOverlay("Debug Information Enabled", 2, "GREEN")
+  else
+    ChatOverlay("Debug Information Disabled", 2, "RED")
   end
 end
