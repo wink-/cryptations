@@ -67,8 +67,7 @@ KeyCallbacks = {
 
 function Pulse()
   -- Combat Rotation
-  if GroupInCombat
-  and not Unit.IsCastingSpecific(PlayerUnit, SB["Tranquility"]) then
+  if not Unit.IsCastingSpecific(PlayerUnit, SB["Tranquility"]) then
     -- Dispell engine
     if Dispell then
       Rotation.Dispell()
@@ -94,8 +93,6 @@ function Pulse()
     DRRejuvenation()
     DRHealingTouch()
     DRSolarWrath()
-  elseif not Unit.IsCastingSpecific(PlayerUnit, SB["Tranquility"]) then
-    -- Out Of Combat Rotation
   end
 end
 

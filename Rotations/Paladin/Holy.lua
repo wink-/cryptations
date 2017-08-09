@@ -74,43 +74,38 @@ KeyCallbacks = {
 }
 
 function Pulse()
-  if GroupInCombat
-  or UnitAffectingCombat(PlayerUnit) then
-    -- Dispell engine
-    if Dispell then
-      Rotation.Dispell()
-    end
+  -- Dispell engine
+  if Dispell then
+    Rotation.Dispell()
+  end
 
-    -- pulse target engine and remember target
-    Rotation.Target("hostile")
+  -- pulse target engine and remember target
+  Rotation.Target("hostile")
 
-    PHAvengingWrath()
-    PHHolyAvenger()
-    PHLayOnHands()
-    PHBoS()
+  PHAvengingWrath()
+  PHHolyAvenger()
+  PHLayOnHands()
+  PHBoS()
 
     -- TODO
     -- Aura Mastery (SHOULD BE HANDELED BY BOSS MANAGER)
     -- Blessing of Protection (SHOULD BE HANDELED BY BOSS MANAGER)
     -- Blessing of Freedom (SHOULD BE HANDELED BY BOSS MANAGER)
 
-    PHTyrsDeliverance()
-    --PHRuleOfLaw()
-    PHBoL()
-    PHBoF()
-    PHBestowFaith()
-    PHInfusionProc()
-    PHHolyShock()
-    PHJudgment()
-    PHLightsHammer()
-    PHLoD()
-    PHHolyPrism()
-    PHBoV()
-    PHHolyLight()
-    PHFlashOfLight()
-  else
-    -- OUT OF COMBAT ROUTINE
-  end
+  PHTyrsDeliverance()
+  --PHRuleOfLaw()
+  PHBoL()
+  PHBoF()
+  PHBestowFaith()
+  PHInfusionProc()
+  PHHolyShock()
+  PHJudgment()
+  PHLightsHammer()
+  PHLoD()
+  PHHolyPrism()
+  PHBoV()
+  PHHolyLight()
+  PHFlashOfLight()
 end
 
 -- Dispell Spells are handled here
