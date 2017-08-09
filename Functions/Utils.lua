@@ -49,6 +49,8 @@ function Utils.Wait(delay, func, ...)
    return true;
 end
 
+-- Writes the given value to the given setting in the given FileName
+-- This should only be used for toggles and not for rotation settings.
 function Utils.WriteSetting(FileName, Setting, Value)
   -- load File Content
   local wowdir = GetWoWDirectory()
@@ -72,6 +74,8 @@ function Utils.WriteSetting(FileName, Setting, Value)
   WriteFile(profiledir .. FileName .. ".JSON", Settings)
 end
 
+-- Gets the value to the given setting in the given FileName
+-- This should only be used for toggles and not for rotation settings.
 function Utils.GetSetting(FileName, Setting)
   -- load File Content
   local wowdir = GetWoWDirectory()

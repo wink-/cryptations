@@ -91,6 +91,10 @@ function Initialize_NoUnlockerNeeded()
   local function SlashCommands(msg, editbox)
     if msg == 'toggle' then
       Rotation.TogglePause()
+    elseif msg == 'aoe' then
+      Rotation.ToggleAoE()
+    elseif msg == 'cd' then
+      Rotation.ToggleCD()
     elseif msg == 'reload' then
       if FireHack ~= nil then
         Utils.Wait(1, Group.UpdateMembers)
@@ -102,6 +106,10 @@ function Initialize_NoUnlockerNeeded()
       Rotation.ToggleDebug()
     elseif msg == 'help' then
       print('"toggle": toggle the rotation')
+      print('"aoe": toggle between using aoe or not')
+      print('"cd": toggle between using cooldowns or not')
+      print('"dbg": toggle between showing debug text or not')
+      print('"reload": re-gather all rotation relevant information')
     else
       print('Unknown command. Type "/cr help" for a list of available commands')
     end
