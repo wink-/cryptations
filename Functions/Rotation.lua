@@ -4,11 +4,12 @@ local Spell     = LibStub("Spell")
 local Player    = LibStub("Player")
 local Buff      = LibStub("Buff")
 local Debuff    = LibStub("Debuff")
+local Utils     = LibStub("Utils")
 
-Paused   = false
-Debug    = true
-AllowAoE = true
-AllowCD  = true
+Paused   = Utils.GetSetting("Toggles", "Pause")
+Debug    = Utils.GetSetting("Toggles", "Debug")
+AllowAoE = Utils.GetSetting("Toggles", "AllowAoE")
+AllowCD  = Utils.GetSetting("Toggles", "AllowCD")
 
 -- The spell queue shall only contain spells that are a 100% required to be casted (rest is done by the rotation itself)
 -- Example use for the spell queue would be a sequence that has to be casted in a certain order
@@ -153,11 +154,13 @@ end
 
 function Rotation.Pause()
   Paused = true
+  Utils.WriteSetting("Toggles", "Pause", true)
   ChatOverlay("Pausing Rotation", 2, "RED")
 end
 
 function Rotation.TogglePause()
   Paused = not Paused
+  Utils.WriteSetting("Toggles", "Pause", Paused)
   if Paused then
     ChatOverlay("Pausing Rotation", 2, "RED")
   else
@@ -167,6 +170,7 @@ end
 
 function Rotation.ToggleCD()
   AllowCD = not AllowCD
+  Utils.WriteSetting("Toggles", "AllowCD", AllowCD)
   if AllowCD then
     ChatOverlay("Cooldown usage Enabled", 2, "GREEN")
   else
@@ -176,6 +180,7 @@ end
 
 function Rotation.ToggleAoE()
   AllowAoE = not AllowAoE
+  Utils.WriteSetting("Toggles", "AllowAoE", AllowAoE)
   if AllowAoE then
     ChatOverlay("AoE Enabled", 2, "GREEN")
   else
@@ -185,6 +190,7 @@ end
 
 function Rotation.ToggleDebug()
   Debug = not Debug
+  Utils.WriteSetting("Toggles", "Debug", Debug)
   if Debug then
     ChatOverlay("Debug Information Enabled", 2, "GREEN")
   else

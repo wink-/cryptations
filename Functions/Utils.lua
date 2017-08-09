@@ -48,3 +48,45 @@ function Utils.Wait(delay, func, ...)
    tinsert(waitTable,{delay,func,{...}});
    return true;
 end
+
+function Utils.WriteSetting(FileName, Setting, Value)
+  -- load File Content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. FileName .. ".JSON")
+
+  if content == nil or content == "" then
+    return message("Error loading " .. FileName .. " Please contact the Author.")
+  end
+
+  local Settings = json.decode(content)
+
+  if Settings[Setting] == nil then
+    return message("Error writing to " .. FileName .. ": " .. Setting .. " does not exist. Please contact the Author.")
+  end
+
+  Settings[Setting] = Value
+  Settings = json.encode(Settings)
+
+  -- Write File Content
+  WriteFile(profiledir .. FileName .. ".JSON", Settings)
+end
+
+function Utils.GetSetting(FileName, Setting)
+  -- load File Content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. FileName .. ".JSON")
+
+  if content == nil or content == "" then
+    return message("Error loading " .. FileName .. " Please contact the Author.")
+  end
+
+  local Settings = json.decode(content)
+
+  if Settings[Setting] == nil then
+    return message("Error reading " .. FileName .. ": " .. tostring(Setting) .. " does not exist. Please contact the Author.")
+  end
+
+  return Settings[Setting]
+end
