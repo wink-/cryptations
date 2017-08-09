@@ -8,8 +8,8 @@ local Utils     = LibStub("Utils")
 
 function Initialize_UnlockerNeeded()
   if FireHack == nil then
-    Rotation.Pause()
-    return message("No unlocker attached. Please attach unlocker and type '/cr toggle'.")
+    Paused = true
+    return message("No unlocker attached. Please attach an unlocker and then type '/reload'.")
   end
 
   -- Setup event frame

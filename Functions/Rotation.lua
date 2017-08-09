@@ -6,10 +6,12 @@ local Buff      = LibStub("Buff")
 local Debuff    = LibStub("Debuff")
 local Utils     = LibStub("Utils")
 
-Paused   = Utils.GetSetting("Toggles", "Pause")
-Debug    = Utils.GetSetting("Toggles", "Debug")
-AllowAoE = Utils.GetSetting("Toggles", "AllowAoE")
-AllowCD  = Utils.GetSetting("Toggles", "AllowCD")
+if FireHack then
+  Paused   = Utils.GetSetting("Toggles", "Pause")
+  Debug    = Utils.GetSetting("Toggles", "Debug")
+  AllowAoE = Utils.GetSetting("Toggles", "AllowAoE")
+  AllowCD  = Utils.GetSetting("Toggles", "AllowCD")
+end
 
 -- The spell queue shall only contain spells that are a 100% required to be casted (rest is done by the rotation itself)
 -- Example use for the spell queue would be a sequence that has to be casted in a certain order

@@ -74,7 +74,8 @@ KeyCallbacks = {
 }
 
 function Pulse()
-  if UnitAffectingCombat(PlayerUnit) then
+  if GroupInCombat
+  or UnitAffectingCombat(PlayerUnit) then
     -- Dispell engine
     if Dispell then
       Rotation.Dispell()

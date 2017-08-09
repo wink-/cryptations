@@ -22,7 +22,7 @@ function PHLoDRange()
     Range = Range * 1.3
   end
   if Spell.CanCast(SB["Rule of Law"])
-  or Buff.HasTalent(PlayerUnit, AB["Rule of Law"]) then
+  or Buff.Has(PlayerUnit, AB["Rule of Law"]) then
     Range = Range * 1.5
   end
 
