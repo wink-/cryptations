@@ -32,7 +32,7 @@ function Buff.GetCount(unit, buffID, onlyPlayer)
   local BuffCount = 0
 
   for i = 1, MAXITERATIONS do
-    local Name, _, _, _, _, _, _, Caster, _, _, ID = UnitBuff(unit, i)
+    local _, _, _, _, _, _, _, Caster, _, _, ID = UnitBuff(unit, i)
     if ID == buffID
     and (onlyPlayer ~= true or Caster == "player") then
       BuffCount = BuffCount + 1
@@ -40,6 +40,33 @@ function Buff.GetCount(unit, buffID, onlyPlayer)
   end
 
   return BuffCount
+end
+
+-- returns the initial duration of the given buff on the given unit
+-- returns 0 if no buff was found with the given parameters
+-- onlyPlayer (optional): if this is checked, only returns true if the unit has the buff from the player
+function Buff.Duration(unit, buffID, onlyPlayer)
+  if unit == nil then
+    return nil
+  end
+
+  for i = 1, MAXITERATIONS do
+    local _, _, _, _, _, Duration, _, Caster, _, _, ID = UnitBuff(unit, i)
+    if ID == buffID
+    and (onlyPlayer ~= true or Caster == 'player') then
+      return Duration
+    end
+  end
+
+  return 0
+end
+
+-- returns true when the given buff on the given unit is refreshable (remaining duration <= duration * 0.3)
+function Buff.Refreshable(unit, buffID)
+  local Duration  = Buff.Duration(unit, buffID, true)
+  local Remaining = Buff.RemainingTime(unit, buffID, true)
+
+  return Remaining <= Duration * 0.3
 end
 
 -- returns the remaining time of the given buff on the given unit

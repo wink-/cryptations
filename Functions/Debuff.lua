@@ -42,6 +42,33 @@ function Debuff.GetCount(unit, debuffID, onlyPlayer)
   return DebuffCount
 end
 
+-- returns the initial duration of the given debuff on the given unit
+-- returns 0 if no debuff was found with the given parameters
+-- onlyPlayer (optional): if this is checked, only returns true if the unit has the debuff from the player
+function Debuff.Duration(unit, debuffID, onlyPlayer)
+  if unit == nil then
+    return nil
+  end
+
+  for i = 1, MAXITERATIONS do
+    local _, _, _, _, _, Duration, _, Caster, _, _, ID = UnitDebuff(unit, i)
+    if ID == debuffID
+    and (onlyPlayer ~= true or Caster == 'player') then
+      return Duration
+    end
+  end
+
+  return 0
+end
+
+-- returns true when the given debuff on the given unit is refreshable (remaining duration <= duration * 0.3)
+function Debuff.Refreshable(unit, debuffID)
+  local Duration  = Debuff.Duration(unit, debuffID, true)
+  local Remaining = Debuff.RemainingTime(unit, debuffID, true)
+
+  return Remaining <= Duration * 0.3
+end
+
 -- returns the remaining time of the given Debuff on the given unit
 -- returns 0 if no Debuff was found with the given parameters
 -- onlyPlayer (optional): if this is checked, only returns true if the unit has the Debuff from the player
