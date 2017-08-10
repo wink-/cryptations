@@ -79,7 +79,7 @@ Rotations\Rogue\Assasination.lua
 Rotations\Rogue\Outlaw.lua
 Rotations\Rogue\Subtlety.lua
 Rotations\Rogue\Subtlety-Abilities.lua
-Rotations\Rogue\SpellBool.lua
+Rotations\Rogue\SpellBook.lua
 
 Rotations\Shaman\Elemental.lua
 Rotations\Shaman\Enhancement.lua
