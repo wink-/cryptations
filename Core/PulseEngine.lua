@@ -1,13 +1,16 @@
 local Rotation = LibStub("Rotation")
 
-local UpdateInterval          = 0.1
-local LastUpdate              = GetTime()
+UpdateInterval         = 0.1
+LastPulse              = GetTime()
+NextPulse              = GetTime()
 
 local f = CreateFrame("FRAME", "PulseFrame")
 
 function PulseEngine()
-  if LastUpdate < GetTime() + UpdateInterval
+  if GetTime() >= NextPulse
   and not Paused then
+    LastPulse = GetTime()
+    NextPulse = GetTime() + UpdateInterval
 
     if PlayerUnit == nil
     or PlayerUnit ~= ObjectPointer("player")
@@ -21,8 +24,6 @@ function PulseEngine()
 
     -- Pulse the Queue
     Rotation.PulseQueue()
-
-    LastUpdate = GetTime()
   end
 end
 

@@ -13,6 +13,11 @@ if FireHack then
   AllowCD  = Utils.GetSetting("Toggles", "AllowCD")
 end
 
+-- delays the next pulse by given amount of time (in seconds)
+function Rotation.Delay(seconds)
+  NextPulse = NextPulse + seconds
+end
+
 -- The spell queue shall only contain spells that are a 100% required to be casted (rest is done by the rotation itself)
 -- Example use for the spell queue would be a sequence that has to be casted in a certain order
 -- There are also some instant spells that require being casted by the spell queue
