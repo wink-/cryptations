@@ -225,7 +225,7 @@ function DFRipV2()
 
   if Target ~= nil
   and Spell.CanCast(SB["Rip"], Target, 3, 30)
-  and Unit.IsFacing(Target, MeleeAngle)
+  and Player.IsFacing(Target)
   and (Debuff.Has(Target, AB["Rip"]) ~= true
   or Debuff.RemainingTime(Target, AB["Rip"]) < 7)
   and (Buff.Has(PlayerUnit, AB["Savage Roar"]) or not Player.HasTalent(5, 3))
@@ -305,7 +305,7 @@ function DFRakeV3()
 
   if Target ~= nil
   and Spell.CanCast(SB["Rake"], Target, 3, 35)
-  and Unit.IsFacing(Target, MeleeAngle)
+  and Player.IsFacing(Target)
   and not Player.HasTalent(7, 2)
   and (not Debuff.Has(Target, AB["Rake"])
   or Debuff.RemainingTime(Target, AB["Rake"]) < 5) then
@@ -339,7 +339,7 @@ function DFRakeV5()
 
   if Target ~= nil
   and Spell.CanCast(SB["Rake"], Target, 3, 35)
-  and Unit.IsFacing(Target, MeleeAngle)
+  and Player.IsFacing(Target)
   and Player.HasTalent(7, 2)
   and Buff.Has(PlayerUnit, AB["Bloodtalons"])
   and (not Debuff.Has(Target, AB["Rake"])
@@ -361,7 +361,7 @@ function DFBrutalSlashV1()
 
   if Target ~= nil
   and Spell.CanCast(SB["Brutal Slash"], nil, 3, 20)
-  and ObjectIsFacing(PlayerUnit, Target)
+  and Player.IsFacing(Target)
   and Energy >= 35
   and ((BSCharges >= 2 and ChargeTime <= GCD)
   or #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") > 1) then -- TODO: add TTD
@@ -450,7 +450,7 @@ function DFShred()
 
   if Target ~= nil
   and Spell.CanCast(SB["Shred"], Target, 3, 40)
-  and ObjectIsFacing(PlayerUnit, Target)
+  and Player.IsFacing(Target)
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") < 3
   and ((Debuff.Has(Target, AB["Rake"])
   and Debuff.RemainingTime(Target, AB["Rake"]) > DFRakeIntervalSec())

@@ -114,14 +114,14 @@ function Taunt(Target)
   if Target ~= nil
   and Unit.IsInLOS(Target)
   and Spell.CanCast(SB["Avenger's Shield"], Target)
-  and Unit.IsFacing(Target, MeleeAngle) then
+  and Player.IsFacing(Target) then
     return Spell.Cast(SB["Avenger's Shield"], Target)
   end
 
   if Target ~= nil
   and Unit.IsInLOS(Target)
   and Spell.CanCast(SB["Judgment"], Target)
-  and Unit.IsFacing(Target, MeleeAngle) then
+  and Player.IsFacing(Target) then
     return Spell.Cast(SB["Judgment"], Target)
   end
 end

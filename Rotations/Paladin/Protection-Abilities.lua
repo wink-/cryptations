@@ -82,7 +82,7 @@ function PPSotR()
   and Unit.IsHostile(Target)
   and Spell.CanCast(SB["Shield of the Righteous"], Target)
   and not Buff.Has(PlayerUnit, AB["Shield of the Righteous"])
-  and Unit.IsFacing(Target, CastAngle) then
+  and Player.IsFacing(Target, CastAngle) then
     if Player.HasTalent(7, 2)
     and Spell.GetCharges(SB["Shield of the Righteous"]) > 2
     and PlayerUnit ~= MainTank then
@@ -108,9 +108,12 @@ end
 
 function PPHotPTarget()
   local Lowest = Group.UnitToHeal()
-  if Unit.PercentHealth(PlayerUnit) <= LotPHealth then
+
+  if Lowest ~= nil
+  and Unit.PercentHealth(PlayerUnit) <= LotPHealth then
     return PlayerUnit
-  elseif Unit.PercentHealth(Lowest) <= HotPHealth then
+  elseif Lowest ~= nil
+  and Unit.PercentHealth(Lowest) <= HotPHealth then
     return Lowest
   end
 end
@@ -152,7 +155,7 @@ function PPAvengersShield()
   if Target ~= nil
   and Unit.IsInLOS(Target)
   and Spell.CanCast(SB["Avenger's Shield"], Target)
-  and Unit.IsFacing(Target, CastAngle) then
+  and Player.IsFacing(Target, CastAngle) then
     return Spell.Cast(SB["Avenger's Shield"])
   end
 end
@@ -163,7 +166,7 @@ function PPJudgment()
   if Target ~= nil
   and Unit.IsInLOS(Target)
   and Spell.CanCast(SB["Judgment"], Target)
-  and Unit.IsFacing(Target, CastAngle) then
+  and Player.IsFacing(Target, CastAngle) then
     return Spell.Cast(SB["Judgment"])
   end
 end
