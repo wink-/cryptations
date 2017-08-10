@@ -137,9 +137,11 @@ function PHRuleOfLaw()
 end
 
 function PHBeaconTarget()
+  -- beacons would only make sense in raid so we won't check for other than tanks
   for i = 1, #GROUP_TANKS do
     local Unit = GROUP_TANKS[i]
-    if not Buff.Has(Unit, AB["Beacon of Faith"], true)
+    if Unit ~= nil
+    and not Buff.Has(Unit, AB["Beacon of Faith"], true)
     and not Buff.Has(Unit, AB["Beacon of Light"], true) then
       return Unit
     end
