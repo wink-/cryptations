@@ -37,7 +37,7 @@ function Player.GetDamageOverPeriod(period)
   end
 
   local Sum = 0
-  for i = 1, PLAYER_DAMAGE do
+  for i = 1, #PLAYER_DAMAGE do
     if GetTime() - PLAYER_DAMAGE[i].damageTakenTime < period then
       Sum = Sum + PLAYER_DAMAGE[i].damage
     end
@@ -98,4 +98,18 @@ end
 function Player.IsInShapeshift()
   if GetShapeshiftForm() ~= 0 then return true end
   return false
+end
+
+-- returns true if the player is facing the given unit
+-- angle (optional): the maximum facing angle
+function Player.IsFacing(unit, angle)
+  if unit == nil or angle == nil then
+    return nil
+  end
+
+  if angle ~= nil then
+    return ObjectIsFacing(PlayerUnit, unit, angle)
+  else
+    return ObjectIsFacing(PlayerUnit, unit)
+  end
 end

@@ -17,15 +17,6 @@ function Unit.IsHostile(unit)
   end
 end
 
--- produces true if the facing angle between player and unit is smaller or equal to given angle
-function Unit.IsFacing(unit, angle)
-  if unit == nil or angle == nil then
-    return nil
-  end
-
-  return ObjectIsFacing(PlayerUnit, unit, angle)
-end
-
 -- returns true if given unit is in player's los
 function Unit.IsInLOS(unit)
   if unit == nil then
@@ -362,7 +353,7 @@ function Unit.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat, healt
     for Object, _ in pairs(UNIT_TRACKER) do
       if ObjectExists(Object)
       and Object ~= otherUnit
-      and Unit.IsFacing(Object, angle)
+      and Player.IsFacing(Object, angle)
       and Unit.IsInRange(otherUnit, Object, distance)
       and UnitHealth(Object) > 1
       and (healthPercent == nil or Unit.PercentHealth(Object) <= healthPercent) then
@@ -378,7 +369,7 @@ function Unit.GetUnitsInCone(otherUnit, angle, distance, mode, onlyCombat, healt
       local Object = GROUP_MEMBERS[i]
       if ObjectExists(Object)
       and Object ~= otherUnit
-      and Unit.IsFacing(Object, angle)
+      and Player.IsFacing(Object, angle)
       and Unit.IsInRange(otherUnit, Object, distance)
       and UnitHealth(Object) > 1
       and (healthPercent == nil or Unit.PercentHealth(Object) <= healthPercent)
