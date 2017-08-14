@@ -9,7 +9,7 @@ local Utils     = LibStub("Utils")
 function Initialize_UnlockerNeeded()
   if FireHack == nil then
     Paused = true
-    return message("No unlocker attached. Please attach an unlocker and then type '/reload'.")
+    return message("No unlocker attached. Please attach an unlocker and then type '/cr toggle'.")
   end
 
   -- Setup event frame

@@ -3,54 +3,6 @@ local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
 if SpecID ~= 4 then return end
-if FireHack == nil then return end
-
--- load profile content
-local wowdir = GetWoWDirectory()
-local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-local content = ReadFile(profiledir .. "Druid-Restoration.JSON")
-
-if content == nil or content == "" then
-  return message("Error loading config file. Please contact the Author.")
-end
-
-local Settings = json.decode(content)
-
-Dispell         = Settings.Dispell
-AutoEngage      = Settings.AutoEngage
-AutoTarget      = Settings.AutoTarget
-TargetMode      = Settings.TargetMode
-Incarnation     = Settings.Incarnation
-Tranquility     = Settings.Tranquility
-Innervate       = Settings.Innervate
-Ironbark        = Settings.Ironbark
-EoG             = Settings.EoG
-Flourish        = Settings.Flourish
-CenarionWard    = Settings.CenarionWard
-Efflorescence   = Settings.Efflorescence
-Renewal         = Settings.Renewal
-DPS             = Settings.DPS
-MaxRejuv        = Settings.MaxRejuv
-IncarHealth     = Settings.IncarHealth
-RejuvHealth     = Settings.RejuvHealth
-GermHealth      = Settings.GermHealth
-RegrowthHealth  = Settings.RegrowthHealth
-HTHealth        = Settings.HTHealth
-CWHealth        = Settings.CWHealth
-TQHealth        = Settings.TQHealth
-IBHealth        = Settings.IBHealth
-WGUnits         = Settings.WGUnits
-WGHealth        = Settings.WGHealth
-SMHealth        = Settings.SMHealth
-EFUnits         = Settings.EFUnits
-EFHealth        = Settings.EFHealth
-EoGHealth       = Settings.EoGHealth
-FLHoTCount      = Settings.FLHoTCount
-RWHealth        = Settings.RWHealth
-PauseHotkey     = Settings.PauseHotkey
-AoEHotkey       = Settings.AoEHotkey
-CDHotkey        = Settings.CDHotkey
-MaxMana         = UnitPowerMax("player", 0)
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
@@ -59,11 +11,61 @@ local Player      = LibStub("Player")
 local BossManager = LibStub("BossManager")
 local Utils       = LibStub("Utils")
 
-KeyCallbacks = {
-  [PauseHotkey] = Rotation.TogglePause,
-  [AoEHotkey] = Rotation.ToggleAoE,
-  [CDHotkey] = Rotation.ToggleCD
-}
+-- Unlocker related stuff here
+if FireHack ~= nil then
+  -- load profile content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. "Druid-Restoration.JSON")
+
+  if content == nil or content == "" then
+    return message("Error loading config file. Please contact the Author.")
+  end
+
+  local Settings = json.decode(content)
+
+  Dispell         = Settings.Dispell
+  AutoEngage      = Settings.AutoEngage
+  AutoTarget      = Settings.AutoTarget
+  TargetMode      = Settings.TargetMode
+  Incarnation     = Settings.Incarnation
+  Tranquility     = Settings.Tranquility
+  Innervate       = Settings.Innervate
+  Ironbark        = Settings.Ironbark
+  EoG             = Settings.EoG
+  Flourish        = Settings.Flourish
+  CenarionWard    = Settings.CenarionWard
+  Efflorescence   = Settings.Efflorescence
+  Renewal         = Settings.Renewal
+  DPS             = Settings.DPS
+  MaxRejuv        = Settings.MaxRejuv
+  IncarHealth     = Settings.IncarHealth
+  RejuvHealth     = Settings.RejuvHealth
+  GermHealth      = Settings.GermHealth
+  RegrowthHealth  = Settings.RegrowthHealth
+  HTHealth        = Settings.HTHealth
+  CWHealth        = Settings.CWHealth
+  TQHealth        = Settings.TQHealth
+  IBHealth        = Settings.IBHealth
+  WGUnits         = Settings.WGUnits
+  WGHealth        = Settings.WGHealth
+  SMHealth        = Settings.SMHealth
+  EFUnits         = Settings.EFUnits
+  EFHealth        = Settings.EFHealth
+  EoGHealth       = Settings.EoGHealth
+  FLHoTCount      = Settings.FLHoTCount
+  RWHealth        = Settings.RWHealth
+  PauseHotkey     = Settings.PauseHotkey
+  AoEHotkey       = Settings.AoEHotkey
+  CDHotkey        = Settings.CDHotkey
+  MaxMana         = UnitPowerMax("player", 0)
+
+  KeyCallbacks = {
+    [PauseHotkey] = Rotation.TogglePause,
+    [AoEHotkey] = Rotation.ToggleAoE,
+    [CDHotkey] = Rotation.ToggleCD
+  }
+end
 
 function Pulse()
   -- Combat Rotation

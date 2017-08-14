@@ -3,56 +3,58 @@ local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
 if SpecID ~= 2 then return end
-if FireHack == nil then return end
-
--- load profile content
-local wowdir = GetWoWDirectory()
-local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-local content = ReadFile(profiledir .. "Paladin-Protection.JSON")
-
-if content == nil or content == "" then
-  return message("Error loading config file. Please contact the Author.")
-end
-
-local Settings = json.decode(content)
-
-Taunt             = Settings.Taunt
-Interrupt         = Settings.Interrupt
-InterruptAny      = Settings.InterruptAny
-InterruptMin      = Settings.InterruptMin
-InterruptMax      = Settings.InterruptMax
-AutoEngage        = Settings.AutoEngage
-AutoTarget        = Settings.AutoTarget
-TargetMode        = Settings.TargetMode
-AvengingWrath     = Settings.AvengingWrath
-GotaK             = Settings.GotaK
-ArdentDefender    = Settings.ArdentDefender
-LayOnHands        = Settings.LayOnHands
-LayOnHandsFriend  = Settings.LayOnHandsFriend
-EyeOfTyr          = Settings.EyeOfTyr
-Sepharim          = Settings.Sepharim
-HotPFriend        = Settings.HotPFriend
-FoL               = Settings.FoL
-ADHealth          = Settings.ADHealth
-GotaKHealth       = Settings.GotaKHealth
-EoTUnits          = Settings.EoTUnits
-LoHHealth         = Settings.LoHHealth
-LotPHealth        = Settings.LotPHealth
-HotPHealth        = Settings.HotPHealth
-FoLHealth         = Settings.FoLHealth
-PauseHotkey       = Settings.PauseHotkey
-AoEHotkey         = Settings.AoEHotkey
-CDHotkey          = Settings.CDHotkey
-MaxMana           = UnitPowerMax("player" , 0)
 
 local Unit        = LibStub("Unit")
 local Rotation    = LibStub("Rotation")
 
-KeyCallbacks = {
-  [PauseHotkey] = Rotation.TogglePause,
-  [AoEHotkey] = Rotation.ToggleAoE,
-  [CDHotkey] = Rotation.ToggleCD
-}
+-- Unlocker related stuff here
+if FireHack ~= nil then
+  -- load profile content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. "Paladin-Protection.JSON")
+
+  if content == nil or content == "" then
+    return message("Error loading config file. Please contact the Author.")
+  end
+
+  local Settings = json.decode(content)
+
+  Taunt             = Settings.Taunt
+  Interrupt         = Settings.Interrupt
+  InterruptAny      = Settings.InterruptAny
+  InterruptMin      = Settings.InterruptMin
+  InterruptMax      = Settings.InterruptMax
+  AutoEngage        = Settings.AutoEngage
+  AutoTarget        = Settings.AutoTarget
+  TargetMode        = Settings.TargetMode
+  AvengingWrath     = Settings.AvengingWrath
+  GotaK             = Settings.GotaK
+  ArdentDefender    = Settings.ArdentDefender
+  LayOnHands        = Settings.LayOnHands
+  LayOnHandsFriend  = Settings.LayOnHandsFriend
+  EyeOfTyr          = Settings.EyeOfTyr
+  Sepharim          = Settings.Sepharim
+  HotPFriend        = Settings.HotPFriend
+  FoL               = Settings.FoL
+  ADHealth          = Settings.ADHealth
+  GotaKHealth       = Settings.GotaKHealth
+  EoTUnits          = Settings.EoTUnits
+  LoHHealth         = Settings.LoHHealth
+  LotPHealth        = Settings.LotPHealth
+  HotPHealth        = Settings.HotPHealth
+  FoLHealth         = Settings.FoLHealth
+  PauseHotkey       = Settings.PauseHotkey
+  AoEHotkey         = Settings.AoEHotkey
+  CDHotkey          = Settings.CDHotkey
+  MaxMana           = UnitPowerMax("player" , 0)
+
+  KeyCallbacks = {
+    [PauseHotkey] = Rotation.TogglePause,
+    [AoEHotkey] = Rotation.ToggleAoE,
+    [CDHotkey] = Rotation.ToggleCD
+  }
+end
 
 function Pulse()
   -- Call Taunt engine

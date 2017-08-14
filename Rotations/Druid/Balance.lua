@@ -3,43 +3,6 @@ local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
 if SpecID ~= 1 then return end
-if FireHack == nil then return end
-
--- load profile content
-local wowdir = GetWoWDirectory()
-local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-local content = ReadFile(profiledir .. "Druid-Balance.JSON")
-
-if content == nil or content == "" then
-  return message("Error loading config file. Please contact the Author.")
-end
-
-local Settings = json.decode(content)
-
-Interrupt     = Settings.Interrupt
-InterruptAny  = Settings.InterruptAny
-InterruptMin  = Settings.InterruptMin
-InterruptMax  = Settings.InterruptMax
-AutoEngage    = Settings.AutoEngage
-AutoTarget    = Settings.AutoTarget
-TargetMode    = Settings.TargetMode
-Incarnation   = Settings.Incarnation
-CA            = Settings.CA
-FoN           = Settings.FoN
-WoE           = Settings.WoE
-MoonkinForm   = Settings.MoonkinForm
-BotA          = Settings.BotA
-BoE           = Settings.BoE
-BoA           = Settings.BoA
-StFMD         = Settings.StFMD
-MFMD          = Settings.MFMD
-SFMD          = Settings.SFMD
-StFMDCount    = Settings.StFMDCount
-MFMDCount     = Settings.MFMDCount
-SFMDCount     = Settings.SFMDCount
-PauseHotkey   = Settings.PauseHotkey
-AoEHotkey     = Settings.AoEHotkey
-CDHotkey      = Settings.CDHotkey
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
@@ -49,11 +12,50 @@ local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 local BossManager = LibStub("BossManager")
 
-KeyCallbacks = {
-  [PauseHotkey] = Rotation.TogglePause,
-  [AoEHotkey] = Rotation.ToggleAoE,
-  [CDHotkey] = Rotation.ToggleCD
-}
+-- Unlocker related stuff here
+if FireHack ~= nil then
+  -- load profile content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. "Druid-Balance.JSON")
+
+  if content == nil or content == "" then
+    return message("Error loading config file. Please contact the Author.")
+  end
+
+  local Settings = json.decode(content)
+
+  Interrupt     = Settings.Interrupt
+  InterruptAny  = Settings.InterruptAny
+  InterruptMin  = Settings.InterruptMin
+  InterruptMax  = Settings.InterruptMax
+  AutoEngage    = Settings.AutoEngage
+  AutoTarget    = Settings.AutoTarget
+  TargetMode    = Settings.TargetMode
+  Incarnation   = Settings.Incarnation
+  CA            = Settings.CA
+  FoN           = Settings.FoN
+  WoE           = Settings.WoE
+  MoonkinForm   = Settings.MoonkinForm
+  BotA          = Settings.BotA
+  BoE           = Settings.BoE
+  BoA           = Settings.BoA
+  StFMD         = Settings.StFMD
+  MFMD          = Settings.MFMD
+  SFMD          = Settings.SFMD
+  StFMDCount    = Settings.StFMDCount
+  MFMDCount     = Settings.MFMDCount
+  SFMDCount     = Settings.SFMDCount
+  PauseHotkey   = Settings.PauseHotkey
+  AoEHotkey     = Settings.AoEHotkey
+  CDHotkey      = Settings.CDHotkey
+
+  KeyCallbacks = {
+    [PauseHotkey] = Rotation.TogglePause,
+    [AoEHotkey] = Rotation.ToggleAoE,
+    [CDHotkey] = Rotation.ToggleCD
+  }
+end
 
 function EmeraldDreamcatcher()
   DBStarsurgeV4()

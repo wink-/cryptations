@@ -3,56 +3,58 @@ local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
 if SpecID ~= 3 then return end
-if FireHack == nil then return end
-
--- load profile content
-local wowdir = GetWoWDirectory()
-local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-local content = ReadFile(profiledir .. "Paladin-Retribution.JSON")
-
-if content == nil or content == "" then
-  return message("Error loading config file. Please contact the Author.")
-end
-
-local Settings = json.decode(content)
-
-Interrupt     = Settings.Interrupt
-InterruptAny  = Settings.InterruptAny
-InterruptMin  = Settings.InterruptMin
-InterruptMax  = Settings.InterruptMax
-AutoEngage    = Settings.AutoEngage
-AutoTarget    = Settings.AutoTarget
-TargetMode    = Settings.TargetMode
-AvengingWrath = Settings.AvengingWrath
-SoV           = Settings.SoV
-Crusade       = Settings.Crusade
-HolyWrath     = Settings.HolyWrath
-JusticarsVeng = Settings.JusticarsVeng
-EfaE          = Settings.EfaE
-WoG           = Settings.WoG
-SoVHealth     = Settings.SoVHealth
-SoVUnits      = Settings.SoVUnits
-HWHealth      = Settings.HWHealth
-HWUnits       = Settings.HWUnits
-JVHealth      = Settings.JVHealth
-EfaEHealth    = Settings.EfaEHealth
-WoGHealth     = Settings.WoGHealth
-WoGUnits      = Settings.WoGUnits
-JudgmentTTD   = Settings.JudgmentTTD
-PauseHotkey   = Settings.PauseHotkey
-AoEHotkey     = Settings.AoEHotkey
-CDHotkey      = Settings.CDHotkey
-MaxMana       = UnitPowerMax("player" , 0)
 
 local Unit        = LibStub("Unit")
 local Rotation    = LibStub("Rotation")
 local Debuff      = LibStub("Debuff")
 
-KeyCallbacks = {
-  [PauseHotkey] = Rotation.TogglePause,
-  [AoEHotkey] = Rotation.ToggleAoE,
-  [CDHotkey] = Rotation.ToggleCD
-}
+-- Unlocker related stuff here
+if FireHack ~= nil then
+  -- load profile content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. "Paladin-Retribution.JSON")
+
+  if content == nil or content == "" then
+    return message("Error loading config file. Please contact the Author.")
+  end
+
+  local Settings = json.decode(content)
+
+  Interrupt     = Settings.Interrupt
+  InterruptAny  = Settings.InterruptAny
+  InterruptMin  = Settings.InterruptMin
+  InterruptMax  = Settings.InterruptMax
+  AutoEngage    = Settings.AutoEngage
+  AutoTarget    = Settings.AutoTarget
+  TargetMode    = Settings.TargetMode
+  AvengingWrath = Settings.AvengingWrath
+  SoV           = Settings.SoV
+  Crusade       = Settings.Crusade
+  HolyWrath     = Settings.HolyWrath
+  JusticarsVeng = Settings.JusticarsVeng
+  EfaE          = Settings.EfaE
+  WoG           = Settings.WoG
+  SoVHealth     = Settings.SoVHealth
+  SoVUnits      = Settings.SoVUnits
+  HWHealth      = Settings.HWHealth
+  HWUnits       = Settings.HWUnits
+  JVHealth      = Settings.JVHealth
+  EfaEHealth    = Settings.EfaEHealth
+  WoGHealth     = Settings.WoGHealth
+  WoGUnits      = Settings.WoGUnits
+  JudgmentTTD   = Settings.JudgmentTTD
+  PauseHotkey   = Settings.PauseHotkey
+  AoEHotkey     = Settings.AoEHotkey
+  CDHotkey      = Settings.CDHotkey
+  MaxMana       = UnitPowerMax("player" , 0)
+
+  KeyCallbacks = {
+    [PauseHotkey] = Rotation.TogglePause,
+    [AoEHotkey] = Rotation.ToggleAoE,
+    [CDHotkey] = Rotation.ToggleCD
+  }
+end
 
 function SingleTargetSpenders()
   PRExecutionSentence()

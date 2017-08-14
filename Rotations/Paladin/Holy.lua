@@ -3,62 +3,6 @@ local SpecID  = GetSpecialization()
 
 if ClassID ~= 2 then return end
 if SpecID ~= 1 then return end
-if FireHack == nil then return end
-
--- load profile content
-local wowdir = GetWoWDirectory()
-local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-local content = ReadFile(profiledir .. "Paladin-Holy.JSON")
-
-if content == nil or content == "" then
-  return message("Error loading config file. Please contact the Author.")
-end
-
-local Settings = json.decode(content)
-
--- Apply settings from config file
-Dispell                 = Settings.Dispell
-AutoEngage              = Settings.AutoEngage
-AutoTarget              = Settings.AutoTarget
-TargetMode              = Settings.TargetMode
-AvengingWrath           = Settings.AvengingWrath
-HolyAvenger             = Settings.HolyAvenger
-LayOnHands              = Settings.LayOnHands
-BoS                     = Settings.BoS
-TyrsDeliverance         = Settings.TyrsDeliverance
-RuleOfLaw               = Settings.RuleOfLaw
-BoL                     = Settings.BoL
-BoF                     = Settings.BoF
-InfusionHL              = Settings.InfusionHL
-InfusionFoL             = Settings.InfusionFoL
-Judgment                = Settings.UseJudgment
-LightsHammer            = Settings.Judgment
-LightOfDawn             = Settings.LightOfDawn
-HolyPrism               = Settings.HolyPrism
-BoV                     = Settings.BoV
-
-TankEmergency           = Settings.TankEmergency
-AWHealth                = Settings.AWHealth
-HAHealth                = Settings.HAHealth
-LoHHealth               = Settings.LoHHealth
-BoSHealth               = Settings.BoSHealth
-TDHealth                = Settings.TDHealth
-TDUnits                 = Settings.TDUnits
-LHUnits                 = Settings.LHUnits
-LHHealth                = Settings.LHHealth
-LoDUnits                = Settings.LoDUnits
-LoDHealth               = Settings.LoDHealth
-HolyPrismUnits          = Settings.HolyPrismUnits
-BoVUnits                = Settings.BoVUnits
-BoVHealth               = Settings.BoVHealth
-FoLHealth               = Settings.FoLHealth
-BestowFaithHealth       = Settings.BestowFaithHealth
-HLHealth                = Settings.HLHealth
-HSHealth                = Settings.HSHealth
-PauseHotkey             = Settings.PauseHotkey
-AoEHotkey               = Settings.AoEHotkey
-CDHotkey                = Settings.CDHotkey
-MaxMana                 = UnitPowerMax("player" , 0)
 
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
@@ -67,11 +11,70 @@ local Player      = LibStub("Player")
 local BossManager = LibStub("BossManager")
 local Utils       = LibStub("Utils")
 
-KeyCallbacks = {
-  [PauseHotkey] = Rotation.TogglePause,
-  [AoEHotkey] = Rotation.ToggleAoE,
-  [CDHotkey] = Rotation.ToggleCD
-}
+-- Unlocker related stuff here
+if FireHack ~= nil then
+  -- load profile content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. "Paladin-Holy.JSON")
+
+  if content == nil or content == "" then
+    return message("Error loading config file. Please contact the Author.")
+  end
+
+  local Settings = json.decode(content)
+
+  -- Apply settings from config file
+  Dispell                 = Settings.Dispell
+  AutoEngage              = Settings.AutoEngage
+  AutoTarget              = Settings.AutoTarget
+  TargetMode              = Settings.TargetMode
+  AvengingWrath           = Settings.AvengingWrath
+  HolyAvenger             = Settings.HolyAvenger
+  LayOnHands              = Settings.LayOnHands
+  BoS                     = Settings.BoS
+  TyrsDeliverance         = Settings.TyrsDeliverance
+  RuleOfLaw               = Settings.RuleOfLaw
+  BoL                     = Settings.BoL
+  BoF                     = Settings.BoF
+  InfusionHL              = Settings.InfusionHL
+  InfusionFoL             = Settings.InfusionFoL
+  Judgment                = Settings.UseJudgment
+  LightsHammer            = Settings.Judgment
+  LightOfDawn             = Settings.LightOfDawn
+  HolyPrism               = Settings.HolyPrism
+  BoV                     = Settings.BoV
+
+  TankEmergency           = Settings.TankEmergency
+  AWHealth                = Settings.AWHealth
+  HAHealth                = Settings.HAHealth
+  LoHHealth               = Settings.LoHHealth
+  BoSHealth               = Settings.BoSHealth
+  TDHealth                = Settings.TDHealth
+  TDUnits                 = Settings.TDUnits
+  LHUnits                 = Settings.LHUnits
+  LHHealth                = Settings.LHHealth
+  LoDUnits                = Settings.LoDUnits
+  LoDHealth               = Settings.LoDHealth
+  HolyPrismUnits          = Settings.HolyPrismUnits
+  BoVUnits                = Settings.BoVUnits
+  BoVHealth               = Settings.BoVHealth
+  FoLHealth               = Settings.FoLHealth
+  BestowFaithHealth       = Settings.BestowFaithHealth
+  HLHealth                = Settings.HLHealth
+  HSHealth                = Settings.HSHealth
+  PauseHotkey             = Settings.PauseHotkey
+  AoEHotkey               = Settings.AoEHotkey
+  CDHotkey                = Settings.CDHotkey
+  MaxMana                 = UnitPowerMax("player" , 0)
+
+  KeyCallbacks = {
+    [PauseHotkey] = Rotation.TogglePause,
+    [AoEHotkey] = Rotation.ToggleAoE,
+    [CDHotkey] = Rotation.ToggleCD
+  }
+
+end
 
 function Pulse()
   -- Dispell engine
