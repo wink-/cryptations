@@ -73,6 +73,7 @@ if FireHack ~= nil then
     [AoEHotkey] = Rotation.ToggleAoE,
     [CDHotkey] = Rotation.ToggleCD
   }
+
 end
 
 function Pulse()
