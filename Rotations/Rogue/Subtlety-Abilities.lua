@@ -10,6 +10,15 @@ local Unit      = LibStub("Unit")
 local Spell     = LibStub("Spell")
 local Player    = LibStub("Player")
 
+-- returns true if the given spell has finality
+function RSHasFinality(spell)
+  if spell == SB["Eviscerate"] and Buff.Has(PlayerUnit, AB["Finality: Eviscerate"]) then return true
+  elseif spell == SB["Nightblade"] and Buff.Has(PlayerUnit, AB["Finality: Nightblade"]) then return true end
+ 
+  return false
+end
+
+
 function RSShurikenStormV1()
   if Spell.CanCast(SB["Shuriken Storm"], nil, 3, 35)
   and #Units.GetUnitsInRadius(PlayerUnit, 10, "hostile") >= 2 then

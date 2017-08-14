@@ -139,7 +139,8 @@ end
 function PHBeaconTarget()
   for i = 1, #GROUP_TANKS do
     local Unit = GROUP_TANKS[i]
-    if not Buff.Has(Unit, AB["Beacon of Faith"], true)
+    if Unit ~= nil
+    and not Buff.Has(Unit, AB["Beacon of Faith"], true)
     and not Buff.Has(Unit, AB["Beacon of Light"], true) then
       return Unit
     end

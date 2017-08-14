@@ -27,6 +27,8 @@ LossOfControlAuras = {
 -- This is the aurabook and it contains all debuff / buff auras that are relevant
 -- If a spell's buff / debuff is the same as its ID it is still listed here
 AB = {
+  ["Finality: Eviscerate"] = 197496,
+  ["Finality: Nightblade"] = 197498,
   ["Master Assassin's Initiative"] = 235022,
   ["Rejuvenation (Germination)"] = 155777,
   ["Incarnation: Tree of Life"] = 33891,
