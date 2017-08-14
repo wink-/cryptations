@@ -9,7 +9,7 @@ local Utils     = LibStub("Utils")
 function Initialize_UnlockerNeeded()
   if FireHack == nil then
     Paused = true
-    return message("No unlocker attached. Please attach an unlocker and then type '/reload'.")
+    return message("No unlocker attached. Please attach an unlocker and then type '/cr toggle'.")
   end
 
   -- Setup event frame
@@ -91,11 +91,7 @@ end
 function Initialize_NoUnlockerNeeded()
   local function SlashCommands(msg, editbox)
     if msg == 'toggle' then
-      if FireHack ~= nil then
-        Rotation.TogglePause()
-      else
-        print("You need to have an unlocker attached to do this.")
-      end
+      Rotation.TogglePause()
     elseif msg == 'aoe' then
       Rotation.ToggleAoE()
     elseif msg == 'cd' then

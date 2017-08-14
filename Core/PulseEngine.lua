@@ -1,8 +1,8 @@
 local Rotation = LibStub("Rotation")
 
-local UpdateInterval = 0.1
-local LastPulse      = GetTime()
-NextPulse            = GetTime()
+UpdateInterval         = 0.1
+LastPulse              = GetTime()
+NextPulse              = GetTime()
 
 local f = CreateFrame("FRAME", "PulseFrame")
 
