@@ -3,21 +3,19 @@ local SpecID  = GetSpecialization()
 
 if ClassID ~= 4 then return end
 if SpecID ~= 3 then return end
+if FireHack == nil then return end
 
 local Rotation = LibStub("Rotation")
 
--- Unlocker related stuff here
-if FireHack ~= nil then
-  PauseHotkey = "ALT,Q"
-  AoEHotkey   = "ALT,A"
-  CDHotkey    = "ALT,C"
+PauseHotkey = "ALT,Q"
+AoEHotkey   = "ALT,A"
+CDHotkey    = "ALT,C"
 
-  KeyCallbacks = {
-    [PauseHotkey] = Rotation.TogglePause,
-    [AoEHotkey] = Rotation.ToggleAoE,
-    [CDHotkey] = Rotation.ToggleCD
-  }
-end
+KeyCallbacks = {
+  [PauseHotkey] = Rotation.TogglePause,
+  [AoEHotkey] = Rotation.ToggleAoE,
+  [CDHotkey] = Rotation.ToggleCD
+}
 
 function RSBuilders()
   RSShurikenStormV1()

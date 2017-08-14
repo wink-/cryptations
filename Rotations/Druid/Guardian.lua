@@ -3,60 +3,58 @@ local SpecID  = GetSpecialization()
 
 if ClassID ~= 11 then return end
 if SpecID ~= 3 then return end
+if FireHack == nil then return end
+
+-- load profile content
+local wowdir = GetWoWDirectory()
+local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+local content = ReadFile(profiledir .. "Druid-Guardian.JSON")
+
+if content == nil or content == "" then
+  return message("Error loading config file. Please contact the Author.")
+end
+
+local Settings = json.decode(content)
+
+Taunt           = Settings.Taunt
+Interrupt       = Settings.Interrupt
+InterruptAny    = Settings.InterruptAny
+InterruptMin    = Settings.InterruptMin
+InterruptMax    = Settings.InterruptMax
+AutoEngage      = Settings.AutoEngage
+AutoTarget      = Settings.AutoTarget
+TargetMode      = Settings.TargetMode
+Incarnation     = Settings.Incarnation
+BristlingFur     = Settings.BristlingFur
+SurvInstincts   = Settings.SurvInstincts
+Barkskin        = Settings.Barkskin
+Ironfur         = Settings.Ironfur
+FRegen          = Settings.FRegen
+Moonfire        = Settings.Moonfire
+Maul            = Settings.Maul
+RotS            = Settings.RotS
+AutoSwitchForm  = Settings.AutoSwitchForm
+SIHealth        = Settings.SIHealth
+BSHealth        = Settings.BSHealth
+IFHealth        = Settings.IFHealth
+FRHealth        = Settings.FRHealth
+MaulHealth      = Settings.MaulHealth
+MaulRage        = Settings.MaulRage
+RotSHealth      = Settings.RotSHealth
+PauseHotkey     = Settings.PauseHotkey
+AoEHotkey       = Settings.AoEHotkey
+CDHotkey        = Settings.CDHotkey
+MaxMana         = UnitPowerMax("player" , 0)
+MaxHealth       = UnitHealthMax("player")
 
 local Unit        = LibStub("Unit")
 local Rotation    = LibStub("Rotation")
 
--- Unlocker related stuff here
-if FireHack ~= nil then
-  -- load profile content
-  local wowdir = GetWoWDirectory()
-  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-  local content = ReadFile(profiledir .. "Druid-Guardian.JSON")
-
-  if content == nil or content == "" then
-    return message("Error loading config file. Please contact the Author.")
-  end
-
-  local Settings = json.decode(content)
-
-  Taunt           = Settings.Taunt
-  Interrupt       = Settings.Interrupt
-  InterruptAny    = Settings.InterruptAny
-  InterruptMin    = Settings.InterruptMin
-  InterruptMax    = Settings.InterruptMax
-  AutoEngage      = Settings.AutoEngage
-  AutoTarget      = Settings.AutoTarget
-  TargetMode      = Settings.TargetMode
-  Incarnation     = Settings.Incarnation
-  BristlingFur     = Settings.BristlingFur
-  SurvInstincts   = Settings.SurvInstincts
-  Barkskin        = Settings.Barkskin
-  Ironfur         = Settings.Ironfur
-  FRegen          = Settings.FRegen
-  Moonfire        = Settings.Moonfire
-  Maul            = Settings.Maul
-  RotS            = Settings.RotS
-  AutoSwitchForm  = Settings.AutoSwitchForm
-  SIHealth        = Settings.SIHealth
-  BSHealth        = Settings.BSHealth
-  IFHealth        = Settings.IFHealth
-  FRHealth        = Settings.FRHealth
-  MaulHealth      = Settings.MaulHealth
-  MaulRage        = Settings.MaulRage
-  RotSHealth      = Settings.RotSHealth
-  PauseHotkey     = Settings.PauseHotkey
-  AoEHotkey       = Settings.AoEHotkey
-  CDHotkey        = Settings.CDHotkey
-  MaxMana         = UnitPowerMax("player" , 0)
-  MaxHealth       = UnitHealthMax("player")
-
-  KeyCallbacks = {
-    [PauseHotkey] = Rotation.TogglePause,
-    [AoEHotkey] = Rotation.ToggleAoE,
-    [CDHotkey] = Rotation.ToggleCD
-  }
-end
+KeyCallbacks = {
+  [PauseHotkey] = Rotation.TogglePause,
+  [AoEHotkey] = Rotation.ToggleAoE,
+  [CDHotkey] = Rotation.ToggleCD
+}
 
 function Pulse()
   -- Call Taunt engine
