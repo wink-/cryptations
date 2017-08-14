@@ -44,8 +44,7 @@ function Initialize_UnlockerNeeded()
       GroupInCombat = true
     end
 
-    if event == "UNIT_COMBAT" and arg1 == "player"
-    and (arg2 == "WOUND" or arg2 == "SPELL_PERIODIC_DAMAGE" or arg2 == "SPELL_DAMAGE")
+    if event == "UNIT_COMBAT" and arg1 == "player" and arg2 == "WOUND"
     and arg4 ~= nil then
       -- the player damage table is limited to 100 entries
       if getn(PLAYER_DAMAGE) > 100 then

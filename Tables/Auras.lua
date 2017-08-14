@@ -28,8 +28,6 @@ LossOfControlAuras = {
 -- If a spell's buff / debuff is the same as its ID it is still listed here
 AB = {
   ["Master Assassin's Initiative"] = 235022,
-  ["Finality: Eviscerate"] = 197496,
-  ["Finality: Nightblade"] = 197498,
   ["Rejuvenation (Germination)"] = 155777,
   ["Incarnation: Tree of Life"] = 33891,
   ["Bristling Fur"] = 155835,

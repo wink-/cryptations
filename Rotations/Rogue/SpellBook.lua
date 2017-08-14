@@ -5,8 +5,6 @@ if FireHack == nil then return end
 
 SB = {
   ["Alacrity"] = 193539,
-  ["Finality: Eviscerate"] = 197393,
-  ["Finality: Nightblade"] = 197395,
   ["Backstab"] = 53,
   ["Bloodlust"] = 2825,
   ["Dark Shadow"] = 245687,
