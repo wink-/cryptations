@@ -32,7 +32,7 @@ end
 function PHAvengingWrath()
   if AvengingWrath
   and Spell.CanCast(SB["Avenging Wrath"])
-  and GetNumGroupMembers() > 1
+  and #GROUP_MEMBERS > 1
   and Group.AverageHealth() <= AWHealth then
     return Spell.Cast(SB["Avenging Wrath"])
   end
@@ -41,7 +41,7 @@ end
 function PHHolyAvenger()
   if HolyAvenger
   and Spell.CanCast(SB["Holy Avenger"])
-  and GetNumGroupMembers() > 1
+  and #GROUP_MEMBERS > 1
   and Group.AverageHealth() <= HAHealth then
     return Spell.Cast(SB["Holy Avenger"])
   end
