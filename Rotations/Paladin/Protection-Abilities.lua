@@ -26,7 +26,6 @@ end
 function PPGotaK()
   if Spell.CanCast(SB["Guardian of Ancient Kings"])
   and GotaK
-  and not Buff.Has(PlayerUnit, AB["Ardent Defender"])
   and (Unit.PercentHealth(PlayerUnit) <= GotaKHealth
   or BossManager.IsDefCooldownNeeded()) then
     return Spell.Cast(SB["Guardian of Ancient Kings"])
@@ -36,7 +35,6 @@ end
 function PPArdentDefender()
   if Spell.CanCast(SB["Ardent Defender"])
   and ArdentDefender
-  and not Buff.Has(PlayerUnit, AB["Guardian of the Ancient Kings"])
   and (Unit.PercentHealth(PlayerUnit) <= ADHealth
     or BossManager.IsDefCooldownNeeded()) then
     return Spell.Cast(SB["Ardent Defender"])
