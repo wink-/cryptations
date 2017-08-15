@@ -22,7 +22,6 @@ function Initialize_UnlockerNeeded()
   frame:RegisterEvent("GROUP_ROSTER_UPDATE")
   frame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
   frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-  frame:RegisterEvent("PLAYER_REGEN_DISABLED")
   frame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
   frame:RegisterEvent("PLAYER_TARGET_CHANGED")
 
@@ -37,11 +36,6 @@ function Initialize_UnlockerNeeded()
 
     if event == "PLAYER_REGEN_ENABLED" then
       Rotation.CleanUpQueue()
-      GroupInCombat = false
-    end
-
-    if event == "PLAYER_REGEN_DISABLED" then
-      GroupInCombat = true
     end
 
     if event == "UNIT_COMBAT" and arg1 == "player" and arg2 == "WOUND"

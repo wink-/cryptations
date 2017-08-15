@@ -20,7 +20,9 @@ function PulseEngine()
 
     -- TODO: pulse engine delays for:
     -- when player left combat
-    -- when player is looting
+    if GetNumLootItems() > 0 then
+      return Rotation.Delay(2)
+    end
 
     -- Pulse the Queue
     Rotation.PulseQueue()
