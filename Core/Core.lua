@@ -88,6 +88,17 @@ function Initialize_UnlockerNeeded()
 end
 
 function Initialize_NoUnlockerNeeded()
+  -- initalize settings
+  if Paused == nil
+  or AllowAoE == nil
+  or AllowCD == nil
+  or Debug == nil then
+    Paused = false
+    AllowAoE = true
+    AllowCD = true
+    Debug = true
+  end
+
   local function SlashCommands(msg, editbox)
     if msg == 'toggle' then
       Rotation.TogglePause()

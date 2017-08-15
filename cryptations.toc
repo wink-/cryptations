@@ -1,6 +1,7 @@
 ## Interface: 70200
 ## Title: cryptations
 ## Version: 0.1
+## SavedVariablesPerCharacter: Paused, AllowCD, AllowAoE, Debug
 
 # Libs
 Libs\JSON\json.lua
