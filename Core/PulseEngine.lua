@@ -18,8 +18,7 @@ function PulseEngine()
       PlayerUnit = ObjectPointer("player")
     end
 
-    -- TODO: pulse engine delays for:
-    -- when player left combat
+    -- delay for looting
     if GetNumLootItems() > 0 then
       return Rotation.Delay(2)
     end
