@@ -94,7 +94,7 @@ function PHHolyShock()
   if Target ~= nil
   and ((not Buff.Has(Target, AB["Beacon of Faith"], true)
   and not Buff.Has(Target, AB["Beacon of Light"], true))
-  or Unit.PercentHealth(Target) <= 60) -- TODO: add setting
+  or Unit.PercentHealth(Target) <= BeaconEmergency)
   and Unit.PercentHealth(Target) <= HSHealth
   and Spell.CanCast(SB["Holy Shock"], Target, 0, MaxMana * 0.1)
   and Unit.IsInLOS(Target) then
@@ -108,7 +108,7 @@ function PHHolyLight()
   if Target ~= nil
   and ((not Buff.Has(Target, AB["Beacon of Faith"], true)
   and not Buff.Has(Target, AB["Beacon of Light"], true))
-  or Unit.PercentHealth(Target) <= 60)
+  or Unit.PercentHealth(Target) <= BeaconEmergency)
   and Unit.PercentHealth(Target) <= HLHealth
   and Spell.CanCast(SB["Holy Light"], Target, 0, MaxMana * 0.12)
   and Unit.IsInLOS(Target) then
@@ -191,7 +191,7 @@ function PHInfusionProc()
   local Target = Group.UnitToHeal()
 
   if Buff.Has(PlayerUnit, AB["Infusion of Light"]) then
-    if Unit.PercentHealth(Target) <= 60 then -- TODO
+    if Unit.PercentHealth(Target) <= InfusionFoL then
       PHFoLInfusion(Target)
     else
       PHHLInfusion(Target)
@@ -204,7 +204,7 @@ function PHJudgment()
 
   if Judgment
   and Target ~= nil
-  and IsSpellKnown(183778) -- TODO: change to Player.HasTalent()
+  and Player.HasTalent(6, 3)
   and Spell.CanCast(SB["Judgment Holy"], Target, 0, MaxMana * 0.03)
   and Unit.IsInLOS(Target) then
     return Spell.Cast(SB["Judgment Holy"], Target)

@@ -29,15 +29,14 @@ TyrsDeliverance         = Settings.TyrsDeliverance
 RuleOfLaw               = Settings.RuleOfLaw
 BoL                     = Settings.BoL
 BoF                     = Settings.BoF
-InfusionHL              = Settings.InfusionHL
-InfusionFoL             = Settings.InfusionFoL
 Judgment                = Settings.UseJudgment
 LightsHammer            = Settings.Judgment
 LightOfDawn             = Settings.LightOfDawn
 HolyPrism               = Settings.HolyPrism
 BoV                     = Settings.BoV
 
-TankEmergency           = Settings.TankEmergency
+BeaconEmergency         = Settings.BeaconEmergency
+InfusionFoL             = Settings.InfusionFoL
 AWHealth                = Settings.AWHealth
 HAHealth                = Settings.HAHealth
 LoHHealth               = Settings.LoHHealth
