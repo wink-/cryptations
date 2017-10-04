@@ -168,7 +168,7 @@ end
 function DruidBalance.NewMoonV2()
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
-  local SpellState    = DBArtifactState()
+  local SpellState    = DruidBalance.ArtifactState()
   local Target        = PlayerTarget()
 
   if Target ~= nil
@@ -181,12 +181,12 @@ function DruidBalance.NewMoonV2()
 end
 
 function DruidBalance.StarfallV2Pos()
-  local StarfallRadius = DBStarfallRadius()
+  local StarfallRadius = DruidBalance.StarfallRadius()
   return ObjectPosition(Unit.FindBestToAOE(StarfallRadius, 2, 40))
 end
 
 function DruidBalance.StarfallV2()
-  local x, y, z = DBStarfallV2Pos()
+  local x, y, z = DruidBalance.StarfallV2Pos()
 
   if x == nil or y == nil or z == nil then return end
   if Spell.CanCast(SB["Starfall"], nil, 8, 60)
@@ -354,7 +354,7 @@ function DruidBalance.WoE()
 end
 
 function DruidBalance.Incarnation()
-  local StarfallIsValid = DBStarfallV2Pos() ~= nil
+  local StarfallIsValid = DruidBalance.StarfallV2Pos() ~= nil
   local Target          = PlayerTarget()
 
   if Incarnation

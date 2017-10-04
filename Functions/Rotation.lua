@@ -15,7 +15,7 @@ end
 -- Example use for the spell queue would be a sequence that has to be casted in a certain order
 -- There are also some instant spells that require being casted by the spell queue
 function Rotation.PulseQueue()
-
+  
   -- pulse rotation if spellQueue is empty
   if #SPELL_QUEUE == 0
   and not Unit.IsCasting(PlayerUnit)

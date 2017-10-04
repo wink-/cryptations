@@ -17,17 +17,17 @@ function PulseEngine()
       print("Addon Initialized")
     end
 
-    if not rotationEngineInitialized
-    and Toolkit_GetVersion() ~= nil then
-      Initialize_UnlockerNeeded()
-      rotationEngineInitialized = true
-      print("Rotation Initialized")
-    elseif not rotationEngineInitialized then
-      Paused = true
-      message('No unlocker found. Please attach unlocker and type "/cr toggle" ')
-    end
-
     if not Paused then
+
+      if not rotationEngineInitialized
+      and FireHack ~= nil then
+        Initialize_UnlockerNeeded()
+        rotationEngineInitialized = true
+        print("Rotation Initialized")
+      elseif not rotationEngineInitialized then
+        Paused = true
+        return message('No unlocker found. Please attach unlocker and type "/cr toggle" ')
+      end
 
       LastPulse = GetTime()
       NextPulse = GetTime() + UpdateInterval

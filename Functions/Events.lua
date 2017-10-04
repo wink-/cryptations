@@ -7,8 +7,9 @@ TTD_TABLE = {}
 -- This keeps track of all of the valid units and their ttd
 function Events.GetUnits()
   -- cache new units
-  if UnitAffectingCombat("player") then
+  if UnitAffectingCombat("player") or true then
     local Units = GetObjectsOfType(ObjectTypes.Unit)
+    --print("found " .. #Units .. " units")
     for i = 1, #Units do
       local Object = Units[i]
       if Object ~= ObjectPointer("player")

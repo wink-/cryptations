@@ -72,7 +72,7 @@ function ClassManager.LoadRotation()
     -- Balance
     if SpecID == 1 then
       DruidBalance.Initialize()
-      Pulse = DruidBalance.Pulse()
+      Pulse = DruidBalance.Pulse
       message("Balance Druid loaded. Have fun.")
     elseif SpecID == 2 then
     elseif SpecID == 3 then

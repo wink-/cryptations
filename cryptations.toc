@@ -27,6 +27,7 @@ Tables\Auras.lua
 Tables\Spells.lua
 Tables\Units.lua
 Tables\Items.lua
+Tables\SpellBook.lua
 
 # Rotations
 Rotations\DeathKnight\Blood.lua
@@ -45,7 +46,6 @@ Rotations\Druid\Guardian-Abilities.lua
 Rotations\Druid\Guardian.lua
 Rotations\Druid\Restoration-Abilities.lua
 Rotations\Druid\Restoration.lua
-Rotations\Druid\SpellBook.lua
 
 Rotations\Hunter\BeastMastery.lua
 Rotations\Hunter\Marksmanship.lua
@@ -66,7 +66,6 @@ Rotations\Paladin\Protection-Abilities.lua
 Rotations\Paladin\Protection.lua
 Rotations\Paladin\Retribution-Abilities.lua
 Rotations\Paladin\Retribution.lua
-Rotations\Paladin\SpellBook.lua
 
 Rotations\Priest\Discipline.lua
 Rotations\Priest\Holy.lua
@@ -76,7 +75,6 @@ Rotations\Rogue\Assasination.lua
 Rotations\Rogue\Outlaw.lua
 Rotations\Rogue\Subtlety.lua
 Rotations\Rogue\Subtlety-Abilities.lua
-Rotations\Rogue\SpellBook.lua
 
 Rotations\Shaman\Elemental.lua
 Rotations\Shaman\Enhancement.lua
