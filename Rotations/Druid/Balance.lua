@@ -114,7 +114,7 @@ function DruidBalance.Pulse()
   end
 end
 
-function Interrupt(Target)
+function DruidBalance.Interrupt(Target)
   if Spell.CanCast(78675, Target, 0, UnitPowerMax("player", 0) * 0.168)
   and Unit.IsInLOS(Target)
   and ObjectIsFacing(PlayerUnit, Target) then

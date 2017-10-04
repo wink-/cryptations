@@ -1,20 +1,14 @@
-local _, _, ClassID = UnitClass("player")
-local SpecID  = GetSpecialization()
-
-if ClassID ~= 11 then return end
-if SpecID ~= 4 then return end
-if FireHack == nil then return end
-
-local Spell   = LibStub("Spell")
-local Unit    = LibStub("Unit")
-local Group   = LibStub("Group")
-local Buff    = LibStub("Buff")
-local Debuff  = LibStub("Debuff")
+local DruidRestoration  = LibStub("DruidRestoration")
+local Spell             = LibStub("Spell")
+local Unit              = LibStub("Unit")
+local Group             = LibStub("Group")
+local Buff              = LibStub("Buff")
+local Debuff            = LibStub("Debuff")
 
 -- Efflorescence position
 EFx, EFy, EFz = nil
 
-function DRTranquility()
+function DruidRestoration.Tranquility()
   if Spell.CanCast(SB["Tranquility"], nil, 0, MaxMana * 0.184)
   and Tranquility
   and not Unit.IsMoving(PlayerUnit)
@@ -23,14 +17,14 @@ function DRTranquility()
   end
 end
 
-function DRInnervate()
+function DruidRestoration.Innervate()
   if Spell.CanCast(SB["Innervate"], PlayerUnit)
   and Innervate then
     return Spell.Cast(SB["Innervate"], PlayerUnit)
   end
 end
 
-function DRIronbark()
+function DruidRestoration.Ironbark()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
@@ -40,7 +34,7 @@ function DRIronbark()
   end
 end
 
-function DREoG()
+function DruidRestoration.EoG()
   if EoG
   and Group.AverageHealth() <= EoGHealth
   and Spell.CanCast(SB["Essence of G'Hanir"]) then
@@ -48,7 +42,7 @@ function DREoG()
   end
 end
 
-function HoTCount()
+function DruidRestoration.HoTCount()
   return (RejuvenationCount()
   + #Buff.FindUnitsWith(AB["Lifebloom"], true, true)
   + #Buff.FindUnitsWith(AB["Wild Growth"], true, true)
@@ -56,15 +50,15 @@ function HoTCount()
   + #Buff.FindUnitsWith(AB["Living Seed"], true, true))
 end
 
-function DRFlourish()
+function DruidRestoration.Flourish()
   if Flourish
-  and HoTCount() >= FLHoTCount
+  and DruidRestoration.HoTCount() >= FLHoTCount
   and Spell.CanCast(SB["Flourish"]) then
     return Spell.Cast(SB["Flourish"])
   end
 end
 
-function EfflorescencePos()
+function DruidRestoration.EfflorescencePos()
   local Units = Group.FindBestToHeal(10, EFUnits, EFHealth, 40)
 
   if Units ~= nil then
@@ -74,12 +68,12 @@ function EfflorescencePos()
   return nil
 end
 
-function EfflorescenceReplace()
+function DruidRestoration.EfflorescenceReplace()
   -- TODO: check if there are still players in the existing Efflorescence radius
   --        or if there is a group that is better to heal
 end
 
-function DREfflorescence()
+function DruidRestoration.Efflorescence()
   local x, y, z = ObjectPosition(Unit.FindBestToHeal(15, EFUnits, EFHealth, 40))
 
   if x ~= nil and y ~= nil and z ~= nil
@@ -92,7 +86,7 @@ function DREfflorescence()
   end
 end
 
-function DRLifebloom()
+function DruidRestoration.Lifebloom()
   local Target = Group.TankToHeal()
 
   if Target ~= nil
@@ -105,7 +99,7 @@ function DRLifebloom()
   end
 end
 
-function DRRegrowthClearcast()
+function DruidRestoration.RegrowthClearcast()
   local Target = Group.TankToHeal()
 
   if Target ~= nil
@@ -117,7 +111,7 @@ function DRRegrowthClearcast()
   end
 end
 
-function DRRegrowth()
+function DruidRestoration.Regrowth()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
@@ -128,7 +122,7 @@ function DRRegrowth()
   end
 end
 
-function DRCenarionWard()
+function DruidRestoration.CenarionWard()
   local Target = Group.TankToHeal()
 
   if Target ~= nil
@@ -141,12 +135,12 @@ function DRCenarionWard()
 end
 
 -- returns the count of rejuvenations applied by the player
-function RejuvenationCount()
+function DruidRestoration.RejuvenationCount()
   return #Buff.FindUnitsWith(AB["Rejuvenation"], true, true)
 end
 
 -- returns the lowest unit that does not have a rejuvenation from the player on it
-function RejuvenationTarget()
+function DruidRestoration.RejuvenationTarget()
   -- Update sorted Heal Priority
   Group.HealPriority()
 
@@ -170,18 +164,18 @@ function RejuvenationTarget()
 end
 
 -- applies Rejuvenation until the maximum Rejuvenation count
-function DRRejuvenation()
-  local Target = RejuvenationTarget()
+function DruidRestoration.Rejuvenation()
+  local Target = DruidRestoration.RejuvenationTarget()
 
   if Target ~= nil
-  and RejuvenationCount() < MaxRejuv
+  and DruidRestoration.RejuvenationCount() < MaxRejuv
   and Spell.CanCast(SB["Rejuvenation"], Target, 0, MaxMana * 0.1)
   and Unit.IsInLOS(Target) then
     return Spell.Cast(SB["Rejuvenation"], Target)
   end
 end
 
-function DRWildGrowth()
+function DruidRestoration.WildGrowth()
   local Target = Unit.FindBestToHeal(30, WGUnits, WGHealth, 40)
 
   if Target ~= nil
@@ -191,7 +185,7 @@ function DRWildGrowth()
   end
 end
 
-function DRSwiftmend()
+function DruidRestoration.Swiftmend()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
@@ -202,7 +196,7 @@ function DRSwiftmend()
   end
 end
 
-function DRHealingTouch()
+function DruidRestoration.HealingTouch()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
@@ -213,7 +207,7 @@ function DRHealingTouch()
   end
 end
 
-function DRIncarnation()
+function DruidRestoration.Incarnation()
   if Spell.CanCast(SB["Incarnation: Tree of Life"])
   and Incarnation
   and not Buff.Has(PlayerUnit, AB["Incarnation: Tree of Life"])
@@ -222,7 +216,7 @@ function DRIncarnation()
   end
 end
 
-function DRRenewal()
+function DruidRestoration.Renewal()
   if Spell.CanCast(SB["Renewal"])
   and Renewal
   and Unit.PercentHealth(PlayerUnit) <= RWHealth then
@@ -230,7 +224,7 @@ function DRRenewal()
   end
 end
 
-function DRSolarWrath()
+function DruidRestoration.SolarWrath()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -240,6 +234,6 @@ function DRSolarWrath()
   end
 end
 
-function DRVFS()
+function DruidRestoration.VFS()
 
 end

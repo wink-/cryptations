@@ -1,60 +1,56 @@
-local _, _, ClassID = UnitClass("player")
-local SpecID  = GetSpecialization()
+local PaladinProtection = LibStub("PaladinProtection")
+local Unit              = LibStub("Unit")
+local Rotation          = LibStub("Rotation")
 
-if ClassID ~= 2 then return end
-if SpecID ~= 2 then return end
-if FireHack == nil then return end
+function PaladinProtection.Initialize()
+  -- load profile content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. "Paladin-Protection.JSON")
 
--- load profile content
-local wowdir = GetWoWDirectory()
-local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-local content = ReadFile(profiledir .. "Paladin-Protection.JSON")
+  if content == nil or content == "" then
+    return message("Error loading config file. Please contact the Author.")
+  end
 
-if content == nil or content == "" then
-  return message("Error loading config file. Please contact the Author.")
+  local Settings = json.decode(content)
+
+  Taunt             = Settings.Taunt
+  Interrupt         = Settings.Interrupt
+  InterruptAny      = Settings.InterruptAny
+  InterruptMin      = Settings.InterruptMin
+  InterruptMax      = Settings.InterruptMax
+  AutoEngage        = Settings.AutoEngage
+  AutoTarget        = Settings.AutoTarget
+  TargetMode        = Settings.TargetMode
+  AvengingWrath     = Settings.AvengingWrath
+  GotaK             = Settings.GotaK
+  ArdentDefender    = Settings.ArdentDefender
+  LayOnHands        = Settings.LayOnHands
+  LayOnHandsFriend  = Settings.LayOnHandsFriend
+  EyeOfTyr          = Settings.EyeOfTyr
+  Sepharim          = Settings.Sepharim
+  HotPFriend        = Settings.HotPFriend
+  FoL               = Settings.FoL
+  ADHealth          = Settings.ADHealth
+  GotaKHealth       = Settings.GotaKHealth
+  EoTUnits          = Settings.EoTUnits
+  LoHHealth         = Settings.LoHHealth
+  LotPHealth        = Settings.LotPHealth
+  HotPHealth        = Settings.HotPHealth
+  FoLHealth         = Settings.FoLHealth
+  PauseHotkey       = Settings.PauseHotkey
+  AoEHotkey         = Settings.AoEHotkey
+  CDHotkey          = Settings.CDHotkey
+  MaxMana           = UnitPowerMax("player" , 0)
+
+  KeyCallbacks = {
+    [PauseHotkey] = Rotation.TogglePause,
+    [AoEHotkey] = Rotation.ToggleAoE,
+    [CDHotkey] = Rotation.ToggleCD
+  }
 end
 
-local Settings = json.decode(content)
-
-Taunt             = Settings.Taunt
-Interrupt         = Settings.Interrupt
-InterruptAny      = Settings.InterruptAny
-InterruptMin      = Settings.InterruptMin
-InterruptMax      = Settings.InterruptMax
-AutoEngage        = Settings.AutoEngage
-AutoTarget        = Settings.AutoTarget
-TargetMode        = Settings.TargetMode
-AvengingWrath     = Settings.AvengingWrath
-GotaK             = Settings.GotaK
-ArdentDefender    = Settings.ArdentDefender
-LayOnHands        = Settings.LayOnHands
-LayOnHandsFriend  = Settings.LayOnHandsFriend
-EyeOfTyr          = Settings.EyeOfTyr
-Sepharim          = Settings.Sepharim
-HotPFriend        = Settings.HotPFriend
-FoL               = Settings.FoL
-ADHealth          = Settings.ADHealth
-GotaKHealth       = Settings.GotaKHealth
-EoTUnits          = Settings.EoTUnits
-LoHHealth         = Settings.LoHHealth
-LotPHealth        = Settings.LotPHealth
-HotPHealth        = Settings.HotPHealth
-FoLHealth         = Settings.FoLHealth
-PauseHotkey       = Settings.PauseHotkey
-AoEHotkey         = Settings.AoEHotkey
-CDHotkey          = Settings.CDHotkey
-MaxMana           = UnitPowerMax("player" , 0)
-
-local Unit        = LibStub("Unit")
-local Rotation    = LibStub("Rotation")
-
-KeyCallbacks = {
-  [PauseHotkey] = Rotation.TogglePause,
-  [AoEHotkey] = Rotation.ToggleAoE,
-  [CDHotkey] = Rotation.ToggleCD
-}
-
-function Pulse()
+function PaladinProtection.Pulse()
   -- Call Taunt engine
   if UseTauntEngine then
     Rotation.Taunt()
@@ -74,36 +70,36 @@ function Pulse()
     end
 
     -- COOLDOWNS
-    PPAvengingWrath()
-    PPGotaK()
-    PPArdentDefender()
-    PPLayOnHands()
-    PPEyeOfTyr()
-    PPSepharim()
-    PPSotR()
-    PPLotP()
-    PPHotP()
-    PPFlashOfLight()
+    PaladinProtection.AvengingWrath()
+    PaladinProtection.GotaK()
+    PaladinProtection.ArdentDefender()
+    PaladinProtection.LayOnHands()
+    PaladinProtection.EyeOfTyr()
+    PaladinProtection.Sepharim()
+    PaladinProtection.SotR()
+    PaladinProtection.LotP()
+    PaladinProtection.HotP()
+    PaladinProtection.FlashOfLight()
 
     -- AOE ROTATION
     if #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true) >= 3 then
-      PPConsecration()
-      PPAvengersShield()
-      PPJudgment()
-      PPBlessedHammer()
-      PPHotR()
+      PaladinProtection.Consecration()
+      PaladinProtection.AvengersShield()
+      PaladinProtection.Judgment()
+      PaladinProtection.BlessedHammer()
+      PaladinProtection.HotR()
     else
       -- SINGLE TARGET
-      PPJudgment()
-      PPConsecration()
-      PPAvengersShield()
-      PPBlessedHammerST()
+      PaladinProtection.Judgment()
+      PaladinProtection.Consecration()
+      PaladinProtection.AvengersShield()
+      PaladinProtection.BlessedHammerST()
     end
   end
 end
 
 -- Taunt spells are handled here
-function Taunt(Target)
+function PaladinProtection.Taunt(Target)
   if Target ~= nil
   and Spell.CanCast(SB["Hand of Reckoning"], Target)
   and Unit.IsInLOS(Target) then
@@ -127,8 +123,8 @@ function Taunt(Target)
 end
 
 -- Interrupt spells are handled here
-function Interrupt(Target)
-  PRebuke(Target)
-  PBlindingLight(Target)
-  PHammerOfJustice(Target)
+function PaladinProtection.Interrupt(Target)
+  PaladinCommon.Rebuke(Target)
+  PaladinCommon.BlindingLight(Target)
+  PaladinCommon.HammerOfJustice(Target)
 end

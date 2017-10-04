@@ -1,10 +1,4 @@
-local _, _, ClassID = UnitClass("player")
-local SpecID  = GetSpecialization()
-
-if ClassID ~= 2 then return end
-if SpecID ~= 1 then return end
-if FireHack == nil then return end
-
+local PaladinHoly = LibStub("PaladinHoly")
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
 local Rotation    = LibStub("Rotation")
@@ -15,7 +9,7 @@ local BossManager = LibStub("BossManager")
 local Utils       = LibStub("Utils")
 local Group       = LibStub("Group")
 
-function PHLoDRange()
+function PaladinHoly.LoDRange()
   local Range = 15
 
   if Player.HasTalent(7, 2) then
@@ -29,7 +23,7 @@ function PHLoDRange()
   return Range
 end
 
-function PHAvengingWrath()
+function PaladinHoly.AvengingWrath()
   if AvengingWrath
   and Spell.CanCast(SB["Avenging Wrath"])
   and #GROUP_MEMBERS > 1
@@ -38,7 +32,7 @@ function PHAvengingWrath()
   end
 end
 
-function PHHolyAvenger()
+function PaladinHoly.HolyAvenger()
   if HolyAvenger
   and Spell.CanCast(SB["Holy Avenger"])
   and #GROUP_MEMBERS > 1
@@ -47,7 +41,7 @@ function PHHolyAvenger()
   end
 end
 
-function PHLayOnHands()
+function PaladinHoly.LayOnHands()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
@@ -58,7 +52,7 @@ function PHLayOnHands()
   end
 end
 
-function PHBoS()
+function PaladinHoly.BoS()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
@@ -75,7 +69,7 @@ function PHBoS()
   end
 end
 
-function PHTyrsDeliverance()
+function PaladinHoly.TyrsDeliverance()
   local TargetUnits = Unit.GetUnitsInRadius(PlayerUnit, 15, "friendly")
 
   if TyrsDeliverance
@@ -88,7 +82,7 @@ function PHTyrsDeliverance()
   end
 end
 
-function PHHolyShock()
+function PaladinHoly.HolyShock()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
@@ -102,7 +96,7 @@ function PHHolyShock()
   end
 end
 
-function PHHolyLight()
+function PaladinHoly.HolyLight()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
@@ -116,7 +110,7 @@ function PHHolyLight()
   end
 end
 
-function PHLotM()
+function PaladinHoly.LotM()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
@@ -129,14 +123,14 @@ function PHLotM()
   end
 end
 
-function PHRuleOfLaw()
+function PaladinHoly.RuleOfLaw()
   if RuleOfLaw
   and Spell.CanCast(SB["Rule of Law"]) then
     return Spell.Cast(SB["Rule of Law"])
   end
 end
 
-function PHBeaconTarget()
+function PaladinHoly.BeaconTarget()
   for i = 1, #GROUP_TANKS do
     local Unit = GROUP_TANKS[i]
     if Unit ~= nil
@@ -149,8 +143,8 @@ function PHBeaconTarget()
   return nil
 end
 
-function PHBoL()
-  local Target = PHBeaconTarget()
+function PaladinHoly.BoL()
+  local Target = PaladinHoly.BeaconTarget()
 
   if Target ~= nil
   and BoL
@@ -161,8 +155,8 @@ function PHBoL()
   end
 end
 
-function PHBoF()
-  local Target = PHBeaconTarget()
+function PaladinHoly.BoF()
+  local Target = PaladinHoly.BeaconTarget()
 
   if Target ~= nil
   and BoF
@@ -175,7 +169,7 @@ end
 -- TODO:
 -- 80-85 on tank,
 -- 75-70 on group member when tanks don't need it
-function PHBestowFaith()
+function PaladinHoly.BestowFaith()
   local Target = Group.TankToHeal()
 
   if Target ~= nil
@@ -187,19 +181,19 @@ function PHBestowFaith()
   end
 end
 
-function PHInfusionProc()
+function PaladinHoly.InfusionProc()
   local Target = Group.UnitToHeal()
 
   if Buff.Has(PlayerUnit, AB["Infusion of Light"]) then
     if Unit.PercentHealth(Target) <= InfusionFoL then
-      PHFoLInfusion(Target)
+      PaladinHoly.FoLInfusion(Target)
     else
-      PHHLInfusion(Target)
+      PaladinHoly.HLInfusion(Target)
     end
   end
 end
 
-function PHJudgment()
+function PaladinHoly.Judgment()
   local Target = PlayerTarget()
 
   if Judgment
@@ -211,12 +205,12 @@ function PHJudgment()
   end
 end
 
-function PHLightsHammerPos()
+function PaladinHoly.LightsHammerPos()
   return ObjectPosition(Unit.FindBestToHeal(10, LHUnits, LHHealth, 40))
 end
 
-function PHLightsHammer()
-  local x, y, z = PHLightsHammerPos()
+function PaladinHoly.LightsHammer()
+  local x, y, z = PaladinHoly.LightsHammerPos()
 
   if x ~= nil and y ~= nil and z ~= nil
   and GetTotemInfo(1) == false
@@ -226,18 +220,18 @@ function PHLightsHammer()
   end
 end
 
-function PHLoD()
-  local LoDRange = PHLoDRange()
+function PaladinHoly.LoD()
+  local LoDRange = PaladinHoly.LoDRange()
 
   if LightOfDawn
   and Spell.CanCast(SB["Light of Dawn"], nil, 0, MaxMana * 0.14)
   and #Unit.GetUnitsInCone(PlayerUnit, ConeAngle, LoDRange, "friendly", true, LoDHealth) >= LoDUnits then
-    PHRuleOfLaw()
+    PaladinHoly.RuleOfLaw()
     return Spell.Cast(SB["Light of Dawn"])
   end
 end
 
-function PHHolyPrismTarget()
+function PaladinHoly.HolyPrismTarget()
   local BestTarget        = nil
   local UnitCountBest     = 0
   local UnitCountCurrent  = 0
@@ -260,8 +254,8 @@ function PHHolyPrismTarget()
   return BestTarget
 end
 
-function PHHolyPrism()
-  local Target = PHHolyPrismTarget()
+function PaladinHoly.HolyPrism()
+  local Target = PaladinHoly.HolyPrismTarget()
 
   if Target ~= nil
   and UseHolyPrism
@@ -270,7 +264,7 @@ function PHHolyPrism()
   end
 end
 
-function PHBoV()
+function PaladinHoly.BoV()
   local Target = Unit.FindBestToHeal(30, BoVUnits, BoVHealth, 40)
 
   if Target ~= nil
@@ -281,7 +275,7 @@ function PHBoV()
   end
 end
 
-function PHFlashOfLight()
+function PaladinHoly.FlashOfLight()
   local Target = Group.UnitToHeal()
 
   if Target ~= nil
@@ -295,7 +289,7 @@ function PHFlashOfLight()
   end
 end
 
-function PHHLInfusion(Target)
+function PaladinHoly.HLInfusion(Target)
   if Target ~= nil
   and Spell.CanCast(SB["Holy Light"], Target)
   and Unit.IsInLOS(Target) then
@@ -303,7 +297,7 @@ function PHHLInfusion(Target)
   end
 end
 
-function PHFoLInfusion(Target)
+function PaladinHoly.FoLInfusion(Target)
   if Target ~= nil
   and Spell.CanCast(SB["Flash of Light"], Target)
   and Unit.IsInLOS(Target) then

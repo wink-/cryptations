@@ -1,62 +1,58 @@
-local _, _, ClassID = UnitClass("player")
-local SpecID  = GetSpecialization()
+local DruidGuardian = LibStub("DruidGuardian")
+local Unit          = LibStub("Unit")
+local Rotation      = LibStub("Rotation")
 
-if ClassID ~= 11 then return end
-if SpecID ~= 3 then return end
-if FireHack == nil then return end
+function DruidGuardian.Initialize()
+  -- load profile content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. "Druid-Guardian.JSON")
 
--- load profile content
-local wowdir = GetWoWDirectory()
-local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-local content = ReadFile(profiledir .. "Druid-Guardian.JSON")
+  if content == nil or content == "" then
+    return message("Error loading config file. Please contact the Author.")
+  end
 
-if content == nil or content == "" then
-  return message("Error loading config file. Please contact the Author.")
+  local Settings = json.decode(content)
+
+  Taunt           = Settings.Taunt
+  Interrupt       = Settings.Interrupt
+  InterruptAny    = Settings.InterruptAny
+  InterruptMin    = Settings.InterruptMin
+  InterruptMax    = Settings.InterruptMax
+  AutoEngage      = Settings.AutoEngage
+  AutoTarget      = Settings.AutoTarget
+  TargetMode      = Settings.TargetMode
+  Incarnation     = Settings.Incarnation
+  BristlingFur     = Settings.BristlingFur
+  SurvInstincts   = Settings.SurvInstincts
+  Barkskin        = Settings.Barkskin
+  Ironfur         = Settings.Ironfur
+  FRegen          = Settings.FRegen
+  Moonfire        = Settings.Moonfire
+  Maul            = Settings.Maul
+  RotS            = Settings.RotS
+  AutoSwitchForm  = Settings.AutoSwitchForm
+  SIHealth        = Settings.SIHealth
+  BSHealth        = Settings.BSHealth
+  IFHealth        = Settings.IFHealth
+  FRHealth        = Settings.FRHealth
+  MaulHealth      = Settings.MaulHealth
+  MaulRage        = Settings.MaulRage
+  RotSHealth      = Settings.RotSHealth
+  PauseHotkey     = Settings.PauseHotkey
+  AoEHotkey       = Settings.AoEHotkey
+  CDHotkey        = Settings.CDHotkey
+  MaxMana         = UnitPowerMax("player" , 0)
+  MaxHealth       = UnitHealthMax("player")
+
+  KeyCallbacks = {
+    [PauseHotkey] = Rotation.TogglePause,
+    [AoEHotkey] = Rotation.ToggleAoE,
+    [CDHotkey] = Rotation.ToggleCD
+  }
 end
 
-local Settings = json.decode(content)
-
-Taunt           = Settings.Taunt
-Interrupt       = Settings.Interrupt
-InterruptAny    = Settings.InterruptAny
-InterruptMin    = Settings.InterruptMin
-InterruptMax    = Settings.InterruptMax
-AutoEngage      = Settings.AutoEngage
-AutoTarget      = Settings.AutoTarget
-TargetMode      = Settings.TargetMode
-Incarnation     = Settings.Incarnation
-BristlingFur     = Settings.BristlingFur
-SurvInstincts   = Settings.SurvInstincts
-Barkskin        = Settings.Barkskin
-Ironfur         = Settings.Ironfur
-FRegen          = Settings.FRegen
-Moonfire        = Settings.Moonfire
-Maul            = Settings.Maul
-RotS            = Settings.RotS
-AutoSwitchForm  = Settings.AutoSwitchForm
-SIHealth        = Settings.SIHealth
-BSHealth        = Settings.BSHealth
-IFHealth        = Settings.IFHealth
-FRHealth        = Settings.FRHealth
-MaulHealth      = Settings.MaulHealth
-MaulRage        = Settings.MaulRage
-RotSHealth      = Settings.RotSHealth
-PauseHotkey     = Settings.PauseHotkey
-AoEHotkey       = Settings.AoEHotkey
-CDHotkey        = Settings.CDHotkey
-MaxMana         = UnitPowerMax("player" , 0)
-MaxHealth       = UnitHealthMax("player")
-
-local Unit        = LibStub("Unit")
-local Rotation    = LibStub("Rotation")
-
-KeyCallbacks = {
-  [PauseHotkey] = Rotation.TogglePause,
-  [AoEHotkey] = Rotation.ToggleAoE,
-  [CDHotkey] = Rotation.ToggleCD
-}
-
-function Pulse()
+function DruidGuardian.Pulse()
   -- Call Taunt engine
   if Taunt then
     Rotation.Taunt()
@@ -75,28 +71,28 @@ function Pulse()
       Rotation.Interrupt()
     end
 
-    SwitchToBearForm()
-    DGIncarnation()
-    DGSurvivalInstincts()
-    DGBarkskin()
-    DGRotS()
-    DGIronfur()
-    DGBristlingFur()
-    DGFrenziedRegeneration()
-    DGLunarBeam()
-    DGPulverize()
-    DGMoonfire()
-    DGMangle()
-    DGThrash()
-    DGMaul()
-    DGSwipe()
+    DruidGuardian.SwitchToBearForm()
+    DruidGuardian.Incarnation()
+    DruidGuardian.SurvivalInstincts()
+    DruidGuardian.Barkskin()
+    DruidGuardian.RotS()
+    DruidGuardian.Ironfur()
+    DruidGuardian.BristlingFur()
+    DruidGuardian.FrenziedRegeneration()
+    DruidGuardian.LunarBeam()
+    DruidGuardian.Pulverize()
+    DruidGuardian.Moonfire()
+    DruidGuardian.Mangle()
+    DruidGuardian.Thrash()
+    DruidGuardian.Maul()
+    DruidGuardian.Swipe()
   else
     -- out of combat rotation
-    SwitchToBearForm()
+    DruidGuardian.SwitchToBearForm()
   end
 end
 
-function Taunt(Target)
+function DruidGuardian.Taunt(Target)
   if Target ~= nil
   and Spell.CanCast(SB["Growl"], Target)
   and Unit.IsInLOS(Target) then
@@ -111,7 +107,7 @@ function Taunt(Target)
   end
 end
 
-function Interrupt(Target)
+function DruidGuardian.Interrupt(Target)
   if Target ~= nil
   and Spell.CanCast(SB["Skull Bash"], Target)
   and Unit.IsInLOS(Target) then

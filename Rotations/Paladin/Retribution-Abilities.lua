@@ -1,17 +1,11 @@
-local _, _, ClassID = UnitClass("player")
-local SpecID  = GetSpecialization()
-
-if ClassID ~= 2 then return end
-if SpecID ~= 3 then return end
-if FireHack == nil then return end
-
+local PaladinRetribution = LibStub("PaladinRetribution")
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
 local Player      = LibStub("Player")
 local Buff        = LibStub("Buff")
 local Debuff      = LibStub("Debuff")
 
-function PRAvengingWrathJudgment()
+function PaladinRetribution.AvengingWrathJudgment()
   local Target = PlayerTarget()
 
   if Spell.CanCast(SB["Avenging Wrath"])
@@ -22,7 +16,7 @@ function PRAvengingWrathJudgment()
   end
 end
 
-function PRShieldOfVengeance()
+function PaladinRetribution.ShieldOfVengeance()
   if Spell.CanCast(SB["Shield of Vengeance"])
   and SoV
   and Unit.PercentHealth(PlayerUnit) ~= 100 then
@@ -30,7 +24,7 @@ function PRShieldOfVengeance()
   end
 end
 
-function PRCrusade()
+function PaladinRetribution.Crusade()
   local HolyPower = UnitPower("player", 9)
 
   if Crusade
@@ -40,7 +34,7 @@ function PRCrusade()
   end
 end
 
-function PRHolyWrath()
+function PaladinRetribution.HolyWrath()
   if HolyWrath
   and Spell.CanCast(SB["Holy Wrath"])
   and Unit.PercentHealth(PlayerUnit) <= HWHealth
@@ -49,7 +43,7 @@ function PRHolyWrath()
   end
 end
 
-function PRConsecration()
+function PaladinRetribution.Consecration()
   if Spell.CanCast(SB["Consecration Retribution"])
   and not Unit.IsMoving(PlayerUnit)
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true) >= 2 then
@@ -57,7 +51,7 @@ function PRConsecration()
   end
 end
 
-function PRWakeOfAshes()
+function PaladinRetribution.WakeOfAshes()
   local Target    = PlayerTarget()
   local HolyPower = UnitPower("player", 9)
 
@@ -70,7 +64,7 @@ function PRWakeOfAshes()
 end
 
 -- TODO: add Righteous Verdict support if useful
-function PRBladeOfJustice()
+function PaladinRetribution.BladeOfJustice()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -81,7 +75,7 @@ function PRBladeOfJustice()
 end
 
 -- TODO: add Righteous Verdict support if useful
-function PRDivineHammer()
+function PaladinRetribution.DivineHammer()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -91,7 +85,7 @@ function PRDivineHammer()
   end
 end
 
-function PRZeal()
+function PaladinRetribution.Zeal()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -101,7 +95,7 @@ function PRZeal()
   end
 end
 
-function PRCrusaderStrike()
+function PaladinRetribution.CrusaderStrike()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -111,7 +105,7 @@ function PRCrusaderStrike()
   end
 end
 
-function PRJusticarsVengeance()
+function PaladinRetribution.JusticarsVengeance()
   local HolyPower = UnitPower("player", 9)
 
   if HolyPower == 5
@@ -121,7 +115,7 @@ function PRJusticarsVengeance()
   end
 end
 
-function PREyeForAnEye()
+function PaladinRetribution.EyeForAnEye()
   if EfaE
   and Unit.PercentHealth(PlayerUnit) <= EfaEHealth
   and Spell.CanCast(SB["Eye for an Eye"]) then
@@ -129,7 +123,7 @@ function PREyeForAnEye()
   end
 end
 
-function PRWordOfGlory()
+function PaladinRetribution.WordOfGlory()
   if WoG
   and #Unit.GetUnitsBelowHealth(WoGHealth, "friendly", true, PlayerUnit, 15) >= WoGUnits
   and Spell.CanCast(SB["Word of Glory"]) then
@@ -137,7 +131,7 @@ function PRWordOfGlory()
   end
 end
 
-function PRJudgment_Debuff()
+function PaladinRetribution.Judgment_Debuff()
   local Target    = PlayerTarget()
   local HolyPower = UnitPower("player", 9)
 
@@ -153,7 +147,7 @@ function PRJudgment_Debuff()
   end
 end
 
-function PRExecutionSentence()
+function PaladinRetribution.ExecutionSentence()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -163,7 +157,7 @@ function PRExecutionSentence()
   end
 end
 
-function PRDivineStorm_AOE()
+function PaladinRetribution.DivineStorm_AOE()
   local Target = PlayerTarget()
 
   if Target~= nil
@@ -173,7 +167,7 @@ function PRDivineStorm_AOE()
   end
 end
 
-function PRDivineStorm_ST()
+function PaladinRetribution.DivineStorm_ST()
   local Target = PlayerTarget()
 
   if Target~= nil
@@ -183,7 +177,7 @@ function PRDivineStorm_ST()
   end
 end
 
-function PRTemplarsVerdict()
+function PaladinRetribution.TemplarsVerdict()
   local Target = PlayerTarget()
 
   if Target ~= nil

@@ -1,10 +1,4 @@
-local _, _, ClassID = UnitClass("player")
-local SpecID  = GetSpecialization()
-
-if ClassID ~= 11 then return end
-if SpecID ~= 2 then return end
-if FireHack == nil then return end
-
+local DruidFeral  = LibStub("DruidFeral")
 local Unit        = LibStub("Unit")
 local Spell       = LibStub("Spell")
 local Rotation    = LibStub("Rotation")
@@ -17,12 +11,12 @@ local Group       = LibStub("Group")
 local RipCPSpent   = 0 -- This saves how many cp were spent on the last rip (usefull to check if we can apply a stronger rip)
 local RakeEnhanced = false -- This saves whether or not the last used rake was enhanced (through stealth or incarnation)
 
-function OnTargetSwitch()
+function DruidFeral.OnTargetSwitch()
   RipCPSpent    = 0
   RakeEnhanced  = false
 end
 
-function DFRakeDebuffDuration()
+function DruidFeral.RakeDebuffDuration()
   if Player.HasTalent(6, 2) then
     return 10
   end
@@ -30,7 +24,7 @@ function DFRakeDebuffDuration()
   return 15
 end
 
-function DFRakeIntervalSec()
+function DruidFeral.RakeIntervalSec()
   if Player.HasTalent(6, 2) then
     return 2
   end
@@ -38,7 +32,7 @@ function DFRakeIntervalSec()
   return 3
 end
 
-function DFFerociousBiteMaxEnergy()
+function DruidFeral.FerociousBiteMaxEnergy()
   local EnergyNeeded = 25
   if Buff.Has(PlayerUnit, AB["Berserk"]) then
     EnergyNeeded = EnergyNeeded / 2
@@ -49,7 +43,7 @@ function DFFerociousBiteMaxEnergy()
   return EnergyNeeded * 2
 end
 
-function IsRakeEnhanced()
+function DruidFeral.IsRakeEnhanced()
   if Buff.Has(PlayerUnit, AB["Incarnation: King of the Jungle"])
   or Buff.Has(PlayerUnit, AB["Prowl"])
   or Buff.Has(PlayerUnit, AB["Shadowmeld"]) then
@@ -59,14 +53,14 @@ function IsRakeEnhanced()
   end
 end
 
-function DBCat()
+function DruidFeral.Cat()
   if Spell.CanCast(SB["Cat Form"])
   and not Player.IsInShapeshift() then
     return Spell.Cast(SB["Cat Form"])
   end
 end
 
-function DFProwl()
+function DruidFeral.Prowl()
   local Target = PlayerTarget()
 
   if Prowl
@@ -81,20 +75,20 @@ function DFProwl()
   end
 end
 
-function DFRakeV1()
+function DruidFeral.RakeV1()
   local Target = PlayerTarget()
 
   if Target ~= nil
   and Spell.CanCast(SB["Rake"], Target, 3, 35) then
     if Buff.Has(PlayerUnit, AB["Prowl"])
     or Buff.Has(PlayerUnit, AB["Shadowmeld"]) then
-      IsRakeEnhanced()
+      DruidFeral.IsRakeEnhanced()
       return Spell.Cast(SB["Rake"], Target)
     end
   end
 end
 
-function DFTigersFury()
+function DruidFeral.TigersFury()
   local Energy    = UnitPower("player", 3)
   local MaxEnergy = UnitPowerMax("player", 3)
 
@@ -106,7 +100,7 @@ function DFTigersFury()
   end
 end
 
-function DFIKotJ()
+function DruidFeral.IKotJ()
   if Incarnation
   and Spell.CanCast(SB["Incarnation: King of the Jungle"])
   and Buff.Has(PlayerUnit, AB["Tiger's Fury"]) then
@@ -114,7 +108,7 @@ function DFIKotJ()
   end
 end
 
-function DFBerserk()
+function DruidFeral.Berserk()
   if Berserk
   and Spell.CanCast(SB["Berserk"])
   and Buff.Has(PlayerUnit, SB["Tiger's Fury"]) then
@@ -122,7 +116,7 @@ function DFBerserk()
   end
 end
 
-function DFElunesGuidance()
+function DruidFeral.ElunesGuidance()
   local Target      = PlayerTarget()
   local Energy      = UnitPower("player", 3)
   local ComboPoints = UnitPower("player", 4)
@@ -131,12 +125,12 @@ function DFElunesGuidance()
   and Spell.CanCast(SB["Rip"], Target) -- Dummy for range check
   and Spell.CanCast(SB["Elune's Guidance"])
   and ComboPoints <= 1
-  and Energy >= DFFerociousBiteMaxEnergy() then
+  and Energy >= DruidFeral.FerociousBiteMaxEnergy() then
     return Spell.Cast(SB["Elune's Guidance"])
   end
 end
 
-function DFFerociousBiteV1()
+function DruidFeral.FerociousBiteV1()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -149,7 +143,7 @@ function DFFerociousBiteV1()
   end
 end
 
-function DFRegrowthV1()
+function DruidFeral.RegrowthV1()
   local GCD          = Player.GetGCDDuration()
   local ComboPoints  = UnitPower("player", 4)
 
@@ -163,7 +157,7 @@ function DFRegrowthV1()
   end
 end
 
-function DFRegrowthV2()
+function DruidFeral.RegrowthV2()
   if Spell.CanCast(SB["Regrowth"], PlayerUnit)
   and IsEquippedItem(137024)
   and Player.HasTalent(7, 2)
@@ -173,7 +167,7 @@ function DFRegrowthV2()
   end
 end
 
-function DFArtifact()
+function DruidFeral.Artifact()
   local ComboPoints     = UnitPower("player", 4)
   local MaxComboPoints  = UnitPowerMax("player", 4)
   local Target          = PlayerTarget()
@@ -188,7 +182,7 @@ function DFArtifact()
   end
 end
 
-function DFRipV1()
+function DruidFeral.RipV1()
   local ComboPoints = UnitPower("player", 4)
   local Target = PlayerTarget()
 
@@ -202,7 +196,7 @@ function DFRipV1()
   end
 end
 
-function DFFerociousBiteV2()
+function DruidFeral.FerociousBiteV2()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -214,7 +208,7 @@ function DFFerociousBiteV2()
   end
 end
 
-function DFRipV2()
+function DruidFeral.RipV2()
   if RipMD then
     local Target = Group.FindDoTTarget(SB["Rip"], AB["Rip"], RipMDCount)
   else
@@ -235,7 +229,7 @@ function DFRipV2()
   end
 end
 
-function DFSavageRoar()
+function DruidFeral.SavageRoar()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -246,7 +240,7 @@ function DFSavageRoar()
   end
 end
 
-function DFMaim()
+function DruidFeral.Maim()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -256,13 +250,13 @@ function DFMaim()
   end
 end
 
-function DFFerociousBiteV3()
+function DruidFeral.FerociousBiteV3()
   local Energy    = UnitPower("player", 3)
   local Target = PlayerTarget()
 
   if Target ~= nil
   and Spell.CanCast(SB["Ferocious Bite"], Target, 3, 25)
-  and Energy >= DFFerociousBiteMaxEnergy()
+  and Energy >= DruidFeral.FerociousBiteMaxEnergy()
   and Debuff.Has(Target, AB["Rip"])
   and (Debuff.RemainingTime(Target, AB["Rip"]) >= 8
   or not Player.HasTalent(5, 3)) then
@@ -270,7 +264,7 @@ function DFFerociousBiteV3()
   end
 end
 
-function DFShadowmeld()
+function DruidFeral.Shadowmeld()
   local Target = PlayerTarget()
 
   if Shadowmeld
@@ -285,18 +279,18 @@ function DFShadowmeld()
   end
 end
 
-function DFRakeV2()
+function DruidFeral.RakeV2()
   local Target = PlayerTarget()
 
   if Target ~= nil
   and Spell.CanCast(SB["Rake"], Target, 3, 35)
   and not Debuff.Has(Target, AB["Rake"]) then
-    IsRakeEnhanced()
+    DruidFeral.IsRakeEnhanced()
     return Spell.Cast(SB["Rake"], Target)
   end
 end
 
-function DFRakeV3()
+function DruidFeral.RakeV3()
   if RakeMD then
     local Target = Group.FindDoTTarget(SB["Rake"], AB["Rake"], RakeMDCount)
   else
@@ -309,12 +303,12 @@ function DFRakeV3()
   and not Player.HasTalent(7, 2)
   and (not Debuff.Has(Target, AB["Rake"])
   or Debuff.RemainingTime(Target, AB["Rake"]) < 5) then
-    IsRakeEnhanced()
+    DruidFeral.IsRakeEnhanced()
     return Spell.Cast(SB["Rake"], Target)
   end
 end
 
-function DFRakeV4()
+function DruidFeral.RakeV4()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -322,15 +316,15 @@ function DFRakeV4()
   and Player.HasTalent(7, 2)
   and Buff.Has(PlayerUnit, AB["Bloodtalons"])
   and Debuff.RemainingTime(Target, AB["Rake"]) <= 5
-  and TTD_TABLE[Target] > (DFRakeDebuffDuration() / 2)
+  and TTD_TABLE[Target] > (DruidFeral.RakeDebuffDuration() / 2)
   and (not RakeEnhanced or (RakeEnhanced
   and Buff.Has(PlayerUnit, AB["Incarnation: King of the Jungle"]))) then
-    IsRakeEnhanced()
+    DruidFeral.IsRakeEnhanced()
     return Spell.Cast(SB["Rake"], Target)
   end
 end
 
-function DFRakeV5()
+function DruidFeral.RakeV5()
   if RakeMD then
     local Target = Group.FindDoTTarget(SB["Rake"], AB["Rake"], RakeMDCount)
   else
@@ -347,12 +341,12 @@ function DFRakeV5()
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 0
   and (not RakeEnhanced or (RakeEnhanced
   and Buff.Has(PlayerUnit, AB["Incarnation: King of the Jungle"]))) then
-    IsRakeEnhanced()
+    DruidFeral.IsRakeEnhanced()
     return Spell.Cast(SB["Rake"], Target)
   end
 end
 
-function DFBrutalSlashV1()
+function DruidFeral.BrutalSlashV1()
   local Energy      = UnitPower("player", 3)
   local BSCharges   = Spell.GetCharges(SB["Brutal Slash"])
   local ChargeTime  = Spell.GetRemainingChargeTime(SB["Brutal Slash"])
@@ -369,7 +363,7 @@ function DFBrutalSlashV1()
   end
 end
 
-function DFMoonfire()
+function DruidFeral.Moonfire()
   if MoonfireMD
   and Moonfire then
     local Target = Group.FindDoTTarget(SB["Moonfire"], AB["Moonfire"], MFMDCount)
@@ -389,7 +383,7 @@ function DFMoonfire()
   end
 end
 
-function DFThrashV1()
+function DruidFeral.ThrashV1()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -400,7 +394,7 @@ function DFThrashV1()
   end
 end
 
-function DFSwipeV1()
+function DruidFeral.SwipeV1()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -413,7 +407,7 @@ function DFSwipeV1()
 end
 
 
-function DFThrashV2()
+function DruidFeral.ThrashV2()
   local HasT19Bonus2 = Player.HasSetPiece(2)
   local TCRank       = Player.ArtifactTraitRank(238048)
   local Target       = PlayerTarget()
@@ -428,7 +422,7 @@ function DFThrashV2()
   end
 end
 
-function DFThrashV3()
+function DruidFeral.ThrashV3()
   local HasT19Bonus4 = Player.HasSetPiece(4)
   local Target = PlayerTarget()
 
@@ -443,7 +437,7 @@ function DFThrashV3()
   end
 end
 
-function DFShred()
+function DruidFeral.Shred()
   local Energy    = UnitPower("player", 3)
   local MaxEnergy = UnitPowerMax("player", 3)
   local Target    = PlayerTarget()
@@ -453,13 +447,13 @@ function DFShred()
   and Player.IsFacing(Target)
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") < 3
   and ((Debuff.Has(Target, AB["Rake"])
-  and Debuff.RemainingTime(Target, AB["Rake"]) > DFRakeIntervalSec())
+  and Debuff.RemainingTime(Target, AB["Rake"]) > DruidFeral.RakeIntervalSec())
   or (MaxEnergy - Energy) < 1) then
     return Spell.Cast(SB["Shred"], Target)
   end
 end
 
-function DFThrashV4()
+function DruidFeral.ThrashV4()
   local HasT19Bonus2  = Player.HasSetPiece(2)
   local Target        = PlayerTarget()
 
@@ -472,7 +466,7 @@ function DFThrashV4()
   end
 end
 
-function DFBrutalSlashV2()
+function DruidFeral.BrutalSlashV2()
   local HasT19Bonus2  = Player.HasSetPiece(2)
   local Target        = PlayerTarget()
 
@@ -484,7 +478,7 @@ function DFBrutalSlashV2()
   end
 end
 
-function DFThrashV5()
+function DruidFeral.ThrashV5()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -494,7 +488,7 @@ function DFThrashV5()
   end
 end
 
-function DFSwipeV2()
+function DruidFeral.SwipeV2()
   local HasT19Bonus2  = Player.HasSetPiece(2)
   local Target        = PlayerTarget()
 

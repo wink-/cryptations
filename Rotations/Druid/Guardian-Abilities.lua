@@ -1,26 +1,20 @@
-local _, _, ClassID = UnitClass("player")
-local SpecID  = GetSpecialization()
+local DruidGuardian = LibStub("DruidGuardian")
+local Unit          = LibStub("Unit")
+local Spell         = LibStub("Spell")
+local Rotation      = LibStub("Rotation")
+local Player        = LibStub("Player")
+local Buff          = LibStub("Buff")
+local Debuff        = LibStub("Debuff")
+local BossManager   = LibStub("BossManager")
 
-if ClassID ~= 11 then return end
-if SpecID ~= 3 then return end
-if FireHack == nil then return end
-
-local Unit        = LibStub("Unit")
-local Spell       = LibStub("Spell")
-local Rotation    = LibStub("Rotation")
-local Player      = LibStub("Player")
-local Buff        = LibStub("Buff")
-local Debuff      = LibStub("Debuff")
-local BossManager = LibStub("BossManager")
-
-function SwitchToBearForm()
+function DruidGuardian.SwitchToBearForm()
   if AutoSwitchForm
   and not Player.IsInShapeshift() then
     return Spell.Cast(SB["Bear Form"])
   end
 end
 
-function DGSurvivalInstincts()
+function DruidGuardian.SurvivalInstincts()
   if Spell.CanCast(SB["Survival Instincts"])
   and SurvInstincts
   and (Unit.PercentHealth(PlayerUnit) <= SIHealth
@@ -29,7 +23,7 @@ function DGSurvivalInstincts()
   end
 end
 
-function DGBarkskin()
+function DruidGuardian.Barkskin()
   if Spell.CanCast(SB["Barkskin"])
   and Barkskin
   and not Buff.Has(PlayerUnit, AB["Survival Instincts"])
@@ -39,7 +33,7 @@ function DGBarkskin()
   end
 end
 
-function DGRotS()
+function DruidGuardian.RotS()
   if Spell.CanCast(SB["Rage of the Sleeper"])
   and RotS
   and (Unit.PercentHealth(PlayerUnit) <= RotSHealth
@@ -48,7 +42,7 @@ function DGRotS()
   end
 end
 
-function DGIronfur()
+function DruidGuardian.Ironfur()
   if Spell.CanCast(SB["Ironfur"])
   and Ironfur
   and not Buff.Has(PlayerUnit, AB["Survival Instincts"])
@@ -58,7 +52,7 @@ function DGIronfur()
   end
 end
 
-function DGFrenziedRegeneration()
+function DruidGuardian.FrenziedRegeneration()
   if Spell.CanCast(SB["Frenzied Regeneration"])
   and FRegen
   and Player.GetDamageOverPeriod(5) >= UnitHealthMax(PlayerUnit) * (FRHealth / 100) then
@@ -66,7 +60,7 @@ function DGFrenziedRegeneration()
   end
 end
 
-function DGMoonfire()
+function DruidGuardian.Moonfire()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -79,7 +73,7 @@ function DGMoonfire()
   end
 end
 
-function DGMangle()
+function DruidGuardian.Mangle()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -88,7 +82,7 @@ function DGMangle()
   end
 end
 
-function DGThrash()
+function DruidGuardian.Thrash()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -98,7 +92,7 @@ function DGThrash()
   end
 end
 
-function DGPulverize()
+function DruidGuardian.Pulverize()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -108,7 +102,7 @@ function DGPulverize()
   end
 end
 
-function DGMaul()
+function DruidGuardian.Maul()
   local Target = PlayerTarget()
 
   local Rage = UnitPower("player", 1)
@@ -120,7 +114,7 @@ function DGMaul()
   end
 end
 
-function DGSwipe()
+function DruidGuardian.Swipe()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -130,20 +124,20 @@ function DGSwipe()
   end
 end
 
-function DGLunarBeam()
+function DruidGuardian.LunarBeam()
   if Spell.CanCast(SB["Lunar Beam"]) then
     return Spell.Cast(SB["Lunar Beam"])
   end
 end
 
-function DGIncarnation()
+function DruidGuardian.Incarnation()
   if Incarnation
   and Spell.CanCast(SB["Incarnation: Guardian of Ursoc"]) then
     return Spell.Cast(SB["Incarnation: Guardian of Ursoc"])
   end
 end
 
-function DGBristlingFur()
+function DruidGuardian.BristlingFur()
   if BristlinFur
   and Spell.CanCast(SB["Bristling Fur"])
   and BossManager.IsDefCooldownNeeded()

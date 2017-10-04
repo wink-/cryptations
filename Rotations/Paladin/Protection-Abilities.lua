@@ -1,18 +1,12 @@
-local _, _, ClassID = UnitClass("player")
-local SpecID  = GetSpecialization()
+local PaladinProtection = LibStub("PaladinProtection")
+local Unit              = LibStub("Unit")
+local Spell             = LibStub("Spell")
+local Buff              = LibStub("Buff")
+local BossManager       = LibStub("BossManager")
+local Group             = LibStub("Group")
+local Player            = LibStub("Player")
 
-if ClassID ~= 2 then return end
-if SpecID ~= 2 then return end
-if FireHack == nil then return end
-
-local Unit        = LibStub("Unit")
-local Spell       = LibStub("Spell")
-local Buff        = LibStub("Buff")
-local BossManager = LibStub("BossManager")
-local Group       = LibStub("Group")
-local Player      = LibStub("Player")
-
-function PPAvengingWrath()
+function PaladinProtection.AvengingWrath()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -23,7 +17,7 @@ function PPAvengingWrath()
   end
 end
 
-function PPGotaK()
+function PaladinProtection.GotaK()
   if Spell.CanCast(SB["Guardian of Ancient Kings"])
   and GotaK
   and (Unit.PercentHealth(PlayerUnit) <= GotaKHealth
@@ -32,7 +26,7 @@ function PPGotaK()
   end
 end
 
-function PPArdentDefender()
+function PaladinProtection.ArdentDefender()
   if Spell.CanCast(SB["Ardent Defender"])
   and ArdentDefender
   and (Unit.PercentHealth(PlayerUnit) <= ADHealth
@@ -41,10 +35,10 @@ function PPArdentDefender()
   end
 end
 
-function PPLayOnHandsTarget()
+function PaladinProtection.LayOnHandsTarget()
 end
 
-function PPLayOnHands()
+function PaladinProtection.LayOnHands()
   if Spell.CanCast(SB["Lay on Hands"])
   and LayOnHands
   and Unit.PercentHealth(PlayerUnit) <= LoHHealth then
@@ -52,7 +46,7 @@ function PPLayOnHands()
   end
 end
 
-function PPEyeOfTyr()
+function PaladinProtection.EyeOfTyr()
   if Spell.CanCast(SB["Eye of Tyr"])
   and EyeOfTyr
   and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile", true) >= EoTUnits then
@@ -60,7 +54,7 @@ function PPEyeOfTyr()
   end
 end
 
-function PPSepharim()
+function PaladinProtection.Sepharim()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -74,7 +68,7 @@ function PPSepharim()
   end
 end
 
-function PPSotR()
+function PaladinProtection.SotR()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -95,7 +89,7 @@ function PPSotR()
   end
 end
 
-function PPLotP()
+function PaladinProtection.LotP()
   if Spell.CanCast(SB["Light of the Protector"])
   and Unit.PercentHealth(PlayerUnit) <= LoHHealth
   and not Player.HasTalent(5, 1)
@@ -105,7 +99,7 @@ function PPLotP()
   end
 end
 
-function PPHotPTarget()
+function PaladinProtection.HotPTarget()
   local Lowest = Group.UnitToHeal()
 
   if Lowest ~= nil
@@ -117,8 +111,8 @@ function PPHotPTarget()
   end
 end
 
-function PPHotP()
-  local Target = PPHotPTarget()
+function PaladinProtection.HotP()
+  local Target = PaladinProtection.HotPTarget()
 
   if Target ~= nil
   and Player.HasTalent(5, 1)
@@ -129,7 +123,7 @@ function PPHotP()
   end
 end
 
-function PPFlashOfLight()
+function PaladinProtection.FlashOfLight()
   if Spell.CanCast(SB["Flash of Light"], PlayerUnit)
   and FoL
   and Unit.PercentHealth(PlayerUnit) <= FoLHealth
@@ -138,7 +132,7 @@ function PPFlashOfLight()
   end
 end
 
-function PPConsecration()
+function PaladinProtection.Consecration()
   local Target = PlayerTarget()
 
   if not Unit.IsMoving(PlayerUnit)
@@ -148,7 +142,7 @@ function PPConsecration()
   end
 end
 
-function PPAvengersShield()
+function PaladinProtection.AvengersShield()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -159,7 +153,7 @@ function PPAvengersShield()
   end
 end
 
-function PPJudgment()
+function PaladinProtection.Judgment()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -170,7 +164,7 @@ function PPJudgment()
   end
 end
 
-function PPBlessedHammer()
+function PaladinProtection.BlessedHammer()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -181,7 +175,7 @@ function PPBlessedHammer()
   end
 end
 
-function PPBlessedHammerST()
+function PaladinProtection.BlessedHammerST()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -193,7 +187,7 @@ function PPBlessedHammerST()
   end
 end
 
-function PPHotR()
+function PaladinProtection.HotR()
   local Target = PlayerTarget()
 
   if Target ~= nil

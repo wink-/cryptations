@@ -1,13 +1,8 @@
-local _, _, ClassID = UnitClass("player")
-local SpecID  = GetSpecialization()
+local PaladinCommon = LibStub("PaladinCommon")
+local Spell         = LibStub("Spell")
+local Unit          = LibStub("Unit")
 
-if ClassID ~= 2 then return end
-if FireHack == nil then return end
-
-local Spell = LibStub("Spell")
-local Unit  = LibStub("Unit")
-
-function PRebuke(Target)
+function PaladinCommon.Rebuke(Target)
   if Target == nil then
     local Target = PlayerTarget()
   end
@@ -19,7 +14,7 @@ function PRebuke(Target)
   end
 end
 
-function PBlindingLight()
+function PaladinCommon.BlindingLight()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -30,7 +25,7 @@ function PBlindingLight()
   end
 end
 
-function PHammerOfJustice(Target)
+function PaladinCommon.HammerOfJustice(Target)
   if Target == nil then
     local Target = PlayerTarget()
   end

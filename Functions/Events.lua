@@ -8,14 +8,13 @@ TTD_TABLE = {}
 function Events.GetUnits()
   -- cache new units
   if UnitAffectingCombat("player") or true then
-    local Units = GetObjectsOfType(ObjectTypes.Unit)
-    --print("found " .. #Units .. " units")
-    for i = 1, #Units do
-      local Object = Units[i]
-      if Object ~= ObjectPointer("player")
+    for i = 1, GetObjectCount() do
+      --print("found " .. GetObjectCount() .. " objects")
+      local Object = GetObjectWithIndex(i)
+      if ObjectIsType(Object, ObjectTypes.Unit)
+      and Object ~= ObjectPointer("player")
       and Unit.IsHostile(Object)
-      and not UNIT_TRACKER[Object]
-      and (UnitAffectingCombat(Object) or Unit.IsDummy(Object)) then
+      and not UNIT_TRACKER[Object] then
         UNIT_TRACKER[Object] = GetTime()
         if TTD_TABLE[Object] == nil then
           TTD_TABLE[Object] = -1

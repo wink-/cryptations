@@ -3,7 +3,6 @@ local Group = LibStub("Group")
 local Player = LibStub("Player")
 
 Spelltarget  = nil                                 -- The unit on which a spell shall be casted
-TTD_TABLE    = {unit, start, duration, dps, ttd}   -- Holds the values required for calculating the ttd
 
 -- returns true if a given unit is hostile and therefore can be attacked
 function Unit.IsHostile(unit)
