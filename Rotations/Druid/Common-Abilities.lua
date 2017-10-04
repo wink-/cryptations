@@ -1,12 +1,14 @@
-local _, _, ClassID = UnitClass("player")
-
-if ClassID ~= 11 then return end
-if FireHack == nil then return end
+Druid = {
+  Balance = {},
+  Feral = {},
+  Restoration = {},
+  Guardian = {},
+}
 
 local Spell = LibStub("Spell")
 local Unit  = LibStub("Unit")
 
-function DRejuvenation()
+function Druid.Rejuvenation()
   if Spell.CanCast(SB["Rejuvenation"], HealTarget, 0, MaxMana * 0.1)
   and not Buff.Has(LowestFriend, 774, true)
   and Unit.IsInLOS(HealTarget)
@@ -15,14 +17,14 @@ function DRejuvenation()
   end
 end
 
-function DHealingTouch()
+function Druid.HealingTouch()
   if Spell.CanCast(SB["Healing Touch"], LowestFriend, 0, MaxMana * 0.09)
   and Unit.IsInLOS(LowestFriend) then
     return Spell.Cast(SB["Healing Touch"], LowestFriend)
   end
 end
 
-function DRegrowth()
+function Druid.Regrowth()
   if Spell.CanCast(SB["Regrowh"], nil, 0, MaxMana * 0.1863) then
     return Spell.Cast(SB["Regrowh"])
   end

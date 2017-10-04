@@ -1,80 +1,76 @@
-local _, _, ClassID = UnitClass("player")
-local SpecID  = GetSpecialization()
+local DruidBalance  = LibStub("DruidBalance")
+local Unit          = LibStub("Unit")
+local Spell         = LibStub("Spell")
+local Rotation      = LibStub("Rotation")
+local Player        = LibStub("Player")
+local Buff          = LibStub("Buff")
+local Debuff        = LibStub("Debuff")
+local BossManager   = LibStub("BossManager")
 
-if ClassID ~= 11 then return end
-if SpecID ~= 1 then return end
-if FireHack == nil then return end
+function DruidBalance.Initialize()
+  -- load profile content
+  local wowdir = GetWoWDirectory()
+  local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
+  local content = ReadFile(profiledir .. "Druid-Balance.JSON")
 
--- load profile content
-local wowdir = GetWoWDirectory()
-local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"
-local content = ReadFile(profiledir .. "Druid-Balance.JSON")
+  if content == nil or content == "" then
+    return message("Error loading config file. Please contact the Author.")
+  end
 
-if content == nil or content == "" then
-  return message("Error loading config file. Please contact the Author.")
+  local Settings = json.decode(content)
+
+  Interrupt     = Settings.Interrupt
+  InterruptAny  = Settings.InterruptAny
+  InterruptMin  = Settings.InterruptMin
+  InterruptMax  = Settings.InterruptMax
+  AutoEngage    = Settings.AutoEngage
+  AutoTarget    = Settings.AutoTarget
+  TargetMode    = Settings.TargetMode
+  Incarnation   = Settings.Incarnation
+  CA            = Settings.CA
+  FoN           = Settings.FoN
+  WoE           = Settings.WoE
+  MoonkinForm   = Settings.MoonkinForm
+  BotA          = Settings.BotA
+  BoE           = Settings.BoE
+  BoA           = Settings.BoA
+  StFMD         = Settings.StFMD
+  MFMD          = Settings.MFMD
+  SFMD          = Settings.SFMD
+  StFMDCount    = Settings.StFMDCount
+  MFMDCount     = Settings.MFMDCount
+  SFMDCount     = Settings.SFMDCount
+  PauseHotkey   = Settings.PauseHotkey
+  AoEHotkey     = Settings.AoEHotkey
+  CDHotkey      = Settings.CDHotkey
+
+  KeyCallbacks = {
+    [PauseHotkey] = Rotation.TogglePause,
+    [AoEHotkey] = Rotation.ToggleAoE,
+    [CDHotkey] = Rotation.ToggleCD
+  }
 end
 
-local Settings = json.decode(content)
-
-Interrupt     = Settings.Interrupt
-InterruptAny  = Settings.InterruptAny
-InterruptMin  = Settings.InterruptMin
-InterruptMax  = Settings.InterruptMax
-AutoEngage    = Settings.AutoEngage
-AutoTarget    = Settings.AutoTarget
-TargetMode    = Settings.TargetMode
-Incarnation   = Settings.Incarnation
-CA            = Settings.CA
-FoN           = Settings.FoN
-WoE           = Settings.WoE
-MoonkinForm   = Settings.MoonkinForm
-BotA          = Settings.BotA
-BoE           = Settings.BoE
-BoA           = Settings.BoA
-StFMD         = Settings.StFMD
-MFMD          = Settings.MFMD
-SFMD          = Settings.SFMD
-StFMDCount    = Settings.StFMDCount
-MFMDCount     = Settings.MFMDCount
-SFMDCount     = Settings.SFMDCount
-PauseHotkey   = Settings.PauseHotkey
-AoEHotkey     = Settings.AoEHotkey
-CDHotkey      = Settings.CDHotkey
-
-local Unit        = LibStub("Unit")
-local Spell       = LibStub("Spell")
-local Rotation    = LibStub("Rotation")
-local Player      = LibStub("Player")
-local Buff        = LibStub("Buff")
-local Debuff      = LibStub("Debuff")
-local BossManager = LibStub("BossManager")
-
-KeyCallbacks = {
-  [PauseHotkey] = Rotation.TogglePause,
-  [AoEHotkey] = Rotation.ToggleAoE,
-  [CDHotkey] = Rotation.ToggleCD
-}
-
-function EmeraldDreamcatcher()
-  DBStarsurgeV4()
-  DBSolarWrathV3()
-  DBLunarStrikeV3()
-  DBSolarWrathV4()
-  DBStarsurgeV5()
+function DruidBalance.EmeraldDreamcatcher()
+  DruidBalance.StarsurgeV4()
+  DruidBalance.SolarWrathV3()
+  DruidBalance.LunarStrikeV3()
+  DruidBalance.SolarWrathV4()
+  DruidBalance.StarsurgeV5()
 end
 
-function Cooldowns()
+function DruidBalance.Cooldowns()
   -- Potion
   -- Trinkets
   -- Racials
-  DBAstralCommunion()
-  DBFoN()
-  DBWoE()
-  DBIncarnation()
-  DBCA()
+  DruidBalance.AstralCommunion()
+  DruidBalance.FoN()
+  DruidBalance.WoE()
+  DruidBalance.Incarnation()
+  DruidBalance.CA()
 end
 
-function Pulse()
+function DruidBalance.Pulse()
   -- combat rotation
   if (UnitAffectingCombat(PlayerUnit) or AutoEngage)
   and UnitGUID("target") ~= nil
@@ -87,34 +83,34 @@ function Pulse()
       Rotation.Interrupt()
     end
 
-    DBMoonkin()
-    Cooldowns()
-    DBStarsurgeV1()
-    DBFoE()
-    DBNewMoonV1()
-    DBMoonfireV1()
-    DBSunfireV1()
-    DBStellarFlareV1()
-    DBStarfallV1()
+    DruidBalance.Moonkin()
+    DruidBalance.Cooldowns()
+    DruidBalance.StarsurgeV1()
+    DruidBalance.FoE()
+    DruidBalance.NewMoonV1()
+    DruidBalance.MoonfireV1()
+    DruidBalance.SunfireV1()
+    DruidBalance.StellarFlareV1()
+    DruidBalance.StarfallV1()
     if IsEquippedItem(137062)
     and #Units.GetUnitsInRadius(PlayerUnit, DBStarfallRadius, "hostile") <= 2 then
-      EmeraldDreamcatcher()
+      DruidBalance.DruidBalance.EmeraldDreamcatcher()
     end
-    DBNewMoonV2()
-    DBStarfallV2()
-    DBStellarFlareV2()
-    DBSunfireV2()
-    DBMoonfireV2()
-    DBStarsurgeV2()
-    DBStarsurgeV3()
-    DBSolarWrathV1()
-    DBLunarStrikeV1()
-    DBLunarStrikeV2()
-    DBSolarWrathV2()
+    DruidBalance.NewMoonV2()
+    DruidBalance.StarfallV2()
+    DruidBalance.StellarFlareV2()
+    DruidBalance.SunfireV2()
+    DruidBalance.MoonfireV2()
+    DruidBalance.StarsurgeV2()
+    DruidBalance.StarsurgeV3()
+    DruidBalance.SolarWrathV1()
+    DruidBalance.LunarStrikeV1()
+    DruidBalance.LunarStrikeV2()
+    DruidBalance.SolarWrathV2()
   else
     -- out of combat
-    DBBotA()
-    DBMoonkin()
+    DruidBalance.BotA()
+    DruidBalance.Moonkin()
   end
 end
 

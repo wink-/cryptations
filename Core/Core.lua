@@ -5,13 +5,9 @@ local Group     = LibStub("Group")
 local Player    = LibStub("Player")
 local Events    = LibStub("Events")
 local Utils     = LibStub("Utils")
+local ClassManager = LibStub("ClassManager")
 
 function Initialize_UnlockerNeeded()
-  if FireHack == nil then
-    Paused = true
-    return message("No unlocker attached. Please attach an unlocker and then type '/reload'.")
-  end
-
   -- Setup event frame
   local frame = CreateFrame("FRAME", "EventFrame")
   local spellframe = CreateFrame("FRAME", "SpellFrame")
@@ -57,6 +53,10 @@ function Initialize_UnlockerNeeded()
       Utils.Wait(1, Group.UpdateTanks)
     end
 
+    if event == "PLAYER_ENTERING_WORLD" then
+      ClassManager.LoadRotation()
+    end
+
     if event == "ACTIVE_TALENT_GROUP_CHANGED" and IsInGroup() then
       Group.UpdateTanks()
     end
@@ -79,6 +79,9 @@ function Initialize_UnlockerNeeded()
     AddTimerCallback(0.05, Events.KeyListener)
   end
   AddTimerCallback(0.1, Events.GetUnits)
+
+  -- Load proper rotation
+  ClassManager.LoadRotation()
 end
 
 function Initialize_NoUnlockerNeeded()
@@ -123,6 +126,3 @@ function Initialize_NoUnlockerNeeded()
   SLASH_CR1 = '/cr'
   SlashCmdList["CR"] = SlashCommands
 end
-
-Initialize_NoUnlockerNeeded()
-Initialize_UnlockerNeeded()

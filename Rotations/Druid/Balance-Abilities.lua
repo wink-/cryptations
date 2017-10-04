@@ -1,28 +1,22 @@
-local _, _, ClassID = UnitClass("player")
-local SpecID  = GetSpecialization()
-
-if ClassID ~= 11 then return end
-if SpecID ~= 1 then return end
-if FireHack == nil then return end
-
-local Unit        = LibStub("Unit")
-local Spell       = LibStub("Spell")
-local Rotation    = LibStub("Rotation")
-local Player      = LibStub("Player")
-local Buff        = LibStub("Buff")
-local Debuff      = LibStub("Debuff")
-local BossManager = LibStub("BossManager")
-local Group       = LibStub("Group")
+local DruidBalance  = LibStub("DruidBalance")
+local Unit          = LibStub("Unit")
+local Spell         = LibStub("Spell")
+local Rotation      = LibStub("Rotation")
+local Player        = LibStub("Player")
+local Buff          = LibStub("Buff")
+local Debuff        = LibStub("Debuff")
+local BossManager   = LibStub("BossManager")
+local Group         = LibStub("Group")
 
 local MaxMana = UnitPowerMax("player", 0)
 
-function DBNewMoonCastTime()
+function DruidBalance.NewMoonCastTime()
   local _, _, _, CastTime = GetSpellInfo(Spell.GetName(SB["New Moon"]))
   return CastTime / 1000
 end
 
 -- returns the current state of the artifact spell
-function DBArtifactState()
+function DruidBalance.ArtifactState()
   local _, _, _, _, _, _, ID = GetSpellInfo(Spell.GetName(SB["New Moon"]))
   if ID == SB["New Moon"] then return 1
   elseif ID == SB["Half Moon"] then return 2
@@ -30,7 +24,7 @@ function DBArtifactState()
   end
 end
 
-function DBPowerGainSolarWrath()
+function DruidBalance.PowerGainSolarWrath()
   local Power = 8
   if Buff.Has(PlayerUnit, AB["Celestial Alignment"])
   or Buff.Has(PlayerUnit, AB["Incarnation: Chosen of Elune"]) then
@@ -43,7 +37,7 @@ function DBPowerGainSolarWrath()
   return Power
 end
 
-function DBPowerGainLunarStrike()
+function DruidBalance.PowerGainLunarStrike()
   local Power = 12
   if Buff.Has(PlayerUnit, AB["Celestial Alignment"])
   or Buff.Has(PlayerUnit, AB["Incarnation: Chosen of Elune"]) then
@@ -56,7 +50,7 @@ function DBPowerGainLunarStrike()
   return Power
 end
 
-function DBStarfallRadius()
+function DruidBalance.StarfallRadius()
   local Radius = 15
   if Player.HasTalent(7, 2) then
     Radius = Radius * 1.3
@@ -65,7 +59,7 @@ function DBStarfallRadius()
   return Radius
 end
 
-function DBMoonkin()
+function DruidBalance.Moonkin()
   if MoonkinForm
   and Spell.CanCast(SB["Moonkin Form"])
   and not Player.IsInShapeshift() then
@@ -73,7 +67,7 @@ function DBMoonkin()
   end
 end
 
-function DBBotA()
+function DruidBalance.BotA()
   if BotA
   and Spell.CanCast(SB["Blessing of the Ancients"])
   and ((not Buff.Has(PlayerUnit, AB["Blessing of Elune"]) and BoE)
@@ -82,7 +76,7 @@ function DBBotA()
   end
 end
 
-function DBStarsurgeV1()
+function DruidBalance.StarsurgeV1()
   local GCD     = Player.GetGCDDuration()
   local Target  = PlayerTarget()
 
@@ -96,7 +90,7 @@ function DBStarsurgeV1()
   end
 end
 
-function DBFoE()
+function DruidBalance.FoE()
   local x, y, z = ObjectPosition(Unit.FindBestToAOE(5, 1, 40))
 
   if x == nil or y == nil or z == nil then return end
@@ -107,7 +101,7 @@ function DBFoE()
   end
 end
 
-function DBNewMoonV1()
+function DruidBalance.NewMoonV1()
   local Target  = PlayerTarget()
 
   if Target ~= nil
@@ -116,12 +110,12 @@ function DBNewMoonV1()
   and Unit.IsInLOS(Target)
   and Spell.GetRemainingChargeTime(SB["New Moon"]) == 0
   and (not Buff.Has(PlayerUnit, AB["The Emerald Dreamcatcher"])
-  or Buff.RemainingTime(PlayerUnit, AB["The Emerald Dreamcatcher"]) > DBNewMoonCastTime()) then
+  or Buff.RemainingTime(PlayerUnit, AB["The Emerald Dreamcatcher"]) > DruidBalance.NewMoonCastTime()) then
      return Spell.Cast(SB["New Moon"], Target)
   end
 end
 
-function DBMoonfireV1()
+function DruidBalance.MoonfireV1()
   local Target  = PlayerTarget()
 
   if Target ~= nil
@@ -133,7 +127,7 @@ function DBMoonfireV1()
   end
 end
 
-function DBSunfireV1()
+function DruidBalance.SunfireV1()
   local Target  = PlayerTarget()
 
   if Target ~= nil
@@ -145,7 +139,7 @@ function DBSunfireV1()
   end
 end
 
-function DBStellarFlareV1()
+function DruidBalance.StellarFlareV1()
   local Target  = PlayerTarget()
 
   if Target ~= nil
@@ -158,7 +152,7 @@ function DBStellarFlareV1()
   end
 end
 
-function DBStarfallV1()
+function DruidBalance.StarfallV1()
   local Target  = PlayerTarget()
 
   if Target ~= nil
@@ -171,7 +165,7 @@ function DBStarfallV1()
   end
 end
 
-function DBNewMoonV2()
+function DruidBalance.NewMoonV2()
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
   local SpellState    = DBArtifactState()
@@ -186,12 +180,12 @@ function DBNewMoonV2()
   end
 end
 
-function DBStarfallV2Pos()
+function DruidBalance.StarfallV2Pos()
   local StarfallRadius = DBStarfallRadius()
   return ObjectPosition(Unit.FindBestToAOE(StarfallRadius, 2, 40))
 end
 
-function DBStarfallV2()
+function DruidBalance.StarfallV2()
   local x, y, z = DBStarfallV2Pos()
 
   if x == nil or y == nil or z == nil then return end
@@ -202,7 +196,7 @@ function DBStarfallV2()
   end
 end
 
-function DBStellarFlareV2()
+function DruidBalance.StellarFlareV2()
   if StFMD then
     local Target = Group.FindDoTTarget(SB["Stellar Flare"], SB["Stellar Flare"], StFMDCount)
   else
@@ -219,7 +213,7 @@ function DBStellarFlareV2()
   end
 end
 
-function DBSunfireV2()
+function DruidBalance.SunfireV2()
   if SFMD then
     local Target = Group.FindDoTTarget(SB["Sunfire"], SB["Sunfire"], SFMDCount)
   else
@@ -237,7 +231,7 @@ function DBSunfireV2()
   end
 end
 
-function DBMoonfireV2()
+function DruidBalance.MoonfireV2()
   if MFMD then
     local Target = Group.FindDoTTarget(SB["Moonfire"], SB["Moonfire"], MFMDCount)
   else
@@ -255,7 +249,7 @@ function DBMoonfireV2()
   end
 end
 
-function DBStarsurgeV2()
+function DruidBalance.StarsurgeV2()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -267,7 +261,7 @@ function DBStarsurgeV2()
   end
 end
 
-function DBStarsurgeV3()
+function DruidBalance.StarsurgeV3()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -275,7 +269,7 @@ function DBStarsurgeV3()
   and ObjectIsFacing(PlayerUnit, Target)
   and Unit.IsInLOS(Target)
   and not IsEquippedItem(137062)
-  and #Unit.GetUnitsInRadius(PlayerUnit, DBStarfallRadius(), "hostile", true) < 2
+  and #Unit.GetUnitsInRadius(PlayerUnit, DruidBalance.StarfallRadius(), "hostile", true) < 2
   and Buff.Stacks(PlayerUnit, AB["Solar Empowerment"]) < 3
   and Buff.Stacks(PlayerUnit, AB["Lunar Empowerment"]) < 3
   and (not Player.HasTalent(7, 1)
@@ -285,7 +279,7 @@ function DBStarsurgeV3()
   end
 end
 
-function DBSolarWrathV1()
+function DruidBalance.SolarWrathV1()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -297,7 +291,7 @@ function DBSolarWrathV1()
   end
 end
 
-function DBLunarStrikeV1()
+function DruidBalance.LunarStrikeV1()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -309,7 +303,7 @@ function DBLunarStrikeV1()
   end
 end
 
-function DBLunarStrikeV2()
+function DruidBalance.LunarStrikeV2()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -321,7 +315,7 @@ function DBLunarStrikeV2()
   end
 end
 
-function DBSolarWrathV2()
+function DruidBalance.SolarWrathV2()
   local Target = PlayerTarget()
 
   if Target ~= nil
@@ -332,7 +326,7 @@ function DBSolarWrathV2()
   end
 end
 
-function DBAstralCommunion()
+function DruidBalance.AstralCommunion()
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
 
@@ -343,7 +337,7 @@ function DBAstralCommunion()
   end
 end
 
-function DBFoN()
+function DruidBalance.FoN()
   if FoN
   and Spell.CanCast(SB["Force of Nature"])
   and not IsInGroup() then
@@ -352,14 +346,14 @@ function DBFoN()
   end
 end
 
-function DBWoE()
+function DruidBalance.WoE()
   if WoE
   and Spell.CanCast(SB["Warrior of Elune"]) then
     return Spell.Cast(SB["Warrior of Elune"])
   end
 end
 
-function DBIncarnation()
+function DruidBalance.Incarnation()
   local StarfallIsValid = DBStarfallV2Pos() ~= nil
   local Target          = PlayerTarget()
 
@@ -373,8 +367,8 @@ function DBIncarnation()
   end
 end
 
-function DBCA()
-  local StarfallIsValid = DBStarfallV2Pos() ~= nil
+function DruidBalance.CA()
+  local StarfallIsValid = DruidBalance.StarfallV2Pos() ~= nil
   local Target          = PlayerTarget()
 
   if CA
@@ -387,7 +381,7 @@ function DBCA()
   end
 end
 
-function DBStarsurgeV4()
+function DruidBalance.StarsurgeV4()
   local LunarPower  = UnitPower("player", 8)
   local GCD         = Player.GetGCDDuration()
   local Target      = PlayerTarget()
@@ -404,7 +398,7 @@ function DBStarsurgeV4()
   end
 end
 
-function DBSolarWrathV3()
+function DruidBalance.SolarWrathV3()
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
   local SWCastTime    = 1.5 / (GetHaste() / 100 + 1)
@@ -416,14 +410,14 @@ function DBSolarWrathV3()
   and ObjectIsFacing(PlayerUnit, Target)
   and Unit.IsInLOS(Target)
   and Buff.Stack(PlayerUnit, AB["Solar Empowerment"]) > 1
-  and LunarPowerMax - LunarPower >= DBPowerGainSolarWrath()
+  and LunarPowerMax - LunarPower >= DruidBalance.PowerGainSolarWrath()
   and Buff.RemainingTime(PlayerUnit, AB["The Emerald Dreamcatcher"]) > math.max(0.75, SWCastTime) * 2
   and Buff.RemainingTime(PlayerUnit, AB["The Emerald Dreamcatcher"]) < LSCastTime + math.max(0.75, SWCastTime) then
     return Spell.Cast(SB["Solar Wrath Balance"], PlayerUnit)
   end
 end
 
-function DBLunarStrikeV3()
+function DruidBalance.LunarStrikeV3()
   local LSCastTime    = 2.5 / (GetHaste() / 100 + 1)
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
@@ -435,12 +429,12 @@ function DBLunarStrikeV3()
   and Unit.IsInLOS(Target)
   and Buff.Has(PlayerUnit, AB["Lunar Empowerment"])
   and Buff.RemainingTime(PlayerUnit, AB["The Emerald Dreamcatcher"]) > LSCastTime
-  and LunarPowerMax - LunarPower >= DBPowerGainLunarStrike() then
+  and LunarPowerMax - LunarPower >= DruidBalance.PowerGainLunarStrike() then
     return Spell.Cast(SB["Lunar Strike"], Target)
   end
 end
 
-function DBSolarWrathV4()
+function DruidBalance.SolarWrathV4()
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
   local Target        = PlayerTarget()
@@ -450,12 +444,12 @@ function DBSolarWrathV4()
   and ObjectIsFacing(PlayerUnit, Target)
   and Unit.IsInLOS(Target)
   and Buff.Has(PlayerUnit, AB["Solar Empowerment"])
-  and LunarPowerMax - LunarPower >= DBPowerGainSolarWrath() then
+  and LunarPowerMax - LunarPower >= DruidBalance.PowerGainSolarWrath() then
     return Spell.Cast(SB["Solar Wrath Balance"], Target)
   end
 end
 
-function DBStarsurgeV5()
+function DruidBalance.StarsurgeV5()
   local LunarPower    = UnitPower("player", 8)
   local LunarPowerMax = UnitPowerMax("player", 8)
   local Target        = PlayerTarget()
@@ -464,7 +458,7 @@ function DBStarsurgeV5()
   and Spell.CanCast(SB["Starsurge"], Target, 8, 40)
   and ObjectIsFacing(PlayerUnit, Target)
   and Unit.IsInLOS(Target)
-  and LunarPowerMax - LunarPower <= DBPowerGainLunarStrike() then
+  and LunarPowerMax - LunarPower <= DruidBalance.PowerGainLunarStrike() then
     return Spell.Cast(SB["Starsurge"], Target)
   end
 end

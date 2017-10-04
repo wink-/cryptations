@@ -9,7 +9,7 @@ Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 Libs\LibArtifactData-1.0\LibArtifactData-1.0.lua
 Libs\ChatOverlay\ChatOverlay.lua
-Core\LibLoader.lua
+Core\ModuleRegistry.lua
 
 # Functions
 Functions\Unit.lua
@@ -21,10 +21,6 @@ Functions\Player.lua
 Functions\Rotation.lua
 Functions\Group.lua
 Functions\Events.lua
-
-# Core
-Core\Core.lua
-Core\BossManager.lua
 
 # Tables
 Tables\Auras.lua
@@ -94,5 +90,8 @@ Rotations\Warrior\Arms.lua
 Rotations\Warrior\Fury.lua
 Rotations\Warrior\Protection.lua
 
-# Pulse Engine
+# Core
+Core\Core.lua
+Core\BossManager.lua
+Core\ClassManager.lua
 Core\PulseEngine.lua
