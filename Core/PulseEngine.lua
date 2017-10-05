@@ -4,27 +4,27 @@ UpdateInterval         = 0.1
 LastPulse              = GetTime()
 NextPulse              = GetTime()
 
-local addonInitialized = false
-local rotationEngineInitialized = false
+local AddonInitialized = false
+local RotationEngineInitialized = false
 local f = CreateFrame("FRAME", "PulseFrame")
 
 function PulseEngine()
   if GetTime() >= NextPulse then
 
-    if not addonInitialized then
+    if not AddonInitialized then
       Initialize_NoUnlockerNeeded()
-      addonInitialized = true
+      AddonInitialized = true
       print("Addon Initialized")
     end
 
     if not Paused then
 
-      if not rotationEngineInitialized
+      if not RotationEngineInitialized
       and FireHack ~= nil then
         Initialize_UnlockerNeeded()
-        rotationEngineInitialized = true
+        RotationEngineInitialized = true
         print("Rotation Initialized")
-      elseif not rotationEngineInitialized then
+      elseif not RotationEngineInitialized then
         Paused = true
         return message('No unlocker found. Please attach unlocker and type "/cr toggle" ')
       end

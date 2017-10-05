@@ -5,7 +5,7 @@ local Rotation    = LibStub("Rotation")
 local Player      = LibStub("Player")
 local BossManager = LibStub("BossManager")
 
-function DruidFeral.Initalize()
+function DruidFeral.Initialize()
   -- load profile content
   local wowdir = GetWoWDirectory()
   local profiledir = wowdir .. "\\Interface\\Addons\\cryptations\\Profiles\\"

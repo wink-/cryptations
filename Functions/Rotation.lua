@@ -15,7 +15,7 @@ end
 -- Example use for the spell queue would be a sequence that has to be casted in a certain order
 -- There are also some instant spells that require being casted by the spell queue
 function Rotation.PulseQueue()
-  
+
   -- pulse rotation if spellQueue is empty
   if #SPELL_QUEUE == 0
   and not Unit.IsCasting(PlayerUnit)
@@ -190,5 +190,12 @@ function Rotation.ToggleDebug()
     ChatOverlay("Debug Information Enabled", 2, "GREEN")
   else
     ChatOverlay("Debug Information Disabled", 2, "RED")
+  end
+end
+
+-- Prints a message to the chat window if the 'Debug' toggle is set
+function Rotation.Debug(msg)
+  if Debug then
+    print(msg)
   end
 end

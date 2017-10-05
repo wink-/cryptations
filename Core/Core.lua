@@ -53,7 +53,7 @@ function Initialize_UnlockerNeeded()
       Utils.Wait(1, Group.UpdateTanks)
     end
 
-    if event == "PLAYER_ENTERING_WORLD" then
+    if event == "PLAYER_ENTERING_WORLD" or event == "ACTIVE_TALENT_GROUP_CHANGED" then
       ClassManager.LoadRotation()
     end
 

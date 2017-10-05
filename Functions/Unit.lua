@@ -1,12 +1,12 @@
 local Unit = LibStub("Unit")
 local Group = LibStub("Group")
 local Player = LibStub("Player")
-
-Spelltarget  = nil                                 -- The unit on which a spell shall be casted
+local Rotation = LibStub("Rotation")
 
 -- returns true if a given unit is hostile and therefore can be attacked
 function Unit.IsHostile(unit)
-  if unit == nil then
+  if unit == nil
+  or PlayerUnit == nil then
     return nil
   end
 
@@ -54,6 +54,7 @@ function Unit.IsInAttackRange(spell, unit)
   if IsSpellInRange(Name, unit) == 1 then
     return true
   end
+
   -- for melee
   if GetDistanceBetweenObjects(PlayerUnit, unit) <= UnitCombatReach(PlayerUnit) + UnitCombatReach(unit) + 4/3 then
     return true
