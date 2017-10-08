@@ -7,13 +7,15 @@ TTD_TABLE = {}
 -- This keeps track of all of the valid units and their ttd
 function Events.GetUnits()
   -- cache new units
-  if UnitAffectingCombat("player") or true then
+  if UnitAffectingCombat("player")
+  and not Paused then
     for i = 1, GetObjectCount() do
       --print("found " .. GetObjectCount() .. " objects")
       local Object = GetObjectWithIndex(i)
       if ObjectIsType(Object, ObjectTypes.Unit)
       and Object ~= ObjectPointer("player")
       and Unit.IsHostile(Object)
+      and UnitIsVisible(Object)
       and not UNIT_TRACKER[Object] then
         UNIT_TRACKER[Object] = GetTime()
         if TTD_TABLE[Object] == nil then
@@ -35,6 +37,7 @@ function Events.GetUnits()
     -- remove not existing units and their ttd
     for Object,_ in pairs(UNIT_TRACKER) do
       if not ObjectExists(Object)
+      or not UnitIsVisible(Object)
       or UnitHealth(Object) <= 1 then
         UNIT_TRACKER[Object] = nil
         TTD_TABLE[Object] = nil

@@ -4,13 +4,13 @@
 ## SavedVariablesPerCharacter: Paused, AllowCD, AllowAoE, Debug
 
 # Libs
+Core\Compatibility.lua
 Libs\JSON\json.lua
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 Libs\LibArtifactData-1.0\LibArtifactData-1.0.lua
 Libs\ChatOverlay\ChatOverlay.lua
 Core\ModuleRegistry.lua
-Core\Compatibility.lua
 
 # Functions
 Functions\Unit.lua

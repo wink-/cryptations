@@ -36,7 +36,10 @@ end
 -- returns true if distance between unit and otherunit
 -- is lower or equal to given distance
 function Unit.IsInRange(unit, otherUnit, distance)
-  if unit == nil or otherUnit == nil then
+  if unit == nil
+  or otherUnit == nil
+  or not UnitIsVisible(unit)
+  or not UnitIsVisible(otherUnit) then
     return nil
   end
 

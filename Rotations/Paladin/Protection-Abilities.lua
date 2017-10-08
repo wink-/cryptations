@@ -102,8 +102,7 @@ end
 function PaladinProtection.HotPTarget()
   local Lowest = Group.UnitToHeal()
 
-  if Lowest ~= nil
-  and Unit.PercentHealth(PlayerUnit) <= LotPHealth then
+  if Unit.PercentHealth(PlayerUnit) <= LotPHealth then
     return PlayerUnit
   elseif Lowest ~= nil
   and Unit.PercentHealth(Lowest) <= HotPHealth then

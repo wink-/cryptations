@@ -1,4 +1,5 @@
 local PaladinProtection = LibStub("PaladinProtection")
+local PaladinCommon     = LibStub("PaladinCommon")
 local Unit              = LibStub("Unit")
 local Rotation          = LibStub("Rotation")
 

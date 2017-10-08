@@ -32,9 +32,11 @@ function PulseEngine()
       LastPulse = GetTime()
       NextPulse = GetTime() + UpdateInterval
 
+      -- update the playerunit
       if PlayerUnit == nil
       or PlayerUnit ~= ObjectPointer("player")
-      or not ObjectExists(PlayerUnit) then
+      or not ObjectExists(PlayerUnit) 
+      or not UnitIsVisible(PlayerUnit) then
         PlayerUnit = ObjectPointer("player")
       end
 
