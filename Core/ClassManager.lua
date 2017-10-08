@@ -5,6 +5,10 @@ local DruidFeral        = LibStub("DruidFeral")
 local DruidGuardian     = LibStub("DruidGuardian")
 local DruidRestoration  = LibStub("DruidRestoration")
 
+local PaladinHoly         = LibStub("PaladinHoly")
+local PaladinProtection   = LibStub("PaladinProtection")
+local PaladinRetribution  = LibStub("PaladinRetribution")
+
 function ClassManager.LoadRotation()
   local _, _, ClassID = UnitClass("player")
   local SpecID  = GetSpecialization()
@@ -19,9 +23,15 @@ function ClassManager.LoadRotation()
     end
   -- Paladin
   elseif ClassID == 2 then
+    -- Holy
     if SpecID == 1 then
+      PaladinHoly.Initialize()
+    -- Protection
     elseif SpecID == 2 then
+      PaladinProtection.Initialize()
+    -- Retribution
     elseif SpecID == 3 then
+      PaladinRetribution.Initialize()
     end
   -- Hunter
   elseif ClassID == 3 then
@@ -76,28 +86,15 @@ function ClassManager.LoadRotation()
     -- Balance
     if SpecID == 1 then
       DruidBalance.Initialize()
-      Pulse = DruidBalance.Pulse
-      Interrupt = DruidBalance.Interrupt
-      print("Balance Druid loaded. Have fun.")
     -- Feral
     elseif SpecID == 2 then
       DruidFeral.Initialize()
-      Pulse = DruidFeral.Pulse
-      Interrupt = DruidFeral.Interrupt
-      print("Feral Druid loaded. Have fun.")
     -- Guardian
     elseif SpecID == 3 then
       DruidGuardian.Initialize()
-      Pulse = DruidGuardian.Pulse
-      Interrupt = DruidGuardian.Interrupt
-      Taunt = DruidGuardian.Taunt
-      print("Guardian Druid loaded. Have fun.")
     -- Restoration
     elseif SpecID == 4 then
       DruidRestoration.Initialize()
-      Pulse = DruidRestoration.Pulse
-      Dispell = DruidRestoration.Dispell
-      print("Restoration Druid loaded. Have fun.")
     end
   -- Demon Hunter
   elseif ClassID == 12 then

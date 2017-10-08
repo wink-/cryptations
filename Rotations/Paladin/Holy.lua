@@ -66,6 +66,11 @@ function PaladinHoly.Initialize()
     [AoEHotkey] = Rotation.ToggleAoE,
     [CDHotkey] = Rotation.ToggleCD
   }
+
+  -- set function variables
+  Pulse = PaladinHoly.Pulse
+  Dispell = PaladinHoly.Dispell
+  print("Holy Paladin loaded. Have fun!")
 end
 
 function PaladinHoly.Pulse()

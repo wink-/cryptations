@@ -45,6 +45,11 @@ function DruidFeral.Initialize()
     [AoEHotkey] = Rotation.ToggleAoE,
     [CDHotkey] = Rotation.ToggleCD
   }
+
+  -- set function variables
+  Pulse = DruidFeral.Pulse
+  Interrupt = DruidFeral.Interrupt
+  print("Feral Druid loaded. Have fun.")
 end
 
 function DruidFeral.Finishers()

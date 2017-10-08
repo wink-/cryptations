@@ -48,6 +48,12 @@ function PaladinProtection.Initialize()
     [AoEHotkey] = Rotation.ToggleAoE,
     [CDHotkey] = Rotation.ToggleCD
   }
+
+  -- set function variables
+  Pulse = PaladinProtection.Pulse
+  Taunt = PaladinProtection.Taunt
+  Interrupt = PaladinProtection.Interrupt
+  print("Protection Paladin loaded. Have fun.")
 end
 
 function PaladinProtection.Pulse()

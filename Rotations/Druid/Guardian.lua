@@ -50,6 +50,12 @@ function DruidGuardian.Initialize()
     [AoEHotkey] = Rotation.ToggleAoE,
     [CDHotkey] = Rotation.ToggleCD
   }
+
+  -- set function variables
+  Pulse = DruidGuardian.Pulse
+  Interrupt = DruidGuardian.Interrupt
+  Taunt = DruidGuardian.Taunt
+  print("Guardian Druid loaded. Have fun.")
 end
 
 function DruidGuardian.Pulse()

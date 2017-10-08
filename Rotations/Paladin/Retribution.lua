@@ -48,6 +48,11 @@ function PaladinRetribution.Initialize()
     [AoEHotkey] = Rotation.ToggleAoE,
     [CDHotkey] = Rotation.ToggleCD
   }
+
+  -- set function variables
+  Pulse = PaladinRetribution.Pulse
+  Interrupt = PaladinRetribution.Interrupt
+  print("Retribution Paladin loaded. Have fun.")
 end
 
 function PaladinRetribution.SingleTargetSpenders()

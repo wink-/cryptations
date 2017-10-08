@@ -49,6 +49,11 @@ function DruidBalance.Initialize()
     [AoEHotkey] = Rotation.ToggleAoE,
     [CDHotkey] = Rotation.ToggleCD
   }
+
+  -- set function variables
+  Pulse = DruidBalance.Pulse
+  Interrupt = DruidBalance.Interrupt
+  print("Balance Druid loaded. Have fun.")
 end
 
 function DruidBalance.EmeraldDreamcatcher()

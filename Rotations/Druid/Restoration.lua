@@ -59,6 +59,11 @@ function DruidRestoration.Initialize()
     [AoEHotkey] = Rotation.ToggleAoE,
     [CDHotkey] = Rotation.ToggleCD
   }
+
+  -- set function variables
+  Pulse = DruidRestoration.Pulse
+  Dispell = DruidRestoration.Dispell
+  print("Restoration Druid loaded. Have fun.")
 end
 
 function DruidRestoration.Pulse()
