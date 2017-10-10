@@ -8,18 +8,20 @@ TTD_TABLE = {}
 function Events.GetUnits()
   -- cache new units
   if UnitAffectingCombat("player")
-  and not Paused then
-    for i = 1, GetObjectCount() do
-      --print("found " .. GetObjectCount() .. " objects")
-      local Object = GetObjectWithIndex(i)
-      if ObjectIsType(Object, ObjectTypes.Unit)
-      and Object ~= ObjectPointer("player")
-      and Unit.IsHostile(Object)
-      and UnitIsVisible(Object)
-      and not UNIT_TRACKER[Object] then
-        UNIT_TRACKER[Object] = GetTime()
-        if TTD_TABLE[Object] == nil then
-          TTD_TABLE[Object] = -1
+  and not Paused
+  or true then
+    --print("found " .. GetObjectCount() .. " objects")
+    local Units = GetObjectsOfType(ObjectTypes.Unit)
+    for i = 1, #Units do
+      local CurrentUnit = Units[i]
+      if CurrentUnit ~= ObjectPointer("player")
+      and Unit.IsHostile(CurrentUnit)
+      and UnitIsVisible(CurrentUnit)
+      and not UNIT_TRACKER[CurrentUnit]
+      and (UnitAffectingCombat(CurrentUnit) or Unit.IsDummy(CurrentUnit)) then
+        UNIT_TRACKER[CurrentUnit] = GetTime()
+        if TTD_TABLE[CurrentUnit] == nil then
+          TTD_TABLE[CurrentUnit] = -1
         end
       end
 
@@ -38,7 +40,8 @@ function Events.GetUnits()
     for Object,_ in pairs(UNIT_TRACKER) do
       if not ObjectExists(Object)
       or not UnitIsVisible(Object)
-      or UnitHealth(Object) <= 1 then
+      or UnitHealth(Object) <= 1
+      or (not UnitAffectingCombat(Object) and not Unit.IsDummy(Object)) then
         UNIT_TRACKER[Object] = nil
         TTD_TABLE[Object] = nil
       end

@@ -206,7 +206,12 @@ function PaladinHoly.Judgment()
 end
 
 function PaladinHoly.LightsHammerPos()
-  return ObjectPosition(Unit.FindBestToHeal(10, LHUnits, LHHealth, 40))
+  local Target = Unit.FindBestToHeal(10, LHUnits, LHHealth, 40)
+  if Target ~= nil then
+    return ObjectPosition(Target)
+  end
+
+  return nil, nil, nil
 end
 
 function PaladinHoly.LightsHammer()

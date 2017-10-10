@@ -2,7 +2,11 @@
 -- to certain unlockers, making more unlockers compatible
 
 function PlayerTarget()
-  return ObjectPointer("target")
+  if UnitGUID("target") ~= nil then
+    return ObjectPointer("target")
+  end
+
+  return nil
 end
 
 function GetObjectsOfType(ObjectType)
