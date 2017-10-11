@@ -208,7 +208,7 @@ end
 
 function DruidBalance.StellarFlareV2()
   if StFMD then
-    local Target = Group.FindDoTTarget(SB["Stellar Flare"], SB["Stellar Flare"], StFMDCount)
+    local Target = Unit.FindDoTTarget(SB["Stellar Flare"], SB["Stellar Flare"], StFMDCount)
   else
     local Target = PlayerTarget()
   end
@@ -225,7 +225,7 @@ end
 
 function DruidBalance.SunfireV2()
   if SFMD then
-    local Target = Group.FindDoTTarget(SB["Sunfire"], SB["Sunfire"], SFMDCount)
+    local Target = Unit.FindDoTTarget(SB["Sunfire"], SB["Sunfire"], SFMDCount)
   else
     local Target = PlayerTarget()
   end
@@ -243,7 +243,7 @@ end
 
 function DruidBalance.MoonfireV2()
   if MFMD then
-    local Target = Group.FindDoTTarget(SB["Moonfire"], SB["Moonfire"], MFMDCount)
+    local Target = Unit.FindDoTTarget(SB["Moonfire"], SB["Moonfire"], MFMDCount)
   else
     local Target = PlayerTarget()
   end

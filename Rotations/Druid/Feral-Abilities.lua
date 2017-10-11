@@ -210,7 +210,7 @@ end
 
 function DruidFeral.RipV2()
   if RipMD then
-    local Target = Group.FindDoTTarget(SB["Rip"], AB["Rip"], RipMDCount)
+    local Target = Unit.FindDoTTarget(SB["Rip"], AB["Rip"], RipMDCount)
   else
     local Target = PlayerTarget()
   end
@@ -292,7 +292,7 @@ end
 
 function DruidFeral.RakeV3()
   if RakeMD then
-    local Target = Group.FindDoTTarget(SB["Rake"], AB["Rake"], RakeMDCount)
+    local Target = Unit.FindDoTTarget(SB["Rake"], AB["Rake"], RakeMDCount)
   else
     local Target = PlayerTarget()
   end
@@ -326,7 +326,7 @@ end
 
 function DruidFeral.RakeV5()
   if RakeMD then
-    local Target = Group.FindDoTTarget(SB["Rake"], AB["Rake"], RakeMDCount)
+    local Target = Unit.FindDoTTarget(SB["Rake"], AB["Rake"], RakeMDCount)
   else
     local Target = PlayerTarget()
   end
@@ -366,7 +366,7 @@ end
 function DruidFeral.Moonfire()
   if MoonfireMD
   and Moonfire then
-    local Target = Group.FindDoTTarget(SB["Moonfire"], AB["Moonfire"], MFMDCount)
+    local Target = Unit.FindDoTTarget(SB["Moonfire"], AB["Moonfire"], MFMDCount)
   elseif Moonfire then
     local Target = PlayerTarget()
   else

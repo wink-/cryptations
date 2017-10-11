@@ -553,6 +553,39 @@ function Unit.FindBestToAOE(range, minUnits, maxDistance)
   return BestTarget
 end
 
+-- this returns the first unit to DoT according to the given parameters
+-- spellID is used to check if the unit is in attack range
+-- count: units to keep the buff up on
+function Unit.FindDoTTarget(spellID, debuffID, count)
+  local Target = PlayerTarget()
+
+  -- first check if the player's current target is suitable for a dot
+  if Target ~= nil
+  and #Debuff.FindUnitsWith(debuffID, true) <= count
+  and Unit.IsHostile(Target)
+  and (UnitAffectingCombat(Target) or Unit.IsDummy(Target))
+  and Unit.IsInAttackRange(spellID, Target)
+  and not Debuff.Has(Target, debuffID) then
+    return Target
+  end
+
+  -- check if any other unit is suitable for a dot
+  for Object, _ in pairs(UNIT_TRACKER) do
+    if ObjectIsType(Object, ObjectTypes.Unit)
+    and ObjectExists(Object)
+    and Unit.IsHostile(Object)
+    and (UnitAffectingCombat(Object) or Unit.IsDummy(Object))
+    and Unit.IsInLOS(Object)
+    and Unit.IsInAttackRange(spellID, Object)
+    and #Debuff.FindUnitsWith(debuffID, true) <= count
+    and not Debuff.Has(Object, debuffID) then
+      return Object
+    end
+  end
+
+  return nil
+end
+
 -- returns true when the given unit currently casts the given spellID
 function Unit.IsCastingSpecific(unit, spellID)
   local _, _, _, _, _, _, _, castID = UnitCastingInfo(unit)
