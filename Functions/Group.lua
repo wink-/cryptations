@@ -98,14 +98,16 @@ end
 -- spellID is used to check if the unit is in attack range
 -- count: units to keep the buff up on
 function Group.FindDoTTarget(spellID, debuffID, count)
+  local Target = PlayerTarget()
+
   -- first check if the player's current target is suitable for a dot
-  if PlayerTarget() ~= nil
+  if Target ~= nil
   and #Debuff.FindUnitsWith(debuffID, true) <= count
-  and Unit.IsHostile(PlayerTarget())
-  and (UnitAffectingCombat(PlayerTarget()) or Unit.IsDummy(PlayerTarget()))
-  and Unit.IsInAttackRange(spellID, PlayerTarget())
-  and not Debuff.Has(PlayerTarget(), debuffID) then
-    return PlayerTarget()
+  and Unit.IsHostile(Target)
+  and (UnitAffectingCombat(Target) or Unit.IsDummy(Target))
+  and Unit.IsInAttackRange(spellID, Target)
+  and not Debuff.Has(Target, debuffID) then
+    return Target
   end
 
   -- check if any other unit is suitable for a dot

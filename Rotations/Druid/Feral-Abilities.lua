@@ -220,7 +220,7 @@ function DruidFeral.RipV2()
   if Target ~= nil
   and Spell.CanCast(SB["Rip"], Target, 3, 30)
   and Player.IsFacing(Target)
-  and (Debuff.Has(Target, AB["Rip"]) ~= true
+  and (not Debuff.Has(Target, AB["Rip"])
   or Debuff.RemainingTime(Target, AB["Rip"]) < 7)
   and (Buff.Has(PlayerUnit, AB["Savage Roar"]) or not Player.HasTalent(5, 3))
   and not Player.HasTalent(6, 1) then

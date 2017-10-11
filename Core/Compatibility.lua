@@ -20,3 +20,8 @@ function GetObjectsOfType(ObjectType)
 
   return ObjectsOfType
 end
+
+function ObjectIsFacingCustom(Unit, OtherUnit, FacingAngle)
+  -- TODO
+  return true
+end
