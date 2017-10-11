@@ -111,16 +111,19 @@ function DruidFeral.Pulse()
     DruidFeral.RegrowthV1()
     DruidFeral.RegrowthV2()
     if ComboPoints >= 5 then
-      Finishers()
+      Rotation.Debug("Calling Finishers")
+      DruidFeral.Finishers()
     end
     DruidFeral.Artifact()
     if #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") >= 5
     and ComboPoints <= 4 then
-      AoE()
+      Rotation.Debug("Calling AoE")
+      DruidFeral.AoE()
     end
     if ComboPoints <= 4
     and #Unit.GetUnitsInRadius(PlayerUnit, 8, "hostile") < 5 then
-      Generators()
+      Rotation.Debug("Calling Generators")
+      DruidFeral.Generators()
     end
   else
     -- out of combat

@@ -36,6 +36,7 @@ end
 -- returns true if distance between unit and otherunit
 -- is lower or equal to given distance
 function Unit.IsInRange(unit, otherUnit, distance)
+  -- error checking
   if unit == nil
   or otherUnit == nil
   or not UnitIsVisible(unit)
@@ -48,7 +49,10 @@ end
 
 -- same as IsInRange but this one considers the boundingboxes and combat reach
 function Unit.IsInAttackRange(spell, unit)
-  if unit == nil then
+  -- error checking
+  if unit == nil
+  or not UnitIsVisible(unit)
+  or spell == nil then
     return nil
   end
 

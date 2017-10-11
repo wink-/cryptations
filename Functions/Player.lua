@@ -100,6 +100,7 @@ function Player.IsInShapeshift()
   return false
 end
 
+-- TODO: fix error
 -- returns true if the player is facing the given unit
 -- angle (optional): the maximum facing angle
 function Player.IsFacing(unit, angle)

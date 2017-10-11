@@ -61,6 +61,7 @@ end
 
 function DruidBalance.Moonkin()
   if MoonkinForm
+  and not UnitIsDeadOrGhost(PlayerUnit)
   and Spell.CanCast(SB["Moonkin Form"])
   and not Player.IsInShapeshift() then
     return Spell.Cast(SB["Moonkin Form"])
@@ -91,7 +92,10 @@ function DruidBalance.StarsurgeV1()
 end
 
 function DruidBalance.FoE()
-  local x, y, z = ObjectPosition(Unit.FindBestToAOE(5, 1, 40))
+  local Target = Unit.FindBestToAOE(5, 1, 40)
+  if Target ~= nil then
+    local x, y, z = ObjectPosition(Target)
+  end
 
   if x == nil or y == nil or z == nil then return end
   local LunarPower  = UnitPower("player", 8)
@@ -182,7 +186,13 @@ end
 
 function DruidBalance.StarfallV2Pos()
   local StarfallRadius = DruidBalance.StarfallRadius()
-  return ObjectPosition(Unit.FindBestToAOE(StarfallRadius, 2, 40))
+  local Target = Unit.FindBestToAOE(StarfallRadius, 2, 40)
+
+  if Target ~= nil then
+    return ObjectPosition(Target)
+  end
+
+  return nil
 end
 
 function DruidBalance.StarfallV2()

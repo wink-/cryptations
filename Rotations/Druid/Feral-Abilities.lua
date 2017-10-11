@@ -449,6 +449,7 @@ function DruidFeral.Shred()
   and ((Debuff.Has(Target, AB["Rake"])
   and Debuff.RemainingTime(Target, AB["Rake"]) > DruidFeral.RakeIntervalSec())
   or (MaxEnergy - Energy) < 1) then
+    Rotation.Debug("Casting Shred on " .. ObjectName(Target))
     return Spell.Cast(SB["Shred"], Target)
   end
 end
