@@ -61,7 +61,7 @@ end
 
 function DruidBalance.Moonkin()
   if MoonkinForm
-  and not UnitIsDeadOrGhost(PlayerUnit)
+  and not UnitIsDeadOrGhost("player")
   and Spell.CanCast(SB["Moonkin Form"])
   and not Player.IsInShapeshift() then
     return Spell.Cast(SB["Moonkin Form"])

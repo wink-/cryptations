@@ -68,7 +68,8 @@ end
 
 function DruidRestoration.Pulse()
   -- Combat Rotation
-  if not Unit.IsCastingSpecific(PlayerUnit, SB["Tranquility"]) then
+  if not Unit.IsCastingSpecific(PlayerUnit, SB["Tranquility"])
+  and GetNumGroupMembers() > 0 then
     -- Dispell engine
     if Dispell then
       Rotation.Dispell()

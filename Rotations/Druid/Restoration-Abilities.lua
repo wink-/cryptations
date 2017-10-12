@@ -43,7 +43,7 @@ function DruidRestoration.EoG()
 end
 
 function DruidRestoration.HoTCount()
-  return (RejuvenationCount()
+  return (DruidRestoration.RejuvenationCount()
   + #Buff.FindUnitsWith(AB["Lifebloom"], true, true)
   + #Buff.FindUnitsWith(AB["Wild Growth"], true, true)
   + #Buff.FindUnitsWith(AB["Regrowth"], true, true)

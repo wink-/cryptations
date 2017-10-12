@@ -2,6 +2,8 @@ local Unit = LibStub("Unit")
 local Group = LibStub("Group")
 local Player = LibStub("Player")
 local Rotation = LibStub("Rotation")
+local Debuff = LibStub("Debuff")
+local Buff = LibStub("Buff")
 
 -- returns true if a given unit is hostile and therefore can be attacked
 function Unit.IsHostile(unit)

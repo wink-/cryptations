@@ -63,10 +63,10 @@ function DruidFeral.Finishers()
 end
 
 function DruidFeral.AoE()
-  -- Thrash
-  -- Brutal Slash
-  -- Thrash 2
-  -- Swipe
+  DruidFeral.ThrashV4()
+  DruidFeral.BrutalSlashV2()
+  DruidFeral.ThrashV5()
+  DruidFeral.SwipeV2()
 end
 
 function DruidFeral.Generators()

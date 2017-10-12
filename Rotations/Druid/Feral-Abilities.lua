@@ -55,6 +55,9 @@ end
 
 function DruidFeral.Cat()
   if Spell.CanCast(SB["Cat Form"])
+  and not IsMounted()
+  and not UnitIsDeadOrGhost("player")
+  and not UnitControllingVehicle("player")
   and not Player.IsInShapeshift() then
     return Spell.Cast(SB["Cat Form"])
   end

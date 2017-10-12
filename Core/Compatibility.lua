@@ -1,8 +1,8 @@
 -- This file will contain functions and aliases that are only available
 -- to certain unlockers, making more unlockers compatible
-
 function PlayerTarget()
-  if UnitGUID("target") ~= nil then
+  if UnitGUID("target") ~= nil
+  and UnitIsVisible("target") then
     return ObjectPointer("target")
   end
 

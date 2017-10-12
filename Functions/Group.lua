@@ -72,6 +72,8 @@ function Group.HealPriority()
 
   -- function for sorting heal priority list
   function compare(a, b)
+    if a == nil then return false end
+    if b == nil then return true end
     return Unit.PercentHealth(a) < Unit.PercentHealth(b)
   end
 

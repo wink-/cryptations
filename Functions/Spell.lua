@@ -54,7 +54,9 @@ end
 -- checkIfKnown (optional) : if true, checks if the spell is known
 function Spell.CanCast(spell, unit, powerType, power, checkIfKnown)
   local SpellCooldown = GetSpellCooldown(spell)
-  return SpellCooldown == 0 and (unit == nil or Unit.IsInAttackRange(spell, unit))
+  return SpellCooldown == 0
+  and not UnitIsDeadOrGhost("player")
+  and (unit == nil or Unit.IsInAttackRange(spell, unit))
   and (IsSpellKnown(spell) or checkIfKnown == false)
   and (not Unit.IsMoving(PlayerUnit) or Spell.CanCastWhileMoving(spell))
   and ((powerType == nil and power == nil) or UnitPower(PlayerUnit, powerType) >= power)
