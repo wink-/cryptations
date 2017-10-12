@@ -212,10 +212,12 @@ function DruidFeral.FerociousBiteV2()
 end
 
 function DruidFeral.RipV2()
+  local Target = nil
+
   if RipMD then
-    local Target = Unit.FindDoTTarget(SB["Rip"], AB["Rip"], RipMDCount)
+    Target = Unit.FindDoTTarget(SB["Rip"], AB["Rip"], RipMDCount)
   else
-    local Target = PlayerTarget()
+    Target = PlayerTarget()
   end
 
   local ComboPoints = UnitPower("player", 4)
@@ -294,10 +296,12 @@ function DruidFeral.RakeV2()
 end
 
 function DruidFeral.RakeV3()
+  local Target = nil
+
   if RakeMD then
-    local Target = Unit.FindDoTTarget(SB["Rake"], AB["Rake"], RakeMDCount)
+    Target = Unit.FindDoTTarget(SB["Rake"], AB["Rake"], RakeMDCount)
   else
-    local Target = PlayerTarget()
+    Target = PlayerTarget()
   end
 
   if Target ~= nil
@@ -328,10 +332,12 @@ function DruidFeral.RakeV4()
 end
 
 function DruidFeral.RakeV5()
+  local Target = nil
+
   if RakeMD then
-    local Target = Unit.FindDoTTarget(SB["Rake"], AB["Rake"], RakeMDCount)
+    Target = Unit.FindDoTTarget(SB["Rake"], AB["Rake"], RakeMDCount)
   else
-    local Target = PlayerTarget()
+    Target = PlayerTarget()
   end
 
   if Target ~= nil
@@ -367,11 +373,13 @@ function DruidFeral.BrutalSlashV1()
 end
 
 function DruidFeral.Moonfire()
+  local Target = nil
+
   if MoonfireMD
   and Moonfire then
-    local Target = Unit.FindDoTTarget(SB["Moonfire"], AB["Moonfire"], MFMDCount)
+    Target = Unit.FindDoTTarget(SB["Moonfire"], AB["Moonfire"], MFMDCount)
   elseif Moonfire then
-    local Target = PlayerTarget()
+    Target = PlayerTarget()
   else
     return
   end
