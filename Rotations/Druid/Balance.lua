@@ -80,7 +80,7 @@ function DruidBalance.Pulse()
   if (UnitAffectingCombat(PlayerUnit) or AutoEngage)
   and UnitGUID("target") ~= nil
   and Unit.IsHostile("target") and UnitHealth("target") ~= 0 then
-    -- pulse target engine and remember target
+    -- pulse target engine
     Rotation.Target("hostile")
 
     -- call interrupt engine

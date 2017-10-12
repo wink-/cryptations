@@ -573,8 +573,7 @@ function Unit.FindDoTTarget(spellID, debuffID, count)
 
   -- check if any other unit is suitable for a dot
   for Object, _ in pairs(UNIT_TRACKER) do
-    if ObjectIsType(Object, ObjectTypes.Unit)
-    and ObjectExists(Object)
+    if ObjectExists(Object)
     and Unit.IsHostile(Object)
     and (UnitAffectingCombat(Object) or Unit.IsDummy(Object))
     and Unit.IsInLOS(Object)

@@ -207,10 +207,12 @@ function DruidBalance.StarfallV2()
 end
 
 function DruidBalance.StellarFlareV2()
+  local Target = nil
+
   if StFMD then
-    local Target = Unit.FindDoTTarget(SB["Stellar Flare"], SB["Stellar Flare"], StFMDCount)
+    Target = Unit.FindDoTTarget(SB["Stellar Flare"], AB["Stellar Flare"], StFMDCount)
   else
-    local Target = PlayerTarget()
+    Target = PlayerTarget()
   end
 
   if Target ~= nil
@@ -224,10 +226,12 @@ function DruidBalance.StellarFlareV2()
 end
 
 function DruidBalance.SunfireV2()
+  local Target = nil
+
   if SFMD then
-    local Target = Unit.FindDoTTarget(SB["Sunfire"], SB["Sunfire"], SFMDCount)
+    Target = Unit.FindDoTTarget(SB["Sunfire"], AB["Sunfire"], SFMDCount)
   else
-    local Target = PlayerTarget()
+    Target = PlayerTarget()
   end
 
   if Target ~= nil
@@ -242,10 +246,12 @@ function DruidBalance.SunfireV2()
 end
 
 function DruidBalance.MoonfireV2()
+  local Target = nil
+
   if MFMD then
-    local Target = Unit.FindDoTTarget(SB["Moonfire"], SB["Moonfire"], MFMDCount)
+    Target = Unit.FindDoTTarget(SB["Moonfire"], AB["Moonfire"], MFMDCount)
   else
-    local Target = PlayerTarget()
+    Target = PlayerTarget()
   end
 
   if Target ~= nil
@@ -254,7 +260,8 @@ function DruidBalance.MoonfireV2()
   and (not Debuff.Has(Target, AB["Moonfire"], true)
   or Debuff.RemainingTime(Target, AB["Moonfire"], true) < 5)
   and (not Player.HasTalent(7, 3)
-  or #Unit.GetUnitsInRadius(PlayerUnit, 40, "hostile", true) > 1) then
+  or #Unit.GetUnitsInRadius(PlayerUnit, 40, "hostile", true) > 1)
+  then
     return Spell.Cast(SB["Moonfire"], Target)
   end
 end
